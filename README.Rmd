@@ -1,0 +1,117 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# auk: an R interface to AWK for manipulating eBird data
+
+[eBird](http://www.ebird.org) is an online tool for recording bird observations. The eBird database contains nearly 500 million sightings records making it among the largest citizen science projects in history and an extremely valuable resource for bird research and conservation. eBird provides free access to data through a variety of means. Some data can be accessed through the [eBird API](https://confluence.cornell.edu/display/CLOISAPI/eBird+API+1.1), which has an associated R pacakge [rebird](https://github.com/ropensci/rebird). In addition, the full eBird database is packaged as a text file and available for download as the [eBird Basic Dataset (EBD)](http://ebird.org/ebird/data/download). For most applications in science or conservation, users will require the EBD, however, working with these data can be challenging because of the inherently large file size. This primary function of this R package is to subset the EBD into smaller pieces, which are more easily manipulated in R.
+
+## The EBD and AWK
+
+The EBD is a tab separated text file containing every bird sighting in the eBird database. Each row corresponds to a sighting of a single species within a checklist and, in addition to the species and number of individuals observed, information is provided at the checklist level (location, time, date, search effort, etc.). Full metadata on the EBD is provided when the [file is downloaded](http://ebird.org/ebird/data/download). Because eBird contains nearly 500 million sightings, the EBD is an inherently large file (~150 GB uncompressed) and therefore challenging to work with in R.
+
+AWK is a unix utility and programming language for processing column formatted text data. It is highly flexible and extremely fast, making it a valuable tool for pre-processing the EBD. Users of the EBD can use AWK to subset the full text file taxonomically, spatially, or temporally, to produce a smaller file, which can then be loaded in to R for visualization, analysis, and modelling. This package is a wrapper for AWK specifically designed for filtering the EBD. The goal is to ease the use of the EBD by removing the hurdle of learning AWK.
+
+Linux and Mac users should already have AWK installed on their machines, however, Windows uses will need to install [Cygwin](https://www.cygwin.com) to gain access to AWK.
+
+## Installation
+
+This package can be installed directly from GitHub with: 
+
+```{r gh-install, eval=FALSE}
+install.packages("devtools")
+devtools::install_github("ropensci/rebird")
+```
+## Example usage
+
+### Cleaning
+
+Some rows in the eBird Basic Dataset (EBD) may have an incorrect number of columns and the dataset has an extra blank column at the end. The function `auk_clean()` drops these erroneous records and removes the blank column.
+
+```{r auk-clean}
+library(auk)
+# sample data
+f <- system.file("extdata/ebd-sample_messy.txt", package="auk")
+tmp <- tempfile()
+# remove problem runs
+auk_clean(f, tmp)
+# number of lines in input
+length(readLines(f))
+# number of lines in output
+length(readLines(tmp))
+unlink(tmp)
+```
+
+### Filtering
+
+`auk` uses a [pipeline-based workflow](http://r4ds.had.co.nz/pipes.html) for defining filters, which can be compiled into an AWK script. Users should start by defining a reference to the EBD file with `auk_ebd()`. Then the following filters can be applied:
+
+- `auk_species()`: filter by species using common or scientific names.
+- `auk_country()`: filter by country using the standard Engligh name or [ISO 2-letter country codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+- `auk_extent()`: filter by spatial extent, i.e. a range of latitudes and longitudes.
+- `auk_date()`: filter to checklists from a range of dates
+- `auk_time()`: filter to checklists started during a range of times.
+- `auk_duration()`: filter to checklists that lasted a given length of time.
+- `auk_complete()`: only retain checklists in which the observer has specified that they recorded all species seen or heard. These records are the most useful for modelling because they provide both presence and absenced data.
+
+```{r auk-filter}
+# sample data
+f <- system.file("extdata/ebd-sample.txt", package="auk")
+# define an EBD reference and a set of filters
+ebd <- auk_ebd(f) %>% 
+  # species: common and scientific names can be mixed
+  auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>%
+  # country: codes and names can be mixed; case insensitive
+  auk_country(country = c("US", "Canada", "mexico")) %>%
+  # extent: formatted as `c(lng_min, lat_min, lng_max, lat_max)`
+  auk_extent(extent = c(-125, 37, -120, 52)) %>%
+  # date: use standard ISO date format `"YYYY-MM-DD"`
+  auk_date(date = c("2010-01-01", "2010-12-31")) %>%
+  # time: 24h format
+  auk_time(time = c("06:00", "08:00")) %>%
+  # duration: length in minutes of checklists
+  auk_duration(duration = c(0, 60)) %>%
+  # complete: all species seen or heard are recorded
+  auk_complete()
+ebd
+```
+
+In all cases, checks are performed to ensure filters are valid. For example, species are checked against the official [eBird taxonomy](http://help.ebird.org/customer/portal/articles/1006825-the-ebird-taxonomy) and countries are checked using the [`countrycode`](https://github.com/vincentarelbundock/countrycode) package.
+
+Each of these functions only defines the filter. `auk_filter()` should be used to compile all the filters into an AWK script and execute it to produce an output file. So, bringing all this together, one could, for example, extract all Gray Jay and Blue Jay records from Canada with:
+
+```{r auk-complete}
+tmp <- tempfile()
+ebd <- system.file("extdata/ebd-sample.txt", package="auk") %>% 
+  auk_ebd() %>% 
+  auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>% 
+  auk_country(country = "Canada") %>% 
+  auk_filter(file = tmp) %>% 
+  read.delim(quote = "")
+str(ebd)
+unlink(tmp)
+```
+
+### Reading
+
+Not yet implemented...
+
+## Acknowledgements
+
+This package is based on the AWK scripts provided in a presentation given by Daniel Fink, Wesley Hochachka, Tom Auer, and Frank La Sorte at the 2016 NAOC eBird Data Workshop on August 15, 2016.
+
+## References
+
+```
+eBird Basic Dataset. Version: ebd_relFeb-2017. Cornell Lab of Ornithology, Ithaca, New York. May 2013.
+```

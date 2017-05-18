@@ -56,6 +56,9 @@ auk_filter <- function(x, file, awk_file, sep, execute, overwrite) {
 auk_filter.ebd <- function(x, file, awk_file, sep = "\t", execute = TRUE,
                             overwrite = FALSE) {
   # checks
+  if (execute && !auk_installed()) {
+    stop("auk_filter() requires a valid AWK install, unless execute = FALSE.")
+  }
   assert_that(
     assertthat::is.flag(execute),
     !execute || assertthat::is.string(file),

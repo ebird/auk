@@ -57,6 +57,9 @@ auk_clean <- function(f_in, f_out, ncols = 46L,
                        sep_in = "\t", sep_out = "\t",
                        trailing_tab = TRUE, overwrite = FALSE) {
   # checks
+  if (!auk_installed()) {
+    stop("auk_clean() requires a valid AWK install.")
+  }
   assert_that(
     file.exists(f_in),
     assertthat::is.count(ncols),

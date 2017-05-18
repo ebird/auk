@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-rawk: an R interface to awk for manipulating eBird data
-=======================================================
+auk: an R interface to AWK for manipulating eBird data
+======================================================
 
 [eBird](http://www.ebird.org) is an online tool for recording bird observations. The eBird database contains nearly 500 million sightings records making it among the largest citizen science projects in history and an extremely valuable resource for bird research and conservation. eBird provides free access to data through a variety of means. Some data can be accessed through the [eBird API](https://confluence.cornell.edu/display/CLOISAPI/eBird+API+1.1), which has an associated R pacakge [rebird](https://github.com/ropensci/rebird). In addition, the full eBird database is packaged as a text file and available for download as the [eBird Basic Dataset (EBD)](http://ebird.org/ebird/data/download). For most applications in science or conservation, users will require the EBD, however, working with these data can be challenging because of the inherently large file size. This primary function of this R package is to subset the EBD into smaller pieces, which are more easily manipulated in R.
 
@@ -29,17 +29,16 @@ Example usage
 
 ### Cleaning
 
-Some rows in the eBird Basic Dataset (EBD) may have an incorrect number of columns. The function `rawk_clean()` drops these erroneous records.
+Some rows in the eBird Basic Dataset (EBD) may have an incorrect number of columns and the dataset has an extra blank column at the end. The function `auk_clean()` drops these erroneous records and removes the blank column.
 
 ``` r
-library(rawk)
-#> Looking for a valid awk install:
+library(auk)
 # sample data
-f <- system.file("extdata/ebd-sample_messy.txt", package="rawk")
+f <- system.file("extdata/ebd-sample_messy.txt", package="auk")
 tmp <- tempfile()
 # remove problem runs
-rawk_clean(f, tmp)
-#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpVF2F4S/file14ac31b6115e7"
+auk_clean(f, tmp)
+#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpKvua8S/file156492a5c7be"
 # number of lines in input
 length(readLines(f))
 #> [1] 1001
@@ -51,60 +50,60 @@ unlink(tmp)
 
 ### Filtering
 
-`rawk` uses a [pipeline-based workflow](http://r4ds.had.co.nz/pipes.html) for defining filters, which can be compiled into an AWK script. Users should start by defining a reference to the EBD file with `rawk_ebd()`. Then the following filters can be applied:
+`auk` uses a [pipeline-based workflow](http://r4ds.had.co.nz/pipes.html) for defining filters, which can be compiled into an AWK script. Users should start by defining a reference to the EBD file with `auk_ebd()`. Then the following filters can be applied:
 
--   `rawk_species()`: filter by species using common or scientific names.
--   `rawk_country()`: filter by country using the standard Engligh name or [ISO 2-letter country codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
--   `rawk_extent()`: filter by spatial extent, i.e. a range of latitudes and longitudes.
--   `rawk_date()`: filter to checklists from a range of dates
--   `rawk_time()`: filter to checklists started during a range of times.
--   `rawk_duration()`: filter to checklists that lasted a given length of time.
--   `rawk_complete()`: only retain checklists in which the observer has specified that they recorded all species seen or heard. These records are the most useful for modelling because they provide both presence and absenced data.
+-   `auk_species()`: filter by species using common or scientific names.
+-   `auk_country()`: filter by country using the standard Engligh name or [ISO 2-letter country codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+-   `auk_extent()`: filter by spatial extent, i.e. a range of latitudes and longitudes.
+-   `auk_date()`: filter to checklists from a range of dates
+-   `auk_time()`: filter to checklists started during a range of times.
+-   `auk_duration()`: filter to checklists that lasted a given length of time.
+-   `auk_complete()`: only retain checklists in which the observer has specified that they recorded all species seen or heard. These records are the most useful for modelling because they provide both presence and absenced data.
 
 ``` r
 # sample data
-f <- system.file("extdata/ebd-sample.txt", package="rawk")
+f <- system.file("extdata/ebd-sample.txt", package="auk")
 # define an EBD reference and a set of filters
-ebd <- rawk_ebd(f) %>% 
+ebd <- auk_ebd(f) %>% 
   # species: common and scientific names can be mixed
-  rawk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>%
+  auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>%
   # country: codes and names can be mixed; case insensitive
-  rawk_country(country = c("US", "Canada", "mexico")) %>%
+  auk_country(country = c("US", "Canada", "mexico")) %>%
   # extent: formatted as `c(lng_min, lat_min, lng_max, lat_max)`
-  rawk_extent(extent = c(-125, 37, -120, 52)) %>%
+  auk_extent(extent = c(-125, 37, -120, 52)) %>%
   # date: use standard ISO date format `"YYYY-MM-DD"`
-  rawk_date(date = c("2010-01-01", "2010-12-31")) %>%
+  auk_date(date = c("2010-01-01", "2010-12-31")) %>%
   # time: 24h format
-  rawk_time(time = c("06:00", "08:00")) %>%
+  auk_time(time = c("06:00", "08:00")) %>%
   # duration: length in minutes of checklists
-  rawk_duration(duration = c(0, 60)) %>%
+  auk_duration(duration = c(0, 60)) %>%
   # complete: all species seen or heard are recorded
-  rawk_complete()
+  auk_complete()
 ebd
 #> eBird Basic Dataset (EBD): 
-#> /Library/Frameworks/R.framework/Versions/3.3/Resources/library/rawk/extdata/ebd-sample.txt
+#> /Library/Frameworks/R.framework/Versions/3.3/Resources/library/auk/extdata/ebd-sample.txt
 #> 
 #> Filters: 
 #> Species: Cyanocitta cristata, Perisoreus canadensis
 #> Countries: CA, MX, US
-#> Spatial extent: Lat -125 – -120; Lon 37 – 52
-#> Date: 2010-01-01–2010-12-31
-#> Time: 06:00–08:00
-#> Duration: 0–60 minutes
+#> Spatial extent: Lat -125 - -120; Lon 37 - 52
+#> Date: 2010-01-01-2010-12-31
+#> Time: 06:00-08:00
+#> Duration: 0-60 minutes
 #> Complete checklists only: yes
 ```
 
 In all cases, checks are performed to ensure filters are valid. For example, species are checked against the official [eBird taxonomy](http://help.ebird.org/customer/portal/articles/1006825-the-ebird-taxonomy) and countries are checked using the [`countrycode`](https://github.com/vincentarelbundock/countrycode) package.
 
-Each of these functions only defines the filter. `rawk_filter()` should be used to compile all the filters into an AWK script and execute it to produce an output file. So, bringing all this together, one could, for example, extract all Gray Jay and Blue Jay records from Canada with:
+Each of these functions only defines the filter. `auk_filter()` should be used to compile all the filters into an AWK script and execute it to produce an output file. So, bringing all this together, one could, for example, extract all Gray Jay and Blue Jay records from Canada with:
 
 ``` r
 tmp <- tempfile()
-ebd <- system.file("extdata/ebd-sample.txt", package="rawk") %>% 
-  rawk_ebd() %>% 
-  rawk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>% 
-  rawk_country(country = "Canada") %>% 
-  rawk_filter(file = tmp) %>% 
+ebd <- system.file("extdata/ebd-sample.txt", package="auk") %>% 
+  auk_ebd() %>% 
+  auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>% 
+  auk_country(country = "Canada") %>% 
+  auk_filter(file = tmp) %>% 
   read.delim(quote = "")
 str(ebd)
 #> 'data.frame':    152 obs. of  47 variables:

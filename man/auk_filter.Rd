@@ -48,17 +48,17 @@ installed. Linux and Mac machines should have AWK by default, Windows users
 will likely need to install \href{https://www.cygwin.com}{Cygwin}.
 }
 \examples{
-# temp output file
 # define filters
 filters <- system.file("extdata/ebd-sample.txt", package="auk") \%>\%
   auk_ebd() \%>\%
   auk_species(species = c("Gray Jay", "Blue Jay")) \%>\%
   auk_country(country = c("US", "Canada")) \%>\%
-  auk_extent(extent = c(-125, 37, -120, 52)) \%>\%
-  auk_date(date = c("2010-01-01", "2010-12-31")) \%>\%
-  auk_time(time = c("06:00", "08:00")) \%>\%
+  auk_extent(extent = c(-100, 37, -80, 52)) \%>\%
+  auk_date(date = c("2012-01-01", "2012-12-31")) \%>\%
+  auk_time(time = c("06:00", "09:00")) \%>\%
   auk_duration(duration = c(0, 60)) \%>\%
   auk_complete()
+# temp output file
 out_file <- tempfile()
 auk_filter(filters, file = out_file)
 # clean

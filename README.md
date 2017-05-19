@@ -8,7 +8,7 @@ auk: an R interface to AWK for manipulating eBird data
 The EBD and AWK
 ---------------
 
-The EBD is a tab separated text file containing every bird sighting in the eBird database. Each row corresponds to a sighting of a single species within a checklist and, in addition to the species and number of individuals observed, information is provided at the checklist level (location, time, date, search effort, etc.). Full metadata on the EBD is provided when the [file is downloaded](http://ebird.org/ebird/data/download). Because eBird contains nearly 500 million sightings, the EBD is an inherently large file (~150 GB uncompressed) and therefore challenging to work with in R.
+The EBD is a tab separated text file containing every bird sighting in the eBird database at the time of release. Each row corresponds to a sighting of a single species within a checklist and, in addition to the species and number of individuals observed, information is provided at the checklist level (location, time, date, search effort, etc.). Full metadata on the EBD is provided when the [file is downloaded](http://ebird.org/ebird/data/download). Because eBird contains nearly 500 million sightings, the EBD is an inherently large file (~150 GB uncompressed) and therefore challenging to work with in R.
 
 AWK is a unix utility and programming language for processing column formatted text data. It is highly flexible and extremely fast, making it a valuable tool for pre-processing the EBD. Users of the EBD can use AWK to subset the full text file taxonomically, spatially, or temporally, to produce a smaller file, which can then be loaded in to R for visualization, analysis, and modelling. This package is a wrapper for AWK specifically designed for filtering the EBD. The goal is to ease the use of the EBD by removing the hurdle of learning AWK.
 
@@ -21,7 +21,7 @@ This package can be installed directly from GitHub with:
 
 ``` r
 install.packages("devtools")
-devtools::install_github("ropensci/rebird")
+devtools::install_github("mstrimas/auk")
 ```
 
 Example usage
@@ -38,8 +38,7 @@ f <- system.file("extdata/ebd-sample_messy.txt", package="auk")
 tmp <- tempfile()
 # remove problem runs
 auk_clean(f, tmp)
-#> Checking for valid AWK install...
-#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpxqqPs0/file17ef23ad0cd7d"
+#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//Rtmp6RfbVk/file11b95e4c208f"
 # number of lines in input
 length(readLines(f))
 #> [1] 1001
@@ -106,7 +105,6 @@ ebd <- system.file("extdata/ebd-sample.txt", package="auk") %>%
   auk_country(country = "Canada") %>% 
   auk_filter(file = tmp) %>% 
   read.delim(quote = "")
-#> Checking for valid AWK install...
 str(ebd)
 #> 'data.frame':    50 obs. of  46 variables:
 #>  $ GLOBAL.UNIQUE.IDENTIFIER  : Factor w/ 50 levels "URN:CornellLabOfOrnithology:EBIRD:OBS102848882",..: 11 8 42 27 23 28 26 4 5 13 ...

@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 ## The EBD and AWK
 
-The EBD is a tab separated text file containing every bird sighting in the eBird database. Each row corresponds to a sighting of a single species within a checklist and, in addition to the species and number of individuals observed, information is provided at the checklist level (location, time, date, search effort, etc.). Full metadata on the EBD is provided when the [file is downloaded](http://ebird.org/ebird/data/download). Because eBird contains nearly 500 million sightings, the EBD is an inherently large file (~150 GB uncompressed) and therefore challenging to work with in R.
+The EBD is a tab separated text file containing every bird sighting in the eBird database at the time of release. Each row corresponds to a sighting of a single species within a checklist and, in addition to the species and number of individuals observed, information is provided at the checklist level (location, time, date, search effort, etc.). Full metadata on the EBD is provided when the [file is downloaded](http://ebird.org/ebird/data/download). Because eBird contains nearly 500 million sightings, the EBD is an inherently large file (~150 GB uncompressed) and therefore challenging to work with in R.
 
 AWK is a unix utility and programming language for processing column formatted text data. It is highly flexible and extremely fast, making it a valuable tool for pre-processing the EBD. Users of the EBD can use AWK to subset the full text file taxonomically, spatially, or temporally, to produce a smaller file, which can then be loaded in to R for visualization, analysis, and modelling. This package is a wrapper for AWK specifically designed for filtering the EBD. The goal is to ease the use of the EBD by removing the hurdle of learning AWK.
 
@@ -30,7 +30,7 @@ This package can be installed directly from GitHub with:
 
 ```{r gh-install, eval=FALSE}
 install.packages("devtools")
-devtools::install_github("ropensci/rebird")
+devtools::install_github("mstrimas/auk")
 ```
 ## Example usage
 

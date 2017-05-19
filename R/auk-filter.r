@@ -4,7 +4,8 @@
 #' this script to produce a filtered eBird Reference Dataset (ERD). The initial
 #' creation of the `ebd` object should be done with [auk_ebd()] and filters can
 #' be defined using the various other functions in this package, e.g.
-#' [auk_species()] or [auk_country()].
+#' [auk_species()] or [auk_country()]. Note that this function typically takes
+#' at least a couple hours to run.
 #'
 #' The AWK script can be saved for future reference by providing an output
 #' filename to `awk_file`. The default behvaiour of this function is to generate
@@ -190,7 +191,7 @@ BEGIN {
   OFS = \"${sep}\"
 }
 {
-  keep = 0
+  keep = 1
 
   # filters
   ${species_filter}
@@ -213,7 +214,9 @@ BEGIN {
 "
 
 awk_if <- "
-  if (${condition}) {
+  if (keep == 1 && (${condition})) {
     keep = 1
+  } else {
+    keep = 0
   }
 "

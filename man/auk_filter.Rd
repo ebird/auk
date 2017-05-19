@@ -33,7 +33,8 @@ Convert the filters defined in an \code{ebd} object into an AWK script and run
 this script to produce a filtered eBird Reference Dataset (ERD). The initial
 creation of the \code{ebd} object should be done with \code{\link[=auk_ebd]{auk_ebd()}} and filters can
 be defined using the various other functions in this package, e.g.
-\code{\link[=auk_species]{auk_species()}} or \code{\link[=auk_country]{auk_country()}}.
+\code{\link[=auk_species]{auk_species()}} or \code{\link[=auk_country]{auk_country()}}. Note that this function typically takes
+at least a couple hours to run.
 }
 \details{
 The AWK script can be saved for future reference by providing an output

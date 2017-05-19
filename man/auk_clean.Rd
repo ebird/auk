@@ -37,7 +37,8 @@ however, if an error was encountered the exit code is returned.
 \description{
 Some rows in the eBird Basic Dataset (EBD) may have an incorrect number of
 columns. This function drops these erroneous records. The most recent EBD
-has 46 columns per row, so this is used as the default in the function.
+has 46 columns per row, so this is used as the default in the function. Note
+that this function typically takes at least 3 hours to run.
 }
 \details{
 In addition to cleaning the dataset, the field separator can be changed from

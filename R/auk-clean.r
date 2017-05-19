@@ -2,7 +2,8 @@
 #'
 #' Some rows in the eBird Basic Dataset (EBD) may have an incorrect number of
 #' columns. This function drops these erroneous records. The most recent EBD
-#' has 46 columns per row, so this is used as the default in the function.
+#' has 46 columns per row, so this is used as the default in the function. Note
+#' that this function typically takes at least 3 hours to run.
 #'
 #' In addition to cleaning the dataset, the field separator can be changed from
 #' tab to another character, for example a CSV file can be generated.

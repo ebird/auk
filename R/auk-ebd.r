@@ -104,7 +104,7 @@ print.ebd <- function(x, ...) {
   if (length(x$date_filter) == 0) {
     cat("all")
   } else {
-    cat(paste0(x$date_filter[1], "-", x$date_filter[2]))
+    cat(paste0(x$date_filter[1], " - ", x$date_filter[2]))
   }
   cat("\n")
   # time filter

@@ -46,7 +46,9 @@
 #'   auk_complete()
 #' # temp output file
 #' out_file <- tempfile()
-#' auk_filter(filters, file = out_file)
+#' auk_filter(filters, file = out_file) %>%
+#'   auk_read() %>%
+#'   str()
 #' # clean
 #' unlink(out_file)
 auk_filter <- function(x, file, awk_file, sep, execute, overwrite) {

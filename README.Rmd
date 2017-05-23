@@ -97,14 +97,20 @@ ebd <- system.file("extdata/ebd-sample.txt", package="auk") %>%
   auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>% 
   auk_country(country = "Canada") %>% 
   auk_filter(file = tmp) %>% 
-  read.delim(quote = "")
+  auk_read()
 str(ebd)
 unlink(tmp)
 ```
 
 ### Reading
 
-Not yet implemented...
+EBD files can be read with `auk_read()`, a thin wrapper around `read.delim()` that uses `stringsAsFactors = FALSE`, `quote = ""`, and does some basic cleaning up of variable names.
+
+```{r read}
+system.file("extdata/ebd-sample.txt", package="auk") %>% 
+  auk_read() %>% 
+  str()
+```
 
 ## Acknowledgements
 

@@ -61,7 +61,7 @@ filters <- system.file("extdata/ebd-sample.txt", package="auk") \%>\%
 # temp output file
 out_file <- tempfile()
 auk_filter(filters, file = out_file) \%>\%
-  auk_read() \%>\%
+  read_ebd() \%>\%
   str()
 # clean
 unlink(out_file)

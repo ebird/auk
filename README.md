@@ -38,7 +38,7 @@ f <- system.file("extdata/ebd-sample_messy.txt", package="auk")
 tmp <- tempfile()
 # remove problem runs
 auk_clean(f, tmp)
-#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpaWCEzn/file3a4f5398d4ef"
+#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//Rtmp3cQRYO/file6c876b864774"
 # number of lines in input
 length(readLines(f))
 #> [1] 1001
@@ -104,7 +104,7 @@ ebd <- system.file("extdata/ebd-sample.txt", package="auk") %>%
   auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>% 
   auk_country(country = "Canada") %>% 
   auk_filter(file = tmp) %>% 
-  auk_read()
+  read_ebd()
 str(ebd)
 #> 'data.frame':    41 obs. of  46 variables:
 #>  $ global_unique_identifier  : chr  "URN:CornellLabOfOrnithology:EBIRD:OBS157760668" "URN:CornellLabOfOrnithology:EBIRD:OBS143438862" "URN:CornellLabOfOrnithology:EBIRD:OBS154329263" "URN:CornellLabOfOrnithology:EBIRD:OBS299694278" ...
@@ -153,16 +153,17 @@ str(ebd)
 #>  $ reason                    : logi  NA NA NA NA NA NA ...
 #>  $ trip_comments             : chr  NA "Feuillet d'observations quotidiennes du Québec (feuillet no. 69557)" NA "general Pakenham area" ...
 #>  $ species_comments          : logi  NA NA NA NA NA NA ...
+#>  - attr(*, ".internal.selfref")=<externalptr>
 unlink(tmp)
 ```
 
 ### Reading
 
-EBD files can be read with `auk_read()`, a thin wrapper around `read.delim()` that uses `stringsAsFactors = FALSE`, `quote = ""`, and does some basic cleaning up of variable names.
+EBD files can be read with `read_ebd()`, a thin wrapper around `data.table::fread()`, `readr::read_delim()`, or `read.delim()` depending on availability, that uses `stringsAsFactors = FALSE`, `quote = ""`, and does some basic cleaning up of variable names.
 
 ``` r
 system.file("extdata/ebd-sample.txt", package="auk") %>% 
-  auk_read() %>% 
+  read_ebd() %>% 
   str()
 #> 'data.frame':    1000 obs. of  46 variables:
 #>  $ global_unique_identifier  : chr  "URN:CornellLabOfOrnithology:EBIRD:OBS172901271" "URN:CornellLabOfOrnithology:EBIRD:OBS118712387" "URN:CornellLabOfOrnithology:EBIRD:OBS155256467" "URN:CornellLabOfOrnithology:EBIRD:OBS284448755" ...
@@ -211,6 +212,44 @@ system.file("extdata/ebd-sample.txt", package="auk") %>%
 #>  $ reason                    : logi  NA NA NA NA NA NA ...
 #>  $ trip_comments             : chr  "<br />Submitted from BirdLog CA for iOS, version 1.5.1" "Butterfly clusters found and photographed." "My last visit to this spot was almost three months ago. Pink-headed Warblers successfully bred meanwhile, as independent young "| __truncated__ NA ...
 #>  $ species_comments          : chr  NA NA NA NA ...
+#>  - attr(*, ".internal.selfref")=<externalptr>
+```
+
+For user of the Tidyverse or `data.table`, `read_ebd()` can return tibbles or data.tables, respectively, by using the `setclass` argument.
+
+``` r
+library(dplyr)
+system.file("extdata/ebd-sample.txt", package="auk") %>% 
+  read_ebd(setclass = "tbl")
+#> # A tibble: 1,000 × 46
+#>                          global_unique_identifier    last_edited_date
+#> *                                           <chr>               <chr>
+#> 1  URN:CornellLabOfOrnithology:EBIRD:OBS172901271 2012-12-17 11:04:03
+#> 2  URN:CornellLabOfOrnithology:EBIRD:OBS118712387 2011-10-04 15:40:47
+#> 3  URN:CornellLabOfOrnithology:EBIRD:OBS155256467 2015-08-08 21:02:47
+#> 4  URN:CornellLabOfOrnithology:EBIRD:OBS284448755 2016-08-11 09:14:19
+#> 5  URN:CornellLabOfOrnithology:EBIRD:OBS420415441 2016-07-27 17:42:10
+#> 6  URN:CornellLabOfOrnithology:EBIRD:OBS150662526 2013-11-23 11:07:30
+#> 7  URN:CornellLabOfOrnithology:EBIRD:OBS134228541 2011-12-27 20:12:55
+#> 8  URN:CornellLabOfOrnithology:EBIRD:OBS118726549 2017-01-12 21:14:23
+#> 9  URN:CornellLabOfOrnithology:EBIRD:OBS420402930 2016-07-30 20:30:22
+#> 10 URN:CornellLabOfOrnithology:EBIRD:OBS100358984 2014-02-17 17:35:52
+#> # ... with 990 more rows, and 44 more variables: taxonomic_order <int>,
+#> #   category <chr>, common_name <chr>, scientific_name <chr>,
+#> #   subspecies_common_name <chr>, subspecies_scientific_name <chr>,
+#> #   observation_count <chr>, breeding_bird_atlas_code <chr>,
+#> #   age_sex <chr>, country <chr>, country_code <chr>, state <chr>,
+#> #   state_code <chr>, county <chr>, county_code <chr>, iba_code <chr>,
+#> #   bcr_code <int>, usfws_code <chr>, atlas_block <lgl>, locality <chr>,
+#> #   locality_id <chr>, locality_type <chr>, latitude <dbl>,
+#> #   longitude <dbl>, observation_date <chr>,
+#> #   time_observations_started <chr>, observer_id <chr>, first_name <chr>,
+#> #   last_name <chr>, sampling_event_identifier <chr>, protocol_type <chr>,
+#> #   project_code <chr>, duration_minutes <int>, effort_distance_km <dbl>,
+#> #   effort_area_ha <dbl>, number_observers <int>,
+#> #   all_species_reported <int>, group_identifier <chr>, has_media <int>,
+#> #   approved <int>, reviewed <int>, reason <lgl>, trip_comments <chr>,
+#> #   species_comments <chr>
 ```
 
 Acknowledgements

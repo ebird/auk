@@ -97,19 +97,27 @@ ebd <- system.file("extdata/ebd-sample.txt", package="auk") %>%
   auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>% 
   auk_country(country = "Canada") %>% 
   auk_filter(file = tmp) %>% 
-  auk_read()
+  read_ebd()
 str(ebd)
 unlink(tmp)
 ```
 
 ### Reading
 
-EBD files can be read with `auk_read()`, a thin wrapper around `read.delim()` that uses `stringsAsFactors = FALSE`, `quote = ""`, and does some basic cleaning up of variable names.
+EBD files can be read with `read_ebd()`, a thin wrapper around `data.table::fread()`, `readr::read_delim()`, or `read.delim()` depending on availability, that uses `stringsAsFactors = FALSE`, `quote = ""`, and does some basic cleaning up of variable names.
 
 ```{r read}
 system.file("extdata/ebd-sample.txt", package="auk") %>% 
-  auk_read() %>% 
+  read_ebd() %>% 
   str()
+```
+
+For user of the Tidyverse or `data.table`, `read_ebd()` can return tibbles or data.tables, respectively, by using the `setclass` argument.
+
+```{r read-tbl, message = FALSE}
+library(dplyr)
+system.file("extdata/ebd-sample.txt", package="auk") %>% 
+  read_ebd(setclass = "tbl")
 ```
 
 ## Acknowledgements

@@ -4,32 +4,34 @@
 \alias{read_ebd}
 \title{Read an EBD file}
 \usage{
-read_ebd(file, sep = "\\t", setclass = c("data.frame", "tbl", "data.table"))
+read_ebd(file, sep = "\\t", setclass = c("tbl", "data.frame", "data.table"))
 }
 \arguments{
 \item{file}{character; EBD file to read.}
 
 \item{sep}{character; single character used to separate fields within a row.}
 
-\item{setclass}{\code{data.frame}, \code{tbl}, or \code{data.table}; optionally set
+\item{setclass}{\code{tbl}, \code{data.frame}, or \code{data.table}; optionally set
 additional classes to set on the output data. All return objects are
 data frames, but may additionally be \code{tbl} (for use with \code{dplyr}
-and the tidyverse) or \code{data.table} (for use with \code{data.table}).}
+and the tidyverse) or \code{data.table} (for use with \code{data.table}). The default
+is to return a tibble.}
 }
 \value{
-A \code{data.frame} unless \code{setclass} is used in which case the data frame
-will have additonal classes \code{tbl} or \code{data.table}.
+A \code{data.frame} with additional class \code{tbl} unless \code{setclass} is used,
+in which case a standard \code{data.frame} or \code{data.table} can be returned.
 }
 \description{
-Read an eBird Basic Dataset file using \link[=fread]{data.table},
-\link[=read_delim]{readr}, or \link{read.delim} depending on which packages are
-installed. This function chooses read options that are suitable for EBD files
-and cleans up variable names to be in \code{snake_case}.
+Read an eBird Basic Dataset file using \link[=read_delim]{readr}. This function
+chooses read options and column formats that are suitable for EBD files and
+cleans up variable names to be in \code{snake_case}. Note that this function makes
+assumptions about the names of the columns in the EBD file and will not work
+correctly if the header row has been modified.
 }
 \examples{
 ebd <- system.file("extdata/ebd-sample.txt", package="auk") \%>\%
   read_ebd()
-# optionally return a tibble for use with tidyverse
+# optionally return a plain data.frame
 ebd_tbl <- system.file("extdata/ebd-sample.txt", package="auk") \%>\%
-  read_ebd(setclass = "tbl")
+  read_ebd(setclass = "data.frame")
 }

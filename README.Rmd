@@ -96,28 +96,25 @@ ebd <- system.file("extdata/ebd-sample.txt", package="auk") %>%
   auk_ebd() %>% 
   auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>% 
   auk_country(country = "Canada") %>% 
-  auk_filter(file = tmp) %>% 
-  read_ebd()
-str(ebd)
+  auk_filter(file = tmp)
 unlink(tmp)
 ```
 
 ### Reading
 
-EBD files can be read with `read_ebd()`, a thin wrapper around `data.table::fread()`, `readr::read_delim()`, or `read.delim()` depending on availability, that uses `stringsAsFactors = FALSE`, `quote = ""`, and does some basic cleaning up of variable names.
+EBD files can be read with `read_ebd()`, a wrapper around `readr::read_delim()`, that uses `stringsAsFactors = FALSE`, `quote = ""`, sets column classes, and converts variable names to `snake_case`.
 
 ```{r read}
 system.file("extdata/ebd-sample.txt", package="auk") %>% 
-  read_ebd() %>% 
-  str()
+  read_ebd()
 ```
 
-For user of the Tidyverse or `data.table`, `read_ebd()` can return tibbles or data.tables, respectively, by using the `setclass` argument.
+By default, `read_ebd()` returns a tibble for use with [Tidyverse](http://tidyverse.org) packages. Tibbles will behave just like plain data frames in most instances, but users can choose to return a plain `data.frame` or `data.table` by using the `setclass` argument.
 
-```{r read-tbl, message = FALSE}
-library(dplyr)
+```{r read-tbl}
 system.file("extdata/ebd-sample.txt", package="auk") %>% 
-  read_ebd(setclass = "tbl")
+  read_ebd(setclass = "data.frame") %>% 
+  str()
 ```
 
 ## Acknowledgements

@@ -53,6 +53,12 @@ read_ebd <- function(file, sep = "\t",
                          col_types = col_types)
   attr(x, "spec") <- NULL
 
+  # remove possible blank final column
+  blank <- grepl("^[xX][0-9]{2}$", names(x)[ncol(x)])
+  if (blank) {
+    x[ncol(x)] <- NULL
+  }
+
   # names to snake case
   names(x) <- clean_names(names(x))
 

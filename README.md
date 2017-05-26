@@ -38,7 +38,7 @@ f <- system.file("extdata/ebd-sample_messy.txt", package="auk")
 tmp <- tempfile()
 # remove problem runs
 auk_clean(f, tmp)
-#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpMl4Gs5/filee1142515ac88"
+#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpHbZeZ0/file8397b46c42e"
 # number of lines in input
 length(readLines(f))
 #> [1] 1001
@@ -203,7 +203,7 @@ system.file("extdata/ebd-sample.txt", package="auk") %>%
 Acknowledgements
 ----------------
 
-This package is based on the AWK scripts provided in a presentation given by Daniel Fink, Wesley Hochachka, Tom Auer, and Frank La Sorte at the 2016 NAOC eBird Data Workshop on August 15, 2016.
+This package is based on the AWK scripts provided in a presentation given by Wesley Hochachka, Daniel Fink, Tom Auer, and Frank La Sorte at the 2016 NAOC eBird Data Workshop on August 15, 2016.
 
 References
 ----------

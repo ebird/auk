@@ -119,7 +119,7 @@ system.file("extdata/ebd-sample.txt", package="auk") %>%
 
 ## Acknowledgements
 
-This package is based on the AWK scripts provided in a presentation given by Daniel Fink, Wesley Hochachka, Tom Auer, and Frank La Sorte at the 2016 NAOC eBird Data Workshop on August 15, 2016.
+This package is based on the AWK scripts provided in a presentation given by Wesley Hochachka, Daniel Fink, Tom Auer, and Frank La Sorte at the 2016 NAOC eBird Data Workshop on August 15, 2016.
 
 ## References
 

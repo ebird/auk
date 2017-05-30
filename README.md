@@ -1,20 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-auk: an R interface to AWK for manipulating eBird data
-======================================================
+auk: eBird Data Processing with AWK
+===================================
 
-[![Travis-CI Build Status](https://travis-ci.org/mstrimas/auk.svg?branch=master)](https://travis-ci.org/mstrimas/auk)
+[![Travis-CI Build Status](https://travis-ci.org/mstrimas/auk.svg?branch=master&?label=Mac%20OSX%20%26%20Linux)](https://travis-ci.org/mstrimas/auk)
 
-[eBird](http://www.ebird.org) is an online tool for recording bird observations. The eBird database contains nearly 500 million sightings records making it among the largest citizen science projects in history and an extremely valuable resource for bird research and conservation. eBird provides free access to data through a variety of means. Some data can be accessed through the [eBird API](https://confluence.cornell.edu/display/CLOISAPI/eBird+API+1.1), which has an associated R pacakge [rebird](https://github.com/ropensci/rebird). In addition, the full eBird database is packaged as a text file and available for download as the [eBird Basic Dataset (EBD)](http://ebird.org/ebird/data/download). For most applications in science or conservation, users will require the EBD, however, working with these data can be challenging because of the inherently large file size. This primary function of this R package is to subset the EBD into smaller pieces, which are more easily manipulated in R.
+Overview
+--------
 
-The EBD and AWK
----------------
-
-The EBD is a tab separated text file containing every bird sighting in the eBird database at the time of release. Each row corresponds to a sighting of a single species within a checklist and, in addition to the species and number of individuals observed, information is provided at the checklist level (location, time, date, search effort, etc.). Full metadata on the EBD is provided when the [file is downloaded](http://ebird.org/ebird/data/download). Because eBird contains nearly 500 million sightings, the EBD is an inherently large file (~150 GB uncompressed) and therefore challenging to work with in R.
-
-AWK is a unix utility and programming language for processing column formatted text data. It is highly flexible and extremely fast, making it a valuable tool for pre-processing the EBD. Users of the EBD can use AWK to subset the full text file taxonomically, spatially, or temporally, to produce a smaller file, which can then be loaded in to R for visualization, analysis, and modelling. This package is a wrapper for AWK specifically designed for filtering the EBD. The goal is to ease the use of the EBD by removing the hurdle of learning AWK.
-
-Linux and Mac users should already have AWK installed on their machines, however, Windows uses will need to install [Cygwin](https://www.cygwin.com) to gain access to AWK.
+[eBird](http://www.ebird.org) is an online tool for recording bird observations. The eBird database contains nearly 500 million sightings records making it among the largest citizen science projects in history and an extremely valuable resource for bird research and conservation. The full eBird database is packaged as a text file and available for download as the [eBird Basic Dataset (EBD)](http://ebird.org/ebird/data/download). Due to the large size of this dataset, it must be filtered to a smaller subset of desired observations before reading into R. This subsetting is most efficiently done using AWK, a unix utility and programming language for processing column formatted text data. This package acts as a front end for AWK, allowing users to filter eBird data before import into R.
 
 Installation
 ------------
@@ -22,12 +16,14 @@ Installation
 This package can be installed directly from GitHub with:
 
 ``` r
-install.packages("devtools")
+# install.packages("devtools")
 devtools::install_github("mstrimas/auk")
 ```
 
-Example usage
--------------
+`auk` requires the unix utility AWK and therefore currently only works on Linux and Mac OS X.
+
+Usage
+-----
 
 ### Cleaning
 
@@ -40,7 +36,7 @@ f <- system.file("extdata/ebd-sample_messy.txt", package="auk")
 tmp <- tempfile()
 # remove problem runs
 auk_clean(f, tmp)
-#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpVTVgpY/filebe34b946d6c"
+#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//Rtmpsy84ef/filef5b4c67bcf8"
 # number of lines in input
 length(readLines(f))
 #> [1] 1001

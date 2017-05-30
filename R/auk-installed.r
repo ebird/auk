@@ -6,8 +6,9 @@
 #' auk_installed()
 auk_installed <- function() {
   awk_version <- tryCatch(
-    list(result = system("awk --version", intern = TRUE, ignore.stderr = TRUE)),
-    error = function(e) list(result = NULL)
+    list(result = system("which awk", intern = TRUE, ignore.stderr = TRUE)),
+    error = function(e) list(result = NULL),
+    warning = function(e) list(result = NULL)
   )
-  !is.null(awk_version$result) && grepl("^awk", awk_version$result)
+  !is.null(awk_version$result) && grepl("awk$", awk_version$result)
 }

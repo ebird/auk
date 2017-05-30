@@ -2,9 +2,17 @@
 % Please edit documentation in R/read-ebd.r
 \name{read_ebd}
 \alias{read_ebd}
+\alias{read_ebd.character}
+\alias{read_ebd.auk_ebd}
 \title{Read an EBD file}
 \usage{
 read_ebd(x, sep, unique, setclass)
+
+\method{read_ebd}{character}(x, sep = "\\t", unique = TRUE,
+  setclass = c("tbl", "data.frame", "data.table"))
+
+\method{read_ebd}{auk_ebd}(x, sep = "\\t", unique = TRUE,
+  setclass = c("tbl", "data.frame", "data.table"))
 }
 \arguments{
 \item{x}{filename of EBD file or \code{auk_ebd} object with associtated output
@@ -28,8 +36,7 @@ in which case a standard \code{data.frame} or \code{data.table} can be returned.
 \description{
 Read an eBird Basic Dataset file using \code{\link[data.table:fread]{data.table::fread()}},
 \code{\link[readr:read_delim]{readr::read_delim()}}, or \link{read.delim} depending on which packages are
-installed. \strong{Note that this function typically takes at least a couple hours
-to run.}
+installed.
 }
 \details{
 This functions performs the following processing steps:
@@ -43,6 +50,13 @@ function used.
 \code{\link[=auk_unique]{auk_unique()}}, unless \code{unique = FALSE}.
 }
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{character}: Filename of filtered EBD.
+
+\item \code{auk_ebd}: \code{auk_ebd} object output from \code{\link[=auk_filter]{auk_filter()}}
+}}
+
 \examples{
 ebd <- system.file("extdata/ebd-sample.txt", package = "auk") \%>\%
   read_ebd()

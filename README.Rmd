@@ -89,7 +89,7 @@ In all cases, checks are performed to ensure filters are valid. For example, spe
 
 Each of these functions only defines the filter. `auk_filter()` should be used to compile all the filters into an AWK script and execute it to produce an output file. So, bringing all this together, one could, for example, extract all Gray Jay and Blue Jay records from Canada with:
 
-```{r auk-complete}
+```{r auk-complete, eval = FALSE}
 tmp <- tempfile()
 ebd <- system.file("extdata/ebd-sample.txt", package="auk") %>% 
   auk_ebd() %>% 

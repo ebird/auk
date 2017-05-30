@@ -2,8 +2,7 @@
 #'
 #' Read an eBird Basic Dataset file using [data.table::fread()],
 #' [readr::read_delim()], or [read.delim] depending on which packages are
-#' installed. **Note that this function typically takes at least a couple hours
-#' to run.**
+#' installed.
 #'
 #' @param x filename of EBD file or `auk_ebd` object with associtated output
 #'   files as created by [auk_filter()].
@@ -40,6 +39,7 @@ read_ebd <- function(x, sep, unique, setclass) {
 }
 
 #' @export
+#' @describeIn read_ebd Filename of filtered EBD.
 read_ebd.character <- function(x, sep = "\t", unique = TRUE,
                                setclass = c("tbl", "data.frame",
                                             "data.table")) {
@@ -135,7 +135,8 @@ read_ebd.character <- function(x, sep = "\t", unique = TRUE,
 }
 
 #' @export
-read_ebd.ebd <- function(x, sep = "\t", unique = TRUE,
+#' @describeIn read_ebd `auk_ebd` object output from [auk_filter()]
+read_ebd.auk_ebd <- function(x, sep = "\t", unique = TRUE,
                          setclass = c("tbl", "data.frame", "data.table")) {
   setclass <- match.arg(setclass)
   read_ebd(x$output, sep = sep, unique = unique, setclass = setclass)

@@ -108,15 +108,15 @@ EBD files can be read with `read_ebd()`, a wrapper around `readr::read_delim()`,
 
 ```{r read}
 system.file("extdata/ebd-sample.txt", package="auk") %>% 
-  read_ebd()
+  read_ebd() %>% 
+  str()
 ```
 
 By default, `read_ebd()` returns a tibble for use with [Tidyverse](http://tidyverse.org) packages. Tibbles will behave just like plain data frames in most instances, but users can choose to return a plain `data.frame` or `data.table` by using the `setclass` argument.
 
 ```{r read-tbl}
-system.file("extdata/ebd-sample.txt", package="auk") %>% 
-  read_ebd(setclass = "data.frame") %>% 
-  str()
+ebd_df <- system.file("extdata/ebd-sample.txt", package="auk") %>% 
+  read_ebd(setclass = "data.frame")
 ```
 
 ## Acknowledgements

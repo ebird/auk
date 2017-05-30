@@ -6,8 +6,8 @@
 #'
 #' @param x `ebd` object; reference to EBD file created by [auk_ebd()].
 #' @param species character; species to filter by, provided as scientific or
-#'   common names, or a mixture of both. These names must match the official
-#'   eBird Taxomony ([ebird_taxonomy]).
+#'   English common names, or a mixture of both. These names must match the
+#'   official eBird Taxomony ([ebird_taxonomy]).
 #' @param replace logical; multiple calls to `auk_species()` are additive, unless
 #'   `replace = FALSE`, in which case the previous list of species to filter by
 #'   will be removed and replaced by that in the current call.
@@ -17,7 +17,7 @@
 #' @examples
 #' # common and scientific names can be mixed
 #' species <- c("Gray Jay", "Pluvialis squatarola")
-#' system.file("extdata/ebd-sample.txt", package="auk") %>%
+#' system.file("extdata/ebd-sample.txt", package = "auk") %>%
 #'   auk_ebd() %>%
 #'   auk_species(species)
 auk_species <- function(x, species, replace)  {

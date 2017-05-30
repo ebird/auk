@@ -23,7 +23,7 @@ defined, \code{\link[=auk_filter]{auk_filter()}} should be used to call AWK and 
 filtering.
 }
 \examples{
-system.file("extdata/ebd-sample.txt", package="auk") \%>\%
+system.file("extdata/ebd-sample.txt", package = "auk") \%>\%
   auk_ebd() \%>\%
   auk_date(date = c("2010-01-01", "2010-12-31"))
 }

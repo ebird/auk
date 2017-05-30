@@ -10,8 +10,8 @@ auk_species(x, species, replace)
 \item{x}{\code{ebd} object; reference to EBD file created by \code{\link[=auk_ebd]{auk_ebd()}}.}
 
 \item{species}{character; species to filter by, provided as scientific or
-common names, or a mixture of both. These names must match the official
-eBird Taxomony (\link{ebird_taxonomy}).}
+English common names, or a mixture of both. These names must match the
+official eBird Taxomony (\link{ebird_taxonomy}).}
 
 \item{replace}{logical; multiple calls to \code{auk_species()} are additive, unless
 \code{replace = FALSE}, in which case the previous list of species to filter by
@@ -28,7 +28,7 @@ function only defines the filter and, once all filters have been defined,
 \examples{
 # common and scientific names can be mixed
 species <- c("Gray Jay", "Pluvialis squatarola")
-system.file("extdata/ebd-sample.txt", package="auk") \%>\%
+system.file("extdata/ebd-sample.txt", package = "auk") \%>\%
   auk_ebd() \%>\%
   auk_species(species)
 }

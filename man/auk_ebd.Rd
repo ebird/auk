@@ -4,10 +4,17 @@
 \alias{auk_ebd}
 \title{Reference to EBD file}
 \usage{
-auk_ebd(file, sep = "\\t")
+auk_ebd(file, file_sampling, sep = "\\t")
 }
 \arguments{
 \item{file}{character; input file.}
+
+\item{file_sampling}{character; optional input sampling event data file,
+required if you intend to zero-fill the data to produce a presence absence
+data set. The sampling file consists of just effort information for every
+eBird checklist. Any species not appearing in the EBD for a given checklist
+is implicitly considered to have a count of 0. This file should be
+downloaded at the same time as the EBD to ensure they are in sync.}
 
 \item{sep}{character; the input field seperator, the EBD is tab separated so
 this should generally not be modified. Must only be a single character and
@@ -31,6 +38,6 @@ approach is suggested to speed up processing time.
 }
 \examples{
 # example data
-f <- system.file("extdata/ebd-sample.txt", package="auk")
+f <- system.file("extdata/ebd-sample.txt", package = "auk")
 auk_ebd(f)
 }

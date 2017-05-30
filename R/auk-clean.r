@@ -31,8 +31,9 @@
 #'   however, if an error was encountered the exit code is returned.
 #' @export
 #' @examples
+#' \dontrun{
 #' # example data with errors
-#' f <- system.file("extdata/ebd-sample_messy.txt", package="auk")
+#' f <- system.file("extdata/ebd-sample_messy.txt", package = "auk")
 #' tmp <- tempfile()
 #'
 #' # clean file to remove problem rows
@@ -45,6 +46,7 @@
 #' # note that the extra blank column has also been removed
 #' ncol(read.delim(f, nrows = 5, quote = ""))
 #' ncol(read.delim(tmp, nrows = 5, quote = ""))
+#' }
 auk_clean <- function(f_in, f_out,
                        sep_in = "\t", sep_out = "\t",
                        remove_blank = TRUE, overwrite = FALSE) {

@@ -12,7 +12,7 @@
 #' @return An `ebd` object.
 #' @export
 #' @examples
-#' system.file("extdata/ebd-sample.txt", package="auk") %>%
+#' system.file("extdata/ebd-sample.txt", package = "auk") %>%
 #'   auk_ebd() %>%
 #'   auk_complete()
 auk_complete <- function(x)  {

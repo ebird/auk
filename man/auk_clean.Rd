@@ -47,8 +47,9 @@ installed. Linux and Mac machines should have AWK by default, Windows users
 will likely need to install \href{https://www.cygwin.com}{Cygwin}.
 }
 \examples{
+\dontrun{
 # example data with errors
-f <- system.file("extdata/ebd-sample_messy.txt", package="auk")
+f <- system.file("extdata/ebd-sample_messy.txt", package = "auk")
 tmp <- tempfile()
 
 # clean file to remove problem rows
@@ -61,4 +62,5 @@ length(readLines(tmp))
 # note that the extra blank column has also been removed
 ncol(read.delim(f, nrows = 5, quote = ""))
 ncol(read.delim(tmp, nrows = 5, quote = ""))
+}
 }

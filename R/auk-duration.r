@@ -13,7 +13,7 @@
 #' @export
 #' @examples
 #' # only keep checklists that are less than an hour long
-#' system.file("extdata/ebd-sample.txt", package="auk") %>%
+#' system.file("extdata/ebd-sample.txt", package = "auk") %>%
 #'   auk_ebd() %>%
 #'   auk_duration(duration = c(0, 60))
 auk_duration <- function(x, duration)  {

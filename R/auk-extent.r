@@ -13,7 +13,7 @@
 #' @export
 #' @examples
 #' # fliter to locations roughly in the Pacific Northwest
-#' system.file("extdata/ebd-sample.txt", package="auk") %>%
+#' system.file("extdata/ebd-sample.txt", package = "auk") %>%
 #'   auk_ebd() %>%
 #'   auk_extent(extent = c(-125, 37, -120, 52))
 auk_extent <- function(x, extent)  {

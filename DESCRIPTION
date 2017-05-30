@@ -4,6 +4,7 @@ Version: 0.0.1
 Authors@R: c(
   person("Matthew", "Strimas-Mackey", email = "mstrimas@gmail.com", role = c("aut", "cre")),
   person("Eliot", "Miller", role = "aut"),
+  person("Wesley", "Hochachka", role = "aut"),
   person("Cornell Lab of Ornithology", role = c("cph", "fnd"))
   )
 Description: Process the eBird Basic Dataset (EBD) using AWK. This package is 
@@ -17,7 +18,8 @@ Imports:
     assertthat,
     stringr,
     magrittr,
-    countrycode
+    countrycode,
+    dplyr
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
 Suggests:

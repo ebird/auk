@@ -13,7 +13,7 @@
 #' @export
 #' @examples
 #' # only keep checklists started between 6 and 8 in the morning
-#' system.file("extdata/ebd-sample.txt", package="auk") %>%
+#' system.file("extdata/ebd-sample.txt", package = "auk") %>%
 #'   auk_ebd() %>%
 #'   auk_time(time = c("06:00", "08:00"))
 auk_time <- function(x, time)  {

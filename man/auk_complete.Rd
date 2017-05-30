@@ -21,7 +21,7 @@ filters have been defined, \code{\link[=auk_filter]{auk_filter()}} should be use
 perform the filtering.
 }
 \examples{
-system.file("extdata/ebd-sample.txt", package="auk") \%>\%
+system.file("extdata/ebd-sample.txt", package = "auk") \%>\%
   auk_ebd() \%>\%
   auk_complete()
 }

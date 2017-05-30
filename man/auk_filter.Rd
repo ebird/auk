@@ -33,10 +33,15 @@ Convert the filters defined in an \code{ebd} object into an AWK script and run
 this script to produce a filtered eBird Reference Dataset (ERD). The initial
 creation of the \code{ebd} object should be done with \code{\link[=auk_ebd]{auk_ebd()}} and filters can
 be defined using the various other functions in this package, e.g.
-\code{\link[=auk_species]{auk_species()}} or \code{\link[=auk_country]{auk_country()}}. Note that this function typically takes
-at least a couple hours to run.
+\code{\link[=auk_species]{auk_species()}} or \code{\link[=auk_country]{auk_country()}}. \strong{Note that this function typically takes
+at least a couple hours to run.}
 }
 \details{
+If an EBD sampling file is provided in the \link[=auk_ebd]{ebd}
+object, this function will filter both the EBD and the sampling data using
+the same set of filters. This ensures that the files are in sync, i.e. that
+they contain data on the same set of checklists.
+
 The AWK script can be saved for future reference by providing an output
 filename to \code{awk_file}. The default behvaiour of this function is to generate
 and run the AWK script, however, by setting \code{execute = FALSE} the AWK script
@@ -49,7 +54,7 @@ will likely need to install \href{https://www.cygwin.com}{Cygwin}.
 }
 \examples{
 # define filters
-filters <- system.file("extdata/ebd-sample.txt", package="auk") \%>\%
+filters <- system.file("extdata/ebd-sample.txt", package = "auk") \%>\%
   auk_ebd() \%>\%
   auk_species(species = c("Gray Jay", "Blue Jay")) \%>\%
   auk_country(country = c("US", "Canada")) \%>\%
@@ -58,6 +63,7 @@ filters <- system.file("extdata/ebd-sample.txt", package="auk") \%>\%
   auk_time(time = c("06:00", "09:00")) \%>\%
   auk_duration(duration = c(0, 60)) \%>\%
   auk_complete()
+\dontrun{
 # temp output file
 out_file <- tempfile()
 auk_filter(filters, file = out_file) \%>\%
@@ -65,4 +71,5 @@ auk_filter(filters, file = out_file) \%>\%
   str()
 # clean
 unlink(out_file)
+}
 }

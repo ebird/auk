@@ -4,13 +4,17 @@
 \alias{auk_unique}
 \title{Remove duplicate group checklists}
 \usage{
-auk_unique(x, group_id = "group_identifier")
+auk_unique(x, group_id = "group_identifier",
+  sort_by = "sampling_event_identifier")
 }
 \arguments{
 \item{x}{data.frame; the EBD data frame, typically as imported by
 \code{\link[=read_ebd]{read_ebd()}}.}
 
 \item{group_id}{character; the name of the group ID column.}
+
+\item{sort_by}{character; the name of the field to sort by prior to picking
+the first record.}
 }
 \value{
 A data.frame with unique observations.
@@ -23,7 +27,7 @@ bird observations. This function is called automatically by \code{\link[=read_eb
 }
 \examples{
 # read in an ebd file and don't automatically remove duplicates
-ebd <- system.file("extdata/ebd-sample.txt", package="auk") \%>\%
+ebd <- system.file("extdata/ebd-sample.txt", package = "auk") \%>\%
   read_ebd(unique = FALSE)
 # remove duplicates
 ebd_unique <- auk_unique(ebd)

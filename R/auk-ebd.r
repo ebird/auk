@@ -4,6 +4,12 @@
 #' filtering using AWK.
 #'
 #' @param file character; input file.
+#' @param file_sampling character; optional input sampling event data file,
+#'   required if you intend to zero-fill the data to produce a presence absence
+#'   data set. The sampling file consists of just effort information for every
+#'   eBird checklist. Any species not appearing in the EBD for a given checklist
+#'   is implicitly considered to have a count of 0. This file should be
+#'   downloaded at the same time as the EBD to ensure they are in sync.
 #' @param sep character; the input field seperator, the EBD is tab separated so
 #'   this should generally not be modified. Must only be a single character and
 #'   space delimited is not allowed since spaces appear in many of the fields.
@@ -20,16 +26,16 @@
 #' @export
 #' @examples
 #' # example data
-#' f <- system.file("extdata/ebd-sample.txt", package="auk")
+#' f <- system.file("extdata/ebd-sample.txt", package = "auk")
 #' auk_ebd(f)
-auk_ebd <- function(file, sep = "\t") {
+auk_ebd <- function(file, file_sampling, sep = "\t") {
   # checks
   assert_that(
     file.exists(file),
     assertthat::is.string(sep), nchar(sep) == 1, sep != " "
   )
 
-  # read header row
+  # read header rows
   header <- tolower(get_header(file, sep))
 
   # identify columns required for filtering
@@ -43,17 +49,41 @@ auk_ebd <- function(file, sep = "\t") {
              "observation date", "time observations started", "duration minutes",
              "all species reported"),
     stringsAsFactors = FALSE)
-  # all these columns should be in list
+  # all these columns should be in header
   if (!all(column_index$name %in% header)) {
     stop("Problem parsing header in EBD file.")
   }
   column_index$index <- match(column_index$name, header)
 
+  # process sampling data header
+  if (!missing(file_sampling)) {
+    assert_that(
+      file.exists(file_sampling)
+    )
+    file_sampling <- normalizePath(file_sampling)
+    # species not in sampling data
+    column_index_sampling <- column_index[column_index$id != "species", ]
+    # read header rows
+    header_sampling <- tolower(get_header(file_sampling, sep))
+    # all these columns should be in header
+    if (!all(column_index_sampling$name %in% header_sampling)) {
+      stop("Problem parsing header in EBD file.")
+    }
+    column_index_sampling$index <- match(column_index_sampling$name,
+                                         header_sampling)
+
+  } else {
+    file_sampling <- NULL
+    column_index_sampling <- NULL
+  }
+
   # output
   structure(
     list(
       file = normalizePath(file),
+      file_sampling = normalizePath(file_sampling),
       column_index = column_index,
+      column_index_sampling = column_index_sampling,
       species_filter = character(),
       country_filer = character(),
       extent_filter = numeric(),
@@ -70,7 +100,13 @@ auk_ebd <- function(file, sep = "\t") {
 print.ebd <- function(x, ...) {
   cat("eBird Basic Dataset (EBD): \n")
   cat(x$file)
-  cat("\n\n")
+  cat("\n")
+  if (!is.null(x$file_sampling)) {
+    cat("EBD Sampling File: \n")
+    cat(x$file_sampling)
+    cat("\n")
+  }
+  cat("\n")
 
   cat("Filters: \n")
   # species filter

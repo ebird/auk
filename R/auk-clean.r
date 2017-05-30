@@ -1,12 +1,14 @@
 #' Clean an EBD file
 #'
 #' Some rows in the eBird Basic Dataset (EBD) may have an incorrect number of
-#' columns. This function drops these erroneous records. The most recent EBD
-#' has 46 columns per row, so this is used as the default in the function. Note
-#' that this function typically takes at least 3 hours to run.
+#' columns, often resulting from tabs embedded in the comments field. This
+#' function drops these problematic records. **Note that this
+#' function typically takes at least 3 hours to run.**
 #'
 #' In addition to cleaning the dataset, the field separator can be changed from
-#' tab to another character, for example a CSV file can be generated.
+#' tab to another character. However, this functionality should be used with
+#' caution because text fields are not quoted in the EBD and may contain the
+#' field separator.
 #'
 #' Calling this function requires that the command line utility AWK is
 #' installed. Linux and Mac machines should have AWK by default, Windows users
@@ -14,18 +16,15 @@
 #'
 #' @param f_in character; input file.
 #' @param f_out character; output file.
-#' @param ncols integer; number of columns in valid rows.
 #' @param sep_in character; the input field seperator, the EBD is tab separated
 #'   by default. Must only be a single character and space delimited is not
 #'   allowed since spaces appear in many of the fields.
 #' @param sep_out character; the output field seperator, defaults to tab
 #'   delimited. Must only be a single character and space delimited is not
 #'   allowed since spaces appear in many of the fields.
-#' @param trailing_tab logical; whether the trailing tab should be removed from
-#'   the end of each row. The EBD comes with an extra tab at the end of each
-#'   line, which causes a extra blank column. Note that this is applied prior to
-#'   filtering based on the number of columns, so if `remove_ws` is set to
-#'   `FALSE` one must also set `ncols = 47`.
+#' @param remove_blank logical; whether the trailing blank should be removed
+#'   from the end of each row. The EBD comes with an extra tab at the end of
+#'   each line, which causes a extra blank column.
 #' @param overwrite logical; overwrite output file if it already exists
 #'
 #' @return If AWK ran without errors, the output filename is returned,
@@ -46,27 +45,18 @@
 #' # note that the extra blank column has also been removed
 #' ncol(read.delim(f, nrows = 5, quote = ""))
 #' ncol(read.delim(tmp, nrows = 5, quote = ""))
-#'
-#' # clean file and convert from tab to comma seperated
-#' auk_clean(f, tmp, sep_out = ",", overwrite = TRUE)
-#' # tab separated
-#' readLines(f, 1)
-#' # comma separated
-#' readLines(tmp, 1)
-#' unlink(tmp)
-auk_clean <- function(f_in, f_out, ncols = 46L,
+auk_clean <- function(f_in, f_out,
                        sep_in = "\t", sep_out = "\t",
-                       trailing_tab = TRUE, overwrite = FALSE) {
+                       remove_blank = TRUE, overwrite = FALSE) {
   # checks
   if (!auk_installed()) {
     stop("auk_clean() requires a valid AWK install.")
   }
   assert_that(
     file.exists(f_in),
-    assertthat::is.count(ncols),
     assertthat::is.string(sep_in), nchar(sep_in) == 1, sep_in != " ",
     assertthat::is.string(sep_out), nchar(sep_out) == 1, sep_out != " ",
-    assertthat::is.flag(trailing_tab),
+    assertthat::is.flag(remove_blank),
     assertthat::is.flag(overwrite)
   )
   # check output file
@@ -77,8 +67,21 @@ auk_clean <- function(f_in, f_out, ncols = 46L,
     stop("Output file already exists, use overwrite = TRUE.")
   }
 
+  # determine number of columns
+  # read header row
+  header <- get_header(f_in, sep_in)
+  if (remove_blank && header[length(header)] == "") {
+    header <- header[-length(header)]
+  }
+  ncols <- length(header)
+  if (ncols < 45) {
+    sprintf("There is an error in your EBD file, only %i columns detected.",
+            ncols) %>%
+      stop()
+  }
+
   # construct awk command
-  if (trailing_tab) {
+  if (remove_blank) {
     # remove end of line tab
     ws <- "sub(/\t$/, \"\", $0)"
   } else {

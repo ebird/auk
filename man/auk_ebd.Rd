@@ -9,9 +9,9 @@ auk_ebd(file, sep = "\\t")
 \arguments{
 \item{file}{character; input file.}
 
-\item{sep}{character; the input field seperator, the EBD is tab separated
-by default. Must only be a single character and space delimited is not
-allowed since spaces appear in many of the fields.}
+\item{sep}{character; the input field seperator, the EBD is tab separated so
+this should generally not be modified. Must only be a single character and
+space delimited is not allowed since spaces appear in many of the fields.}
 }
 \value{
 An \code{ebd} object storing the file reference and the desired filters
@@ -20,6 +20,14 @@ once created with other package functions.
 \description{
 Create a reference to an eBird Basic Dataset (EBD) file in preparation for
 filtering using AWK.
+}
+\details{
+The EBD can be downloaded as a tab-separated text file from the
+\href{http://ebird.org/ebird/data/download}{eBird website} after submitting a
+request for access. As of February 2017, this file is nearly 150 GB making
+it challenging to work with. If you're only interested in a single species
+or a small region it is possible to submit a custom download request. This
+approach is suggested to speed up processing time.
 }
 \examples{
 # example data

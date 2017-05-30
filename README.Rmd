@@ -14,6 +14,8 @@ knitr::opts_chunk$set(
 
 # auk: an R interface to AWK for manipulating eBird data
 
+[![Travis-CI Build Status](https://travis-ci.org/mstrimas/auk.svg?branch=master)](https://travis-ci.org/mstrimas/auk)
+
 [eBird](http://www.ebird.org) is an online tool for recording bird observations. The eBird database contains nearly 500 million sightings records making it among the largest citizen science projects in history and an extremely valuable resource for bird research and conservation. eBird provides free access to data through a variety of means. Some data can be accessed through the [eBird API](https://confluence.cornell.edu/display/CLOISAPI/eBird+API+1.1), which has an associated R pacakge [rebird](https://github.com/ropensci/rebird). In addition, the full eBird database is packaged as a text file and available for download as the [eBird Basic Dataset (EBD)](http://ebird.org/ebird/data/download). For most applications in science or conservation, users will require the EBD, however, working with these data can be challenging because of the inherently large file size. This primary function of this R package is to subset the EBD into smaller pieces, which are more easily manipulated in R.
 
 ## The EBD and AWK

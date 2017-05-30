@@ -4,12 +4,16 @@
 \alias{read_ebd}
 \title{Read an EBD file}
 \usage{
-read_ebd(file, sep = "\\t", setclass = c("tbl", "data.frame", "data.table"))
+read_ebd(file, sep = "\\t", unique = TRUE, setclass = c("tbl",
+  "data.frame", "data.table"))
 }
 \arguments{
 \item{file}{character; EBD file to read.}
 
 \item{sep}{character; single character used to separate fields within a row.}
+
+\item{unique}{logical; should duplicate grouped checklists be removed. If
+\code{unique = TRUE}, \code{\link[=auk_unique]{auk_unique()}} is called on the EBD before returning.}
 
 \item{setclass}{\code{tbl}, \code{data.frame}, or \code{data.table}; optionally set
 additional classes to set on the output data. All return objects are
@@ -22,16 +26,27 @@ A \code{data.frame} with additional class \code{tbl} unless \code{setclass} is u
 in which case a standard \code{data.frame} or \code{data.table} can be returned.
 }
 \description{
-Read an eBird Basic Dataset file using \link[=read_delim]{readr}. This function
-chooses read options and column formats that are suitable for EBD files and
-cleans up variable names to be in \code{snake_case}. Note that this function makes
-assumptions about the names of the columns in the EBD file and will not work
-correctly if the header row has been modified.
+Read an eBird Basic Dataset file using \code{\link[data.table:fread]{data.table::fread()}},
+\code{\link[readr:read_delim]{readr::read_delim()}}, or \link{read.delim} depending on which packages are
+installed. \strong{Note that this function typically takes at least a couple hours
+to run.}
+}
+\details{
+This functions performs the following processing steps:
+\itemize{
+\item Data types for columns are manually set based on column names used in the
+February 2017 EBD. If variables are added or names are changed in later
+releases, any new variables will have data types inferred by the import
+function used.
+\item Variables names are converted to \code{snake_case}.
+\item Duplicate observations resulting from group checklists are removed using
+\code{\link[=auk_unique]{auk_unique()}}, unless \code{unique = FALSE}.
+}
 }
 \examples{
 ebd <- system.file("extdata/ebd-sample.txt", package="auk") \%>\%
   read_ebd()
 # optionally return a plain data.frame
-ebd_tbl <- system.file("extdata/ebd-sample.txt", package="auk") \%>\%
+ebd_df <- system.file("extdata/ebd-sample.txt", package="auk") \%>\%
   read_ebd(setclass = "data.frame")
 }

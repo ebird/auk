@@ -4,15 +4,13 @@
 \alias{auk_clean}
 \title{Clean an EBD file}
 \usage{
-auk_clean(f_in, f_out, ncols = 46L, sep_in = "\\t", sep_out = "\\t",
-  trailing_tab = TRUE, overwrite = FALSE)
+auk_clean(f_in, f_out, sep_in = "\\t", sep_out = "\\t",
+  remove_blank = TRUE, overwrite = FALSE)
 }
 \arguments{
 \item{f_in}{character; input file.}
 
 \item{f_out}{character; output file.}
-
-\item{ncols}{integer; number of columns in valid rows.}
 
 \item{sep_in}{character; the input field seperator, the EBD is tab separated
 by default. Must only be a single character and space delimited is not
@@ -22,11 +20,9 @@ allowed since spaces appear in many of the fields.}
 delimited. Must only be a single character and space delimited is not
 allowed since spaces appear in many of the fields.}
 
-\item{trailing_tab}{logical; whether the trailing tab should be removed from
-the end of each row. The EBD comes with an extra tab at the end of each
-line, which causes a extra blank column. Note that this is applied prior to
-filtering based on the number of columns, so if \code{remove_ws} is set to
-\code{FALSE} one must also set \code{ncols = 47}.}
+\item{remove_blank}{logical; whether the trailing blank should be removed
+from the end of each row. The EBD comes with an extra tab at the end of
+each line, which causes a extra blank column.}
 
 \item{overwrite}{logical; overwrite output file if it already exists}
 }
@@ -36,13 +32,15 @@ however, if an error was encountered the exit code is returned.
 }
 \description{
 Some rows in the eBird Basic Dataset (EBD) may have an incorrect number of
-columns. This function drops these erroneous records. The most recent EBD
-has 46 columns per row, so this is used as the default in the function. Note
-that this function typically takes at least 3 hours to run.
+columns, often resulting from tabs embedded in the comments field. This
+function drops these problematic records. \strong{Note that this
+function typically takes at least 3 hours to run.}
 }
 \details{
 In addition to cleaning the dataset, the field separator can be changed from
-tab to another character, for example a CSV file can be generated.
+tab to another character. However, this functionality should be used with
+caution because text fields are not quoted in the EBD and may contain the
+field separator.
 
 Calling this function requires that the command line utility AWK is
 installed. Linux and Mac machines should have AWK by default, Windows users
@@ -63,12 +61,4 @@ length(readLines(tmp))
 # note that the extra blank column has also been removed
 ncol(read.delim(f, nrows = 5, quote = ""))
 ncol(read.delim(tmp, nrows = 5, quote = ""))
-
-# clean file and convert from tab to comma seperated
-auk_clean(f, tmp, sep_out = ",", overwrite = TRUE)
-# tab separated
-readLines(f, 1)
-# comma separated
-readLines(tmp, 1)
-unlink(tmp)
 }

@@ -21,8 +21,8 @@ this should generally not be modified. Must only be a single character and
 space delimited is not allowed since spaces appear in many of the fields.}
 }
 \value{
-An \code{ebd} object storing the file reference and the desired filters
-once created with other package functions.
+An \code{auk_ebd} object storing the file reference and the desired
+filters once created with other package functions.
 }
 \description{
 Create a reference to an eBird Basic Dataset (EBD) file in preparation for

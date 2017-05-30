@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 
 # auk: eBird Data Processing with AWK
 
-[![Travis-CI Build Status](https://travis-ci.org/mstrimas/auk.svg?branch=master&?label=Mac%20OSX%20%26%20Linux)](https://travis-ci.org/mstrimas/auk)
+[![Travis-CI Build Status](https://img.shields.io/travis/mstrimas/auk/master.svg?label=Mac%20OSX%20%26%20Linux)](https://travis-ci.org/mstrimas/auk)
 
 ## Overview
 

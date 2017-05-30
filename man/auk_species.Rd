@@ -7,7 +7,7 @@
 auk_species(x, species, replace)
 }
 \arguments{
-\item{x}{\code{ebd} object; reference to EBD file created by \code{\link[=auk_ebd]{auk_ebd()}}.}
+\item{x}{\code{auk_ebd} object; reference to EBD file created by \code{\link[=auk_ebd]{auk_ebd()}}.}
 
 \item{species}{character; species to filter by, provided as scientific or
 English common names, or a mixture of both. These names must match the
@@ -18,7 +18,7 @@ official eBird Taxomony (\link{ebird_taxonomy}).}
 will be removed and replaced by that in the current call.}
 }
 \value{
-An \code{ebd} object.
+An \code{auk_ebd} object.
 }
 \description{
 Define a filter for the eBird Basic Dataset (EBD) based on species. This

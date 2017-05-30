@@ -7,13 +7,13 @@
 auk_duration(x, duration)
 }
 \arguments{
-\item{x}{\code{ebd} object; reference to EBD file created by \code{\link[=auk_ebd]{auk_ebd()}}.}
+\item{x}{\code{auk_ebd} object; reference to EBD file created by \code{\link[=auk_ebd]{auk_ebd()}}.}
 
 \item{duration}{integer; 2 element vector specifying the range of durations
 in minutes to filter by.}
 }
 \value{
-An \code{ebd} object.
+An \code{auk_ebd} object.
 }
 \description{
 Define a filter for the eBird Basic Dataset (EBD) based on the duration of

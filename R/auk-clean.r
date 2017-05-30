@@ -5,15 +5,6 @@
 #' function drops these problematic records. **Note that this
 #' function typically takes at least 3 hours to run.**
 #'
-#' In addition to cleaning the dataset, the field separator can be changed from
-#' tab to another character. However, this functionality should be used with
-#' caution because text fields are not quoted in the EBD and may contain the
-#' field separator.
-#'
-#' Calling this function requires that the command line utility AWK is
-#' installed. Linux and Mac machines should have AWK by default, Windows users
-#' will likely need to install [Cygwin](https://www.cygwin.com).
-#'
 #' @param f_in character; input file.
 #' @param f_out character; output file.
 #' @param sep_in character; the input field seperator, the EBD is tab separated
@@ -26,6 +17,20 @@
 #'   from the end of each row. The EBD comes with an extra tab at the end of
 #'   each line, which causes a extra blank column.
 #' @param overwrite logical; overwrite output file if it already exists
+#'
+#' @details
+#'
+#' This function can clean an EBD file or an EBD sampling file.
+#'
+#' In addition to cleaning the dataset, the field separator can be changed from
+#' tab to another character. However, this functionality should be used with
+#' caution because text fields are not quoted in the EBD and may contain the
+#' field separator.
+#'
+#' Calling this function requires that the command line utility AWK is
+#' installed. Linux and Mac machines should have AWK by default, Windows users
+#' will likely need to install [Cygwin](https://www.cygwin.com).
+#'
 #'
 #' @return If AWK ran without errors, the output filename is returned,
 #'   however, if an error was encountered the exit code is returned.

@@ -7,13 +7,13 @@
 auk_extent(x, extent)
 }
 \arguments{
-\item{x}{\code{ebd} object; reference to EBD file created by \code{\link[=auk_ebd]{auk_ebd()}}.}
+\item{x}{\code{auk_ebd} object; reference to EBD file created by \code{\link[=auk_ebd]{auk_ebd()}}.}
 
 \item{extent}{numeric; spatial extent expressed as the range of latitudes
 and longitudes: \code{c(lng_min, lat_min, lng_max, lat_max)}.}
 }
 \value{
-An \code{ebd} object.
+An \code{auk_ebd} object.
 }
 \description{
 Define a filter for the eBird Basic Dataset (EBD) based on spatial extent.

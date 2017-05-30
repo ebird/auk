@@ -5,7 +5,7 @@
 #' been defined, [auk_filter()] should be used to call AWK and perform the
 #' filtering.
 #'
-#' @param x `ebd` object; reference to EBD file created by [auk_ebd()].
+#' @param x `auk_ebd` object; reference to EBD file created by [auk_ebd()].
 #' @param country character; countries to filter by. Countries can either be
 #'   expressed as English names or [ISO 2-letter country
 #'   codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2). English names are
@@ -15,7 +15,7 @@
 #'   unless `replace = FALSE`, in which case the previous list of countries to
 #'   filter by will be removed and replaced by that in the current call.
 #'
-#' @return An `ebd` object.
+#' @return An `auk_ebd` object.
 #' @export
 #' @examples
 #' # country names and ISO2 codes can be mixed
@@ -29,7 +29,7 @@ auk_country <- function(x, country, replace)  {
 }
 
 #' @export
-auk_country.ebd <- function(x, country, replace = FALSE) {
+auk_country.auk_ebd <- function(x, country, replace = FALSE) {
   # checks
   assert_that(
     is.character(country),
@@ -62,11 +62,11 @@ auk_country.ebd <- function(x, country, replace = FALSE) {
 
   # add countries to filter list
   if (replace) {
-    x$country_filter <- country_codes
+    x$filters$country <- country_codes
   } else {
-    x$country_filter <- c(x$country_filter, country_codes)
+    x$filters$country <- c(x$filters$country, country_codes)
   }
-  x$country_filter <- c(x$country_filter, country_codes) %>%
+  x$filters$country <- c(x$filters$country, country_codes) %>%
     unique() %>%
     sort()
   return(x)

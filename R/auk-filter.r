@@ -1,16 +1,19 @@
 #' Filter the EBD using AWK
 #'
-#' Convert the filters defined in an `ebd` object into an AWK script and run
+#' Convert the filters defined in an `auk_ebd` object into an AWK script and run
 #' this script to produce a filtered eBird Reference Dataset (ERD). The initial
-#' creation of the `ebd` object should be done with [auk_ebd()] and filters can
-#' be defined using the various other functions in this package, e.g.
+#' creation of the `auk_ebd` object should be done with [auk_ebd()] and filters
+#' can be defined using the various other functions in this package, e.g.
 #' [auk_species()] or [auk_country()]. **Note that this function typically takes
 #' at least a couple hours to run.**
 #'
-#' @param x `ebd` object; reference to EBD file created by [auk_ebd()] with
+#' @param x `auk_ebd` object; reference to EBD file created by [auk_ebd()] with
 #'   filters defined.
 #' @param file character; output file.
+#' @param file_sampling character; optional output file for EBD sampling data.
 #' @param awk_file character; output file to optionally save the awk script to.
+#' @param filter_sampling logical; whether the EBD sampling file should also be
+#'   filtered.
 #' @param sep character; the input field seperator, the EBD is tab separated by
 #'   default. Must only be a single character and space delimited is not allowed
 #'   since spaces appear in many of the fields.
@@ -20,7 +23,7 @@
 #' @param overwrite logical; overwrite output file if it already exists
 #'
 #' @details
-#' If an EBD sampling file is provided in the [ebd][auk_ebd()]
+#' If an EBD sampling file is provided in the [auk_ebd][auk_ebd()]
 #' object, this function will filter both the EBD and the sampling data using
 #' the same set of filters. This ensures that the files are in sync, i.e. that
 #' they contain data on the same set of checklists.
@@ -35,11 +38,8 @@
 #' installed. Linux and Mac machines should have AWK by default, Windows users
 #' will likely need to install [Cygwin](https://www.cygwin.com).
 #'
-#'
-#' @return If AWK ran without errors, the output filename is returned,
-#'   however, if an error was encountered the exit code is returned. If `execute
-#'   = FALSE`, then the path to the AWK script is returned rather than the path
-#'   to the output file.
+#' @return An `auk_ebd` object with the output files set. If `execute = FALSE`,
+#'   then the path to the AWK script is returned instead.
 #' @export
 #' @examples
 #' # define filters
@@ -61,30 +61,33 @@
 #' # clean
 #' unlink(out_file)
 #' }
-auk_filter <- function(x, file, file_sampling, awk_file, sep, execute,
-                        overwrite) {
+auk_filter <- function(x, file, file_sampling, awk_file, sep,
+                       filter_sampling, execute, overwrite) {
   UseMethod("auk_filter")
 }
 
 #' @export
-auk_filter.ebd <- function(x, file, file_sampling, awk_file, sep = "\t",
-                           filter_sampling = !missing(file_sampling),
-                           execute = TRUE, overwrite = FALSE) {
+auk_filter.auk_ebd <- function(x, file, file_sampling, awk_file, sep = "\t",
+                               filter_sampling = TRUE, execute = TRUE,
+                               overwrite = FALSE) {
   # checks
   if (execute && !auk_installed()) {
     stop("auk_filter() requires a valid AWK install, unless execute = FALSE.")
   }
   assert_that(
     file.exists(x$file),
+    is.null(x$file_sampling) || file.exists(x$file_sampling),
     assertthat::is.flag(execute),
     !execute || assertthat::is.string(file),
     missing(awk_file) || assertthat::is.string(awk_file),
     assertthat::is.string(sep), nchar(sep) == 1, sep != " ",
+    assertthat::is.flag(filter_sampling),
     assertthat::is.flag(overwrite)
   )
   if (!execute && missing(awk_file)) {
     stop("awk_file must be set when execute is FALSE.")
   }
+
   # check output file
   if (!missing(file)) {
     if (!dir.exists(dirname(file))) {
@@ -98,236 +101,146 @@ auk_filter.ebd <- function(x, file, file_sampling, awk_file, sep = "\t",
   if (!missing(awk_file) && !dir.exists(dirname(awk_file))) {
     stop("Output directory for awk file doesn't exist.")
   }
-
-  # set up filters
-  filters <- list(sep = sep)
-  # species filter
-  if (length(x$species_filter) == 0) {
-    filters$species_filter <- ""
-  } else {
-    idx <- x$column_index$index[x$column_index$id == "species"]
-    condition <- paste0("$", idx, " == \"", x$species_filter, "\"",
-                        collapse = " || ")
-    filters$species_filter <- str_interp(awk_if, list(condition = condition))
+  # check output sampling file
+  if (is.null(x$file_sampling) || !execute || !filter_sampling) {
+    filter_sampling <- FALSE
   }
-  # country filter
-  if (length(x$country_filter) == 0) {
-    filters$country_filter <- ""
-  } else {
-    idx <- x$column_index$index[x$column_index$id == "country"]
-    condition <- paste0("$", idx, " == \"", x$country_filter, "\"",
-                        collapse = " || ")
-    filters$country_filter <- str_interp(awk_if, list(condition = condition))
-  }
-  # extent filter
-  if (length(x$extent_filter) == 0) {
-    filters$extent_filter <- ""
-  } else {
-    lat_idx <- x$column_index$index[x$column_index$id == "lat"]
-    lng_idx <- x$column_index$index[x$column_index$id == "lng"]
-    condition <- paste0("$${lng_idx} > ${xmn} && ",
-                        "$${lng_idx} < ${xmx} && ",
-                        "$${lat_idx} > ${ymn} && ",
-                        "$${lat_idx} < ${ymx}") %>%
-      str_interp(list(lat_idx = lat_idx, lng_idx = lng_idx,
-                      xmn = x$extent_filter[1], xmx = x$extent_filter[3],
-                      ymn = x$extent_filter[2], ymx = x$extent_filter[4]))
-    filters$extent_filter <- str_interp(awk_if, list(condition = condition))
-  }
-  # date filter
-  if (length(x$date_filter) == 0) {
-    filters$date_filter <- ""
-  } else {
-    idx <- x$column_index$index[x$column_index$id == "date"]
-    condition <- str_interp("$${idx} > \"${mn}\" && $${idx} < \"${mx}\"",
-                            list(idx = idx,
-                                 mn = x$date_filter[1],
-                                 mx = x$date_filter[2]))
-    filters$date_filter <- str_interp(awk_if, list(condition = condition))
-  }
-  # time filter
-  if (length(x$time_filter) == 0) {
-    filters$time_filter <- ""
-  } else {
-    idx <- x$column_index$index[x$column_index$id == "time"]
-    condition <- str_interp("$${idx} > \"${mn}\" && $${idx} < \"${mx}\"",
-                            list(idx = idx,
-                                 mn = x$time_filter[1],
-                                 mx = x$time_filter[2]))
-    filters$time_filter <- str_interp(awk_if, list(condition = condition))
-  }
-  # duration filter
-  if (length(x$duration_filter) == 0) {
-    filters$duration_filter <- ""
-  } else {
-    idx <- x$column_index$index[x$column_index$id == "duration"]
-    condition <- str_interp("$${idx} > ${mn} && $${idx} < ${mx}",
-                            list(idx = idx,
-                                 mn = x$duration_filter[1],
-                                 mx = x$duration_filter[2]))
-    filters$duration_filter <- str_interp(awk_if, list(condition = condition))
-  }
-  # complete checklists only
-  if (x$complete) {
-    idx <- x$column_index$index[x$column_index$id == "complete"]
-    condition <- str_interp("$${idx} == 1", list(idx = idx))
-    filters$complete <- str_interp(awk_if, list(condition = condition))
-  } else {
-    filters$complete <- ""
+  if (filter_sampling && missing(file_sampling)) {
+    stop(paste0("An output file for the sampling data must be provided, ",
+                "unless filter_sampling is FALSE."))
+  } else if (filter_sampling) {
+    if (!dir.exists(dirname(file_sampling))) {
+      stop("Output directory for sampling file doesn't exist.")
+    }
+    if (!overwrite && file.exists(file_sampling)) {
+      stop("Output sampling file already exists, use overwrite = TRUE.")
+    }
   }
 
-  # generate awk script
-  awk_script <- str_interp(awk_filter, filters)
+  # create awk script for the ebd
+  awk_script <- awk_translate(filters = x$filters,
+                              col_idx = x$col_idx,
+                              sep = sep)
+  # create awk script for the ebd sampling data
+  if (filter_sampling) {
+    awk_script_sampling <- awk_translate(filters = x$filters,
+                                         col_idx = x$col_idx_sampling,
+                                         sep = sep)
+  }
 
-  # output file
+  # output awk file
   if (!missing(awk_file)) {
     writeLines(awk_script, awk_file)
-  }
-  # run
-  if (execute) {
-    awk <- paste0("awk '", awk_script, "' ")
-    com <- paste0(awk, x$file, " > ", file)
-    exit_code <- system(com)
-    if (exit_code == 0) {
-      out <- normalizePath(file)
-    } else {
-      out <- exit_code
+    if (!execute) {
+      return(normalizePath(awk_file))
     }
-  } else {
-    out <- normalizePath(awk_file)
   }
-  return(out)
+
+  # run awk
+  # ebd
+  awk <- paste0("awk '", awk_script, "' ")
+  com <- paste0(awk, x$file, " > ", file)
+  exit_code <- system(com)
+  if (exit_code != 0) {
+    stop("Error running AWK command.")
+  } else {
+    x$output <- normalizePath(file)
+  }
+
+  # ebd sampling
+  if (filter_sampling) {
+    awk <- paste0("awk '", awk_script_sampling, "' ")
+    com <- paste0(awk, x$file_sampling, " > ", file)
+    exit_code <- system(com)
+    if (exit_code != 0) {
+      stop("Error running AWK command.")
+    } else {
+      x$output_sampling <- normalizePath(file_sampling)
+    }
+  }
+  return(x)
 }
 
-
-apply_filters <- function(x, file, awk_file, sep, execute, overwrite) {
-  # checks
-  if (execute && !auk_installed()) {
-    stop("auk_filter() requires a valid AWK install, unless execute = FALSE.")
-  }
-  assert_that(
-    file.exists(x$file),
-    assertthat::is.flag(execute),
-    !execute || assertthat::is.string(file),
-    missing(awk_file) || assertthat::is.string(awk_file),
-    assertthat::is.string(sep), nchar(sep) == 1, sep != " ",
-    assertthat::is.flag(overwrite)
-  )
-  if (!execute && missing(awk_file)) {
-    stop("awk_file must be set when execute is FALSE.")
-  }
-  # check output file
-  if (!missing(file)) {
-    if (!dir.exists(dirname(file))) {
-      stop("Output directory doesn't exist.")
-    }
-    if (!overwrite && file.exists(file)) {
-      stop("Output file already exists, use overwrite = TRUE.")
-    }
-  }
-  # check output awk file
-  if (!missing(awk_file) && !dir.exists(dirname(awk_file))) {
-    stop("Output directory for awk file doesn't exist.")
-  }
-
+awk_translate <- function(filters, col_idx, sep) {
   # set up filters
-  filters <- list(sep = sep)
+  filter_strings <- list(sep = sep)
   # species filter
-  if (length(x$species_filter) == 0) {
-    filters$species_filter <- ""
+  if (length(filters$species) == 0) {
+    filter_strings$species <- ""
   } else {
-    idx <- x$column_index$index[x$column_index$id == "species"]
-    condition <- paste0("$", idx, " == \"", x$species_filter, "\"",
+    idx <- col_idx$index[col_idx$id == "species"]
+    condition <- paste0("$", idx, " == \"", filters$species, "\"",
                         collapse = " || ")
-    filters$species_filter <- str_interp(awk_if, list(condition = condition))
+    filter_strings$species <- str_interp(awk_if, list(condition = condition))
   }
   # country filter
-  if (length(x$country_filter) == 0) {
-    filters$country_filter <- ""
+  if (length(filters$country) == 0) {
+    filter_strings$country <- ""
   } else {
-    idx <- x$column_index$index[x$column_index$id == "country"]
-    condition <- paste0("$", idx, " == \"", x$country_filter, "\"",
+    idx <- col_idx$index[col_idx$id == "country"]
+    condition <- paste0("$", idx, " == \"", filters$country, "\"",
                         collapse = " || ")
-    filters$country_filter <- str_interp(awk_if, list(condition = condition))
+    filter_strings$country <- str_interp(awk_if, list(condition = condition))
   }
   # extent filter
-  if (length(x$extent_filter) == 0) {
-    filters$extent_filter <- ""
+  if (length(filters$extent) == 0) {
+    filter_strings$extent <- ""
   } else {
-    lat_idx <- x$column_index$index[x$column_index$id == "lat"]
-    lng_idx <- x$column_index$index[x$column_index$id == "lng"]
+    lat_idx <- col_idx$index[col_idx$id == "lat"]
+    lng_idx <- col_idx$index[col_idx$id == "lng"]
     condition <- paste0("$${lng_idx} > ${xmn} && ",
                         "$${lng_idx} < ${xmx} && ",
                         "$${lat_idx} > ${ymn} && ",
                         "$${lat_idx} < ${ymx}") %>%
       str_interp(list(lat_idx = lat_idx, lng_idx = lng_idx,
-                      xmn = x$extent_filter[1], xmx = x$extent_filter[3],
-                      ymn = x$extent_filter[2], ymx = x$extent_filter[4]))
-    filters$extent_filter <- str_interp(awk_if, list(condition = condition))
+                      xmn = filters$extent[1], xmx = filters$extent[3],
+                      ymn = filters$extent[2], ymx = filters$extent[4]))
+    filter_strings$extent <- str_interp(awk_if, list(condition = condition))
   }
   # date filter
-  if (length(x$date_filter) == 0) {
-    filters$date_filter <- ""
+  if (length(filters$date) == 0) {
+    filter_strings$date <- ""
   } else {
-    idx <- x$column_index$index[x$column_index$id == "date"]
+    idx <- col_idx$index[col_idx$id == "date"]
     condition <- str_interp("$${idx} > \"${mn}\" && $${idx} < \"${mx}\"",
                             list(idx = idx,
-                                 mn = x$date_filter[1],
-                                 mx = x$date_filter[2]))
-    filters$date_filter <- str_interp(awk_if, list(condition = condition))
+                                 mn = filters$date[1],
+                                 mx = filters$date[2]))
+    filter_strings$date <- str_interp(awk_if, list(condition = condition))
   }
   # time filter
-  if (length(x$time_filter) == 0) {
-    filters$time_filter <- ""
+  if (length(filters$time) == 0) {
+    filter_strings$time <- ""
   } else {
-    idx <- x$column_index$index[x$column_index$id == "time"]
+    idx <- col_idx$index[col_idx$id == "time"]
     condition <- str_interp("$${idx} > \"${mn}\" && $${idx} < \"${mx}\"",
                             list(idx = idx,
-                                 mn = x$time_filter[1],
-                                 mx = x$time_filter[2]))
-    filters$time_filter <- str_interp(awk_if, list(condition = condition))
+                                 mn = filters$time[1],
+                                 mx = filters$time[2]))
+    filter_strings$time <- str_interp(awk_if, list(condition = condition))
   }
   # duration filter
-  if (length(x$duration_filter) == 0) {
-    filters$duration_filter <- ""
+  if (length(filters$duration) == 0) {
+    filter_strings$duration <- ""
   } else {
-    idx <- x$column_index$index[x$column_index$id == "duration"]
+    idx <- col_idx$index[col_idx$id == "duration"]
     condition <- str_interp("$${idx} > ${mn} && $${idx} < ${mx}",
                             list(idx = idx,
-                                 mn = x$duration_filter[1],
-                                 mx = x$duration_filter[2]))
-    filters$duration_filter <- str_interp(awk_if, list(condition = condition))
+                                 mn = filters$duration[1],
+                                 mx = filters$duration[2]))
+    filter_strings$duration <- str_interp(awk_if, list(condition = condition))
   }
   # complete checklists only
-  if (x$complete) {
-    idx <- x$column_index$index[x$column_index$id == "complete"]
+  if (filters$complete) {
+    idx <- col_idx$index[col_idx$id == "complete"]
     condition <- str_interp("$${idx} == 1", list(idx = idx))
-    filters$complete <- str_interp(awk_if, list(condition = condition))
+    filter_strings$complete <- str_interp(awk_if, list(condition = condition))
   } else {
-    filters$complete <- ""
+    filter_strings$complete <- ""
   }
 
   # generate awk script
-  awk_script <- str_interp(awk_filter, filters)
-
-  # output file
-  if (!missing(awk_file)) {
-    writeLines(awk_script, awk_file)
-  }
-  # run
-  if (execute) {
-    awk <- paste0("awk '", awk_script, "' ")
-    com <- paste0(awk, x$file, " > ", file)
-    exit_code <- system(com)
-    if (exit_code == 0) {
-      out <- normalizePath(file)
-    } else {
-      out <- exit_code
-    }
-  } else {
-    out <- normalizePath(awk_file)
-  }
-  return(out)
+  str_interp(awk_filter, filter_strings)
 }
 
 # awk script template
@@ -340,12 +253,12 @@ BEGIN {
   keep = 1
 
   # filters
-  ${species_filter}
-  ${country_filter}
-  ${extent_filter}
-  ${date_filter}
-  ${time_filter}
-  ${duration_filter}
+  ${species}
+  ${country}
+  ${extent}
+  ${date}
+  ${time}
+  ${duration}
   ${complete}
 
   # keeps header

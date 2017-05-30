@@ -5,11 +5,11 @@
 #' filters have been defined, [auk_filter()] should be used to call AWK and
 #' perform the filtering.
 #'
-#' @param x `ebd` object; reference to EBD file created by [auk_ebd()].
+#' @param x `auk_ebd` object; reference to EBD file created by [auk_ebd()].
 #' @param time character; 2 element character vector giving the range of times
 #'   in 24 hour format, e.g. `"06:30"` or `"16:22"`.
 #'
-#' @return An `ebd` object.
+#' @return An `auk_ebd` object.
 #' @export
 #' @examples
 #' # only keep checklists started between 6 and 8 in the morning
@@ -21,7 +21,7 @@ auk_time <- function(x, time)  {
 }
 
 #' @export
-auk_time <- function(x, time) {
+auk_time.auk_ebd <- function(x, time) {
   # checks
   assert_that(
     length(time) == 2,
@@ -39,6 +39,6 @@ auk_time <- function(x, time) {
   assert_that(time[1] <= time[2])
 
   # define filter
-  x$time_filter <- time
+  x$filters$time <- time
   return(x)
 }

@@ -5,7 +5,8 @@
 #' installed. **Note that this function typically takes at least a couple hours
 #' to run.**
 #'
-#' @param file character; EBD file to read.
+#' @param x filename of EBD file or `auk_ebd` object with associtated output
+#'   files as created by [auk_filter()].
 #' @param sep character; single character used to separate fields within a row.
 #' @param unique logical; should duplicate grouped checklists be removed. If
 #'   `unique = TRUE`, [auk_unique()] is called on the EBD before returning.
@@ -34,16 +35,26 @@
 #' # optionally return a plain data.frame
 #' ebd_df <- system.file("extdata/ebd-sample.txt", package = "auk") %>%
 #'   read_ebd(setclass = "data.frame")
-read_ebd <- function(file, sep = "\t", unique = TRUE,
-                     setclass = c("tbl", "data.frame", "data.table")) {
+read_ebd <- function(x, sep, unique, setclass) {
+  UseMethod("read_ebd")
+}
+
+#' @export
+read_ebd.character <- function(x, sep = "\t", unique = TRUE,
+                               setclass = c("tbl", "data.frame",
+                                            "data.table")) {
   # checks
   assert_that(
-    assertthat::is.string(file),
-    file.exists(file))
+    assertthat::is.string(x),
+    file.exists(x))
   setclass <- match.arg(setclass)
+  if (setclass == "data.table" &&
+      !requireNamespace("data.table", quietly = TRUE)) {
+    stop("data.table package must be installed to return a data.table.")
+  }
 
   # get header
-  header <- get_header(file, sep = sep)
+  header <- get_header(x, sep = sep)
   if (header[length(header)] == "") {
     header <- header[-length(header)]
   }
@@ -51,76 +62,83 @@ read_ebd <- function(file, sep = "\t", unique = TRUE,
   # read using fread, read_delim, or read.delim
   if (requireNamespace("data.table", quietly = TRUE)) {
     col_types <- get_col_types(header, reader = "fread")
-    x <- data.table::fread(file, sep = sep, quote = "", na.strings = "",
-                           colClasses = col_types)
+    out <- data.table::fread(x, sep = sep, quote = "", na.strings = "",
+                             colClasses = col_types)
     # convert columns to logical
     tf_cols <- c("ALL SPECIES REPORTED", "HAS MEDIA", "APPROVED", "REVIEWED")
     for (i in tf_cols) {
-      if (i %in% names(x)) {
-        x[[i]] <- as.logical(x[[i]])
+      if (i %in% names(out)) {
+        out[[i]] <- as.logical(out[[i]])
       }
     }
     # convert date and time columns
-    if ("LAST EDITED DATE" %in% names(x)) {
-      x[["LAST EDITED DATE"]] <- as.POSIXct(x[["LAST EDITED DATE"]],
-                                            format = "%Y-%m-%d %H:%M:%S")
+    if ("LAST EDITED DATE" %in% names(out)) {
+      out[["LAST EDITED DATE"]] <- as.POSIXct(out[["LAST EDITED DATE"]],
+                                              format = "%Y-%m-%d %H:%M:%S")
     }
-    if ("OBSERVATION DATE" %in% names(x)) {
-      x[["OBSERVATION DATE"]] <- as.Date(x[["OBSERVATION DATE"]],
-                                         format = "%Y-%m-%d")
+    if ("OBSERVATION DATE" %in% names(out)) {
+      out[["OBSERVATION DATE"]] <- as.Date(out[["OBSERVATION DATE"]],
+                                           format = "%Y-%m-%d")
     }
   } else if (requireNamespace("readr", quietly = TRUE)) {
     col_types <- get_col_types(header, reader = "read_delim")
     print(col_types)
-    x <- readr::read_delim(file, delim = sep, quote = "", na = "",
-                           col_types = col_types)
-    if ("spec" %in% names(attributes(x))) {
-      attr(x, "spec") <- NULL
+    out <- readr::read_delim(x, delim = sep, quote = "", na = "",
+                             col_types = col_types)
+    if ("spec" %in% names(attributes(out))) {
+      attr(out, "spec") <- NULL
     }
   } else {
     w <- paste("read.delim is slow for large EBD files, for better performance",
                "insall the readr or data.table packages.")
     warning(w)
     col_types <- get_col_types(header, reader = "read.delim")
-    x <- utils::read.delim(file, sep = sep, quote = "", na.strings = "",
-                           stringsAsFactors = FALSE, colClasses = col_types)
+    out <- utils::read.delim(x, sep = sep, quote = "", na.strings = "",
+                             stringsAsFactors = FALSE, colClasses = col_types)
     # convert columns to logical
     tf_cols <- c("ALL.SPECIES.REPORTED", "HAS.MEDIA", "APPROVED", "REVIEWED")
     for (i in tf_cols) {
-      if (i %in% names(x)) {
-        x[[i]] <- as.logical(x[[i]])
+      if (i %in% names(out)) {
+        out[[i]] <- as.logical(out[[i]])
       }
     }
   }
 
   # remove possible blank final column
-  blank <- grepl("^[xX][0-9]{2}$", names(x)[ncol(x)])
+  blank <- grepl("^[xX][0-9]{2}$", names(out)[ncol(out)])
   if (blank) {
-    x[ncol(x)] <- NULL
+    out[ncol(out)] <- NULL
   }
 
   # names to snake case
-  names(x) <- clean_names(names(x))
+  names(out) <- clean_names(names(out))
 
   # remove duplicate group checklists
   if (unique) {
-    x <- auk_unique(x)
+    out <- auk_unique(out)
   }
 
   # set output format
   if (setclass == "tbl") {
-    if (inherits(x, "tbl")) {
-      return(x)
+    if (inherits(out, "tbl")) {
+      return(out)
     }
-    return(structure(x, class = c("tbl_df", "tbl", "data.frame")))
+    return(structure(out, class = c("tbl_df", "tbl", "data.frame")))
   } else if (setclass == "data.table") {
-    if (inherits(x, "data.table")) {
-      return(x)
+    if (inherits(out, "data.table")) {
+      return(out)
     }
-    return(structure(x, class = c("data.table", "data.frame")))
+    return(data.table::as.data.table(out))
   } else {
-    return(structure(x, class = "data.frame"))
+    return(structure(out, class = "data.frame"))
   }
+}
+
+#' @export
+read_ebd.ebd <- function(x, sep = "\t", unique = TRUE,
+                         setclass = c("tbl", "data.frame", "data.table")) {
+  setclass <- match.arg(setclass)
+  read_ebd(x$output, sep = sep, unique = unique, setclass = setclass)
 }
 
 clean_names <- function(x) {

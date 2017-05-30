@@ -7,7 +7,7 @@
 auk_country(x, country, replace)
 }
 \arguments{
-\item{x}{\code{ebd} object; reference to EBD file created by \code{\link[=auk_ebd]{auk_ebd()}}.}
+\item{x}{\code{auk_ebd} object; reference to EBD file created by \code{\link[=auk_ebd]{auk_ebd()}}.}
 
 \item{country}{character; countries to filter by. Countries can either be
 expressed as English names or \href{https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2}{ISO 2-letter countrycodes}. English names are
@@ -19,7 +19,7 @@ unless \code{replace = FALSE}, in which case the previous list of countries to
 filter by will be removed and replaced by that in the current call.}
 }
 \value{
-An \code{ebd} object.
+An \code{auk_ebd} object.
 }
 \description{
 Define a filter for the eBird Basic Dataset (EBD) based on a set of

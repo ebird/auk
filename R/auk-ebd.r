@@ -21,8 +21,8 @@
 #'   or a small region it is possible to submit a custom download request. This
 #'   approach is suggested to speed up processing time.
 #'
-#' @return An `ebd` object storing the file reference and the desired filters
-#'   once created with other package functions.
+#' @return An `auk_ebd` object storing the file reference and the desired
+#'   filters once created with other package functions.
 #' @export
 #' @examples
 #' # example data
@@ -39,21 +39,21 @@ auk_ebd <- function(file, file_sampling, sep = "\t") {
   header <- tolower(get_header(file, sep))
 
   # identify columns required for filtering
-  column_index <- data.frame(
+  col_idx <- data.frame(
     id = c("species",
            "country", "lat", "lng",
-           "date", "time", "duration",
-           "complete"),
+           "date", "time",
+           "duration", "complete"),
     name = c("scientific name",
              "country code", "latitude", "longitude",
-             "observation date", "time observations started", "duration minutes",
-             "all species reported"),
+             "observation date", "time observations started",
+             "duration minutes", "all species reported"),
     stringsAsFactors = FALSE)
   # all these columns should be in header
-  if (!all(column_index$name %in% header)) {
+  if (!all(col_idx$name %in% header)) {
     stop("Problem parsing header in EBD file.")
   }
-  column_index$index <- match(column_index$name, header)
+  col_idx$index <- match(col_idx$name, header)
 
   # process sampling data header
   if (!missing(file_sampling)) {
@@ -62,76 +62,87 @@ auk_ebd <- function(file, file_sampling, sep = "\t") {
     )
     file_sampling <- normalizePath(file_sampling)
     # species not in sampling data
-    column_index_sampling <- column_index[column_index$id != "species", ]
+    col_idx_sampling <- col_idx[col_idx$id != "species", ]
     # read header rows
     header_sampling <- tolower(get_header(file_sampling, sep))
     # all these columns should be in header
-    if (!all(column_index_sampling$name %in% header_sampling)) {
+    if (!all(col_idx_sampling$name %in% header_sampling)) {
       stop("Problem parsing header in EBD file.")
     }
-    column_index_sampling$index <- match(column_index_sampling$name,
-                                         header_sampling)
+    col_idx_sampling$index <- match(col_idx_sampling$name, header_sampling)
 
   } else {
     file_sampling <- NULL
-    column_index_sampling <- NULL
+    col_idx_sampling <- NULL
   }
 
   # output
   structure(
     list(
       file = normalizePath(file),
-      file_sampling = normalizePath(file_sampling),
-      column_index = column_index,
-      column_index_sampling = column_index_sampling,
-      species_filter = character(),
-      country_filer = character(),
-      extent_filter = numeric(),
-      date_filter = character(),
-      time_filter = character(),
-      duration_filter = numeric(),
-      complete = FALSE
+      file_sampling = file_sampling,
+      output = NULL,
+      output_sampling = NULL,
+      col_idx = col_idx,
+      col_idx_sampling = col_idx_sampling,
+      filters = list(
+        species = character(),
+        country = character(),
+        extent = numeric(),
+        date = character(),
+        time = character(),
+        duration = numeric(),
+        complete = FALSE
+      )
     ),
-    class = "ebd"
+    class = "auk_ebd"
   )
 }
 
 #' @export
-print.ebd <- function(x, ...) {
-  cat("eBird Basic Dataset (EBD): \n")
-  cat(x$file)
-  cat("\n")
+print.auk_ebd <- function(x, ...) {
+  cat("Input \n")
+  cat(paste("  EBD:", x$file, "\n"))
   if (!is.null(x$file_sampling)) {
-    cat("EBD Sampling File: \n")
-    cat(x$file_sampling)
-    cat("\n")
+    cat(paste("  EBD:", x$file_sampling, "\n"))
   }
   cat("\n")
 
-  cat("Filters: \n")
-  # species filter
-  cat("Species: ")
-  if (length(x$species_filter) == 0) {
-    cat("all")
-  } else if (length(x$species_filter) <= 10) {
-    cat(paste(x$species_filter, collapse = ", "))
+  cat("Output \n")
+  if (is.null(x$output)) {
+    cat("  Filters not executed.\n")
   } else {
-    cat(paste0(length(x$species_filter), " species"))
+    cat(paste("  EBD:", x$output, "\n"))
+    if (!is.null(x$output_sampling)) {
+      cat(paste("  EBD:", x$output_sampling, "\n"))
+    }
+  }
+  cat("\n")
+
+  cat("Filters \n")
+  # species filter
+  cat("  Species: ")
+  if (length(x$filters$species) == 0) {
+    cat("all")
+  } else if (length(x$filters$species) <= 10) {
+    cat(paste(x$filters$species, collapse = ", "))
+  } else {
+    cat(paste0(length(x$filters$species), " species"))
   }
   cat("\n")
   # country filter
-  cat("Countries: ")
-  if (length(x$country_filter) == 0) {
+  cat("  Countries: ")
+  if (length(x$filters$country) == 0) {
     cat("all")
-  } else if (length(x$country_filter) <= 10) {
-    cat(paste(x$country_filter, collapse = ", "))
+  } else if (length(x$filters$country) <= 10) {
+    cat(paste(x$filters$country, collapse = ", "))
   } else {
-    cat(paste0(length(x$country_filter), " countries"))
+    cat(paste0(length(x$filters$country), " countries"))
   }
   cat("\n")
   # extent filter
-  cat("Spatial extent: ")
-  e <- x$extent_filter
+  cat("  Spatial extent: ")
+  e <- x$filters$extent
   if (length(e) == 0) {
     cat("full extent")
   } else {
@@ -140,32 +151,32 @@ print.ebd <- function(x, ...) {
   }
   cat("\n")
   # date filter
-  cat("Date: ")
-  if (length(x$date_filter) == 0) {
+  cat("  Date: ")
+  if (length(x$filters$date) == 0) {
     cat("all")
   } else {
-    cat(paste0(x$date_filter[1], " - ", x$date_filter[2]))
+    cat(paste0(x$filters$date[1], " - ", x$filters$date[2]))
   }
   cat("\n")
   # time filter
-  cat("Time: ")
-  if (length(x$time_filter) == 0) {
+  cat("  Time: ")
+  if (length(x$filters$time) == 0) {
     cat("all")
   } else {
-    cat(paste0(x$time_filter[1], "-", x$time_filter[2]))
+    cat(paste0(x$filters$time[1], "-", x$filters$time[2]))
   }
   cat("\n")
   # duration filter
-  cat("Duration: ")
-  if (length(x$duration_filter) == 0) {
+  cat("  Duration: ")
+  if (length(x$filters$duration) == 0) {
     cat("all")
   } else {
-    cat(paste0(x$duration_filter[1], "-", x$duration_filter[2], " minutes"))
+    cat(paste0(x$filters$duration[1], "-", x$filters$duration[2], " minutes"))
   }
   cat("\n")
   # complete checklists only
-  cat("Complete checklists only: ")
-  if (x$complete) {
+  cat("  Complete checklists only: ")
+  if (x$filters$complete) {
     cat("yes")
   } else {
     cat("no")

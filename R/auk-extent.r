@@ -5,11 +5,11 @@
 #' defined, [auk_filter()] should be used to call AWK and perform the
 #' filtering.
 #'
-#' @param x `ebd` object; reference to EBD file created by [auk_ebd()].
+#' @param x `auk_ebd` object; reference to EBD file created by [auk_ebd()].
 #' @param extent numeric; spatial extent expressed as the range of latitudes
 #'   and longitudes: `c(lng_min, lat_min, lng_max, lat_max)`.
 #'
-#' @return An `ebd` object.
+#' @return An `auk_ebd` object.
 #' @export
 #' @examples
 #' # fliter to locations roughly in the Pacific Northwest
@@ -21,7 +21,7 @@ auk_extent <- function(x, extent)  {
 }
 
 #' @export
-auk_extent.ebd <- function(x, extent) {
+auk_extent.auk_ebd <- function(x, extent) {
   # checks
   assert_that(
     is.numeric(extent),
@@ -35,6 +35,6 @@ auk_extent.ebd <- function(x, extent) {
   )
 
   # define filter
-  x$extent_filter <- extent
+  x$filters$extent <- extent
   return(x)
 }

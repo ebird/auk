@@ -7,13 +7,13 @@
 auk_time(x, time)
 }
 \arguments{
-\item{x}{\code{ebd} object; reference to EBD file created by \code{\link[=auk_ebd]{auk_ebd()}}.}
+\item{x}{\code{auk_ebd} object; reference to EBD file created by \code{\link[=auk_ebd]{auk_ebd()}}.}
 
 \item{time}{character; 2 element character vector giving the range of times
 in 24 hour format, e.g. \code{"06:30"} or \code{"16:22"}.}
 }
 \value{
-An \code{ebd} object.
+An \code{auk_ebd} object.
 }
 \description{
 Define a filter for the eBird Basic Dataset (EBD) based on a range of start

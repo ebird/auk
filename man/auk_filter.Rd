@@ -4,18 +4,25 @@
 \alias{auk_filter}
 \title{Filter the EBD using AWK}
 \usage{
-auk_filter(x, file, awk_file, sep, execute, overwrite)
+auk_filter(x, file, file_sampling, awk_file, sep, filter_sampling, execute,
+  overwrite)
 }
 \arguments{
-\item{x}{\code{ebd} object; reference to EBD file created by \code{\link[=auk_ebd]{auk_ebd()}}.}
+\item{x}{\code{auk_ebd} object; reference to EBD file created by \code{\link[=auk_ebd]{auk_ebd()}} with
+filters defined.}
 
 \item{file}{character; output file.}
+
+\item{file_sampling}{character; optional output file for EBD sampling data.}
 
 \item{awk_file}{character; output file to optionally save the awk script to.}
 
 \item{sep}{character; the input field seperator, the EBD is tab separated by
 default. Must only be a single character and space delimited is not allowed
 since spaces appear in many of the fields.}
+
+\item{filter_sampling}{logical; whether the EBD sampling file should also be
+filtered.}
 
 \item{execute}{logical; whether to execute the awk script, or output it to a
 file for manual execution. If this flag is \code{FALSE}, \code{awk_file} must be
@@ -24,20 +31,19 @@ provided.}
 \item{overwrite}{logical; overwrite output file if it already exists}
 }
 \value{
-If AWK ran without errors, the output filename is returned,
-however, if an error was encountered the exit code is returned. If \code{execute = FALSE}, then the path to the AWK script is returned rather than the path
-to the output file.
+An \code{auk_ebd} object with the output files set. If \code{execute = FALSE},
+then the path to the AWK script is returned instead.
 }
 \description{
-Convert the filters defined in an \code{ebd} object into an AWK script and run
+Convert the filters defined in an \code{auk_ebd} object into an AWK script and run
 this script to produce a filtered eBird Reference Dataset (ERD). The initial
-creation of the \code{ebd} object should be done with \code{\link[=auk_ebd]{auk_ebd()}} and filters can
-be defined using the various other functions in this package, e.g.
+creation of the \code{auk_ebd} object should be done with \code{\link[=auk_ebd]{auk_ebd()}} and filters
+can be defined using the various other functions in this package, e.g.
 \code{\link[=auk_species]{auk_species()}} or \code{\link[=auk_country]{auk_country()}}. \strong{Note that this function typically takes
 at least a couple hours to run.}
 }
 \details{
-If an EBD sampling file is provided in the \link[=auk_ebd]{ebd}
+If an EBD sampling file is provided in the \link[=auk_ebd]{auk_ebd}
 object, this function will filter both the EBD and the sampling data using
 the same set of filters. This ensures that the files are in sync, i.e. that
 they contain data on the same set of checklists.

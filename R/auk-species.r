@@ -4,7 +4,7 @@
 #' function only defines the filter and, once all filters have been defined,
 #' [auk_filter()] should be used to call AWK and perform the filtering.
 #'
-#' @param x `ebd` object; reference to EBD file created by [auk_ebd()].
+#' @param x `auk_ebd` object; reference to EBD file created by [auk_ebd()].
 #' @param species character; species to filter by, provided as scientific or
 #'   English common names, or a mixture of both. These names must match the
 #'   official eBird Taxomony ([ebird_taxonomy]).
@@ -12,7 +12,7 @@
 #'   `replace = FALSE`, in which case the previous list of species to filter by
 #'   will be removed and replaced by that in the current call.
 #'
-#' @return An `ebd` object.
+#' @return An `auk_ebd` object.
 #' @export
 #' @examples
 #' # common and scientific names can be mixed
@@ -25,7 +25,7 @@ auk_species <- function(x, species, replace)  {
 }
 
 #' @export
-auk_species.ebd <- function(x, species, replace = FALSE) {
+auk_species.auk_ebd <- function(x, species, replace = FALSE) {
   # checks
   assert_that(
     is.character(species),
@@ -49,11 +49,11 @@ auk_species.ebd <- function(x, species, replace = FALSE) {
 
   # add species to filter list
   if (replace) {
-    x$species_filter <- species_clean
+    x$filters$species <- species_clean
   } else {
-    x$species_filter <- c(x$species_filter, species_clean)
+    x$filters$species <- c(x$filters$species, species_clean)
   }
-  x$species_filter <- c(x$species_filter, species_clean) %>%
+  x$filters$species <- c(x$filters$species, species_clean) %>%
     unique() %>%
     sort()
   return(x)

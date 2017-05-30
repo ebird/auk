@@ -5,12 +5,12 @@
 #' defined, [auk_filter()] should be used to call AWK and perform the
 #' filtering.
 #'
-#' @param x `ebd` object; reference to EBD file created by [auk_ebd()].
+#' @param x `auk_ebd` object; reference to EBD file created by [auk_ebd()].
 #' @param date character or date; date range to filter by to filter by, provided
 #'   either as a character vector in the format `"2015-12-31"` or a vector
 #'   of Date objects.
 #'
-#' @return An `ebd` object.
+#' @return An `auk_ebd` object.
 #' @export
 #' @examples
 #' system.file("extdata/ebd-sample.txt", package = "auk") %>%
@@ -21,7 +21,7 @@ auk_date <- function(x, date)  {
 }
 
 #' @export
-auk_date <- function(x, date) {
+auk_date.auk_ebd <- function(x, date) {
   # checks
   assert_that(
     length(date) == 2,
@@ -34,6 +34,6 @@ auk_date <- function(x, date) {
     format("%Y-%m-%d")
 
   # define filter
-  x$date_filter <- date
+  x$filters$date <- date
   return(x)
 }

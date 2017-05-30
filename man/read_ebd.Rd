@@ -4,11 +4,11 @@
 \alias{read_ebd}
 \title{Read an EBD file}
 \usage{
-read_ebd(file, sep = "\\t", unique = TRUE, setclass = c("tbl",
-  "data.frame", "data.table"))
+read_ebd(x, sep, unique, setclass)
 }
 \arguments{
-\item{file}{character; EBD file to read.}
+\item{x}{filename of EBD file or \code{auk_ebd} object with associtated output
+files as created by \code{\link[=auk_filter]{auk_filter()}}.}
 
 \item{sep}{character; single character used to separate fields within a row.}
 

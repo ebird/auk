@@ -37,6 +37,8 @@ function drops these problematic records. \strong{Note that this
 function typically takes at least 3 hours to run.}
 }
 \details{
+This function can clean an EBD file or an EBD sampling file.
+
 In addition to cleaning the dataset, the field separator can be changed from
 tab to another character. However, this functionality should be used with
 caution because text fields are not quoted in the EBD and may contain the

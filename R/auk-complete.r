@@ -7,9 +7,9 @@
 #' filters have been defined, [auk_filter()] should be used to call AWK and
 #' perform the filtering.
 #'
-#' @param x `ebd` object; reference to EBD file created by [auk_ebd()].s
+#' @param x `auk_ebd` object; reference to EBD file created by [auk_ebd()].
 #'
-#' @return An `ebd` object.
+#' @return An `auk_ebd` object.
 #' @export
 #' @examples
 #' system.file("extdata/ebd-sample.txt", package = "auk") %>%
@@ -20,8 +20,8 @@ auk_complete <- function(x)  {
 }
 
 #' @export
-auk_complete <- function(x) {
+auk_complete.auk_ebd <- function(x) {
   # define filter
-  x$complete <- TRUE
+  x$filters$complete <- TRUE
   return(x)
 }

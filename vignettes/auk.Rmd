@@ -1,7 +1,5 @@
 ---
 title: "auk: eBird Data Processing with AWK"
-author: "Matthew Strimas-Mackey"
-date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Vignette Title}

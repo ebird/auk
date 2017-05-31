@@ -5,7 +5,7 @@
 \title{Remove duplicate group checklists}
 \usage{
 auk_unique(x, group_id = "group_identifier",
-  sort_by = "sampling_event_identifier")
+  checklist_id = "sampling_event_identifier")
 }
 \arguments{
 \item{x}{data.frame; the EBD data frame, typically as imported by
@@ -13,8 +13,10 @@ auk_unique(x, group_id = "group_identifier",
 
 \item{group_id}{character; the name of the group ID column.}
 
-\item{sort_by}{character; the name of the field to sort by prior to picking
-the first record.}
+\item{checklist_id}{character; the name of the checklist ID column, each
+checklist within a group will get a unique value for this field. The record
+with the lowest \code{checklist_id} will be picked as the unique record within
+each group.}
 }
 \value{
 A data.frame with unique observations.
@@ -24,6 +26,13 @@ eBird checklists can be shared among a group of multiple observers, in which
 case observations will be duplicated in the database. This functions removes
 these duplicates from the eBird Basic Dataset (EBD) creating a set of unique
 bird observations. This function is called automatically by \code{\link[=read_ebd]{read_ebd()}}.
+}
+\details{
+This function chooses the checklist within in each that has the
+lowest value for the field specified by \code{checklist_id}. A new column is
+also created, \code{checklist_id}, whose value is the taken from the field
+specified in the \code{checklist_id} parameter for non-group checklists and from
+the field specified by the \code{group_id} parameter for grouped checklists.
 }
 \examples{
 # read in an ebd file and don't automatically remove duplicates

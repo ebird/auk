@@ -101,7 +101,7 @@ unlink(tmp)
 
 ### Reading
 
-EBD files can be read with `read_ebd()`, a wrapper around `readr::read_delim()`, that uses `stringsAsFactors = FALSE`, `quote = ""`, sets column classes, and converts variable names to `snake_case`.
+EBD files can be read with `read_ebd()`, a wrapper around `readr::read_delim()`, that uses `stringsAsFactors = FALSE`, `quote = ""`, sets column data types, and converts variable names to `snake_case`.
 
 ```{r read}
 system.file("extdata/ebd-sample.txt", package="auk") %>% 

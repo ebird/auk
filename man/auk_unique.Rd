@@ -5,7 +5,8 @@
 \title{Remove duplicate group checklists}
 \usage{
 auk_unique(x, group_id = "group_identifier",
-  checklist_id = "sampling_event_identifier")
+  checklist_id = "sampling_event_identifier",
+  species_id = "scientific_name", checklists_only = FALSE)
 }
 \arguments{
 \item{x}{data.frame; the EBD data frame, typically as imported by
@@ -17,6 +18,18 @@ auk_unique(x, group_id = "group_identifier",
 checklist within a group will get a unique value for this field. The record
 with the lowest \code{checklist_id} will be picked as the unique record within
 each group.}
+
+\item{species_id}{character; the name of the column identifying species
+uniquely. This is required to ensure that removing duplicates is done
+independently for each species. Note that this will not treat sub-species
+independently and, if that behaviour is desired, the user will have to
+generate a column uniquely identifying species and subspecies and pass that
+column's name to this argument.}
+
+\item{checklists_only}{logical; whether the dataset provided only contains
+checklist information as with the sampling event data file. If this
+argument is \code{TRUE}, then the \code{species_id} argument is igonored and removing
+of duplicated is done at the checklist level not the species level.}
 }
 \value{
 A data.frame with unique observations.
@@ -25,8 +38,9 @@ A data.frame with unique observations.
 eBird checklists can be shared among a group of multiple observers, in which
 case observations will be duplicated in the database. This functions removes
 these duplicates from the eBird Basic Dataset (EBD) or the EBD sampling event
-data, creating a set of unique bird observations. This function is called
-automatically by \code{\link[=read_ebd]{read_ebd()}} and \code{\link[=read_sampling]{read_sampling()}}.
+data (with \code{checklists_only = TRUE}), creating a set of unique bird
+observations. This function is called automatically by \code{\link[=read_ebd]{read_ebd()}} and
+\code{\link[=read_sampling]{read_sampling()}}.
 }
 \details{
 This function chooses the checklist within in each that has the

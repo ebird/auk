@@ -57,11 +57,12 @@ auk_ebd <- function(file, file_sampling, sep = "\t") {
   col_idx <- data.frame(
     id = c("species",
            "country", "lat", "lng",
-           "date", "time",
+           "date", "time", "last_edited",
            "duration", "complete"),
     name = c("scientific name",
              "country code", "latitude", "longitude",
              "observation date", "time observations started",
+             "last edited date",
              "duration minutes", "all species reported"),
     stringsAsFactors = FALSE)
   # all these columns should be in header
@@ -106,6 +107,7 @@ auk_ebd <- function(file, file_sampling, sep = "\t") {
         extent = numeric(),
         date = character(),
         time = character(),
+        last_edited = character(),
         duration = numeric(),
         complete = FALSE
       )
@@ -179,6 +181,14 @@ print.auk_ebd <- function(x, ...) {
     cat("all")
   } else {
     cat(paste0(x$filters$time[1], "-", x$filters$time[2]))
+  }
+  cat("\n")
+  # last edited date filter
+  cat("  Laste edited date: ")
+  if (length(x$filters$last_edited) == 0) {
+    cat("all")
+  } else {
+    cat(paste0(x$filters$last_edited[1], " - ", x$filters$last_edited[2]))
   }
   cat("\n")
   # duration filter

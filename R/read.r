@@ -47,7 +47,8 @@ read_ebd.character <- function(x, sep = "\t", unique = TRUE,
   # checks
   assert_that(
     assertthat::is.string(x),
-    file.exists(x))
+    file.exists(x),
+    assertthat::is.string(sep), nchar(sep) == 1, sep != " ")
   setclass <- match.arg(setclass)
   if (setclass == "data.table" &&
       !requireNamespace("data.table", quietly = TRUE)) {
@@ -162,7 +163,8 @@ read_sampling.character <- function(x, sep = "\t", unique = TRUE,
                                     setclass = c("tbl", "data.frame",
                                                  "data.table")) {
   setclass <- match.arg(setclass)
-  read_ebd(x = x, sep = sep, unique = unique, setclass = setclass)
+  out <- read_ebd(x = x, sep = sep, unique = FALSE, setclass = setclass)
+  auk_unique(out, checklists_only = TRUE)
 }
 
 #' @export
@@ -175,5 +177,6 @@ read_sampling.auk_ebd <- function(x, sep = "\t", unique = TRUE,
   if (is.null(x$output_sampling)) {
     stop("No output sampling event data file in this auk_ebd object.")
   }
-  read_ebd(x$output_sampling, sep = sep, unique = unique, setclass = setclass)
+  read_sampling(x$output_sampling, sep = sep, unique = unique,
+                setclass = setclass)
 }

@@ -117,7 +117,7 @@ auk_filter.auk_ebd <- function(x, file, file_sampling, awk_file, sep = "\t",
     }
   }
   # zero-filling requires complete checklists
-  if (filter_sampling && x$filters$complete) {
+  if (filter_sampling && !x$filters$complete) {
     w <- paste("Sampling event data file provided, but filters have not been ",
                "set to only return complete checklists. Complete checklists ",
                "are required for zero-filling. Try calling auk_complete().")
@@ -137,7 +137,7 @@ auk_filter.auk_ebd <- function(x, file, file_sampling, awk_file, sep = "\t",
                                          col_idx = x$col_idx_sampling,
                                          sep = sep)
   }
-  writeLines(awk_script_sampling, "blah.txt")
+
   # output awk file
   if (!missing(awk_file)) {
     writeLines(awk_script, awk_file)
@@ -228,6 +228,18 @@ awk_translate <- function(filters, col_idx, sep) {
                                  mn = filters$time[1],
                                  mx = filters$time[2]))
     filter_strings$time <- str_interp(awk_if, list(condition = condition))
+  }
+  # last edited date filter
+  if (length(filters$last_edited) == 0) {
+    filter_strings$last_edited <- ""
+  } else {
+    idx <- col_idx$index[col_idx$id == "last_edited"]
+    condition <- str_interp("$${idx} > \"${mn}\" && $${idx} < \"${mx}\"",
+                            list(idx = idx,
+                                 mn = filters$last_edited[1],
+                                 mx = filters$last_edited[2]))
+    filter_strings$last_edited <- str_interp(awk_if,
+                                             list(condition = condition))
   }
   # duration filter
   if (length(filters$duration) == 0) {

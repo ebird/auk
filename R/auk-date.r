@@ -6,9 +6,8 @@
 #' filtering.
 #'
 #' @param x `auk_ebd` object; reference to EBD file created by [auk_ebd()].
-#' @param date character or date; date range to filter by to filter by, provided
-#'   either as a character vector in the format `"2015-12-31"` or a vector
-#'   of Date objects.
+#' @param date character or date; date range to filter by , provided either as a
+#'   character vector in the format `"2015-12-31"` or a vector of Date objects.
 #'
 #' @return An `auk_ebd` object.
 #' @export

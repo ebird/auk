@@ -81,10 +81,11 @@ auk_clean <- function(f_in, f_out,
     header <- header[-length(header)]
   }
   ncols <- length(header)
-  if (ncols < 45) {
-    sprintf("There is an error in your EBD file, only %i columns detected.",
-            ncols) %>%
-      stop()
+  if (ncols < 30) {
+    stop(
+      sprintf("There is an error in your EBD file, only %i columns detected.",
+            ncols)
+      )
   }
 
   # construct awk command

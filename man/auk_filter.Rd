@@ -21,8 +21,8 @@ filters defined.}
 default. Must only be a single character and space delimited is not allowed
 since spaces appear in many of the fields.}
 
-\item{filter_sampling}{logical; whether the EBD sampling file should also be
-filtered.}
+\item{filter_sampling}{logical; whether the EBD sampling event data should
+also be filtered.}
 
 \item{execute}{logical; whether to execute the awk script, or output it to a
 file for manual execution. If this flag is \code{FALSE}, \code{awk_file} must be

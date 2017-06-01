@@ -12,8 +12,8 @@
 #' @param file character; output file.
 #' @param file_sampling character; optional output file for EBD sampling data.
 #' @param awk_file character; output file to optionally save the awk script to.
-#' @param filter_sampling logical; whether the EBD sampling file should also be
-#'   filtered.
+#' @param filter_sampling logical; whether the EBD sampling event data should
+#'   also be filtered.
 #' @param sep character; the input field seperator, the EBD is tab separated by
 #'   default. Must only be a single character and space delimited is not allowed
 #'   since spaces appear in many of the fields.
@@ -116,6 +116,13 @@ auk_filter.auk_ebd <- function(x, file, file_sampling, awk_file, sep = "\t",
       stop("Output sampling file already exists, use overwrite = TRUE.")
     }
   }
+  # zero-filling requires complete checklists
+  if (filter_sampling && x$filters$complete) {
+    w <- paste("Sampling event data file provided, but filters have not been ",
+               "set to only return complete checklists. Complete checklists ",
+               "are required for zero-filling. Try calling auk_complete().")
+    warning(w)
+  }
 
   # create awk script for the ebd
   awk_script <- awk_translate(filters = x$filters,
@@ -123,11 +130,14 @@ auk_filter.auk_ebd <- function(x, file, file_sampling, awk_file, sep = "\t",
                               sep = sep)
   # create awk script for the ebd sampling data
   if (filter_sampling) {
-    awk_script_sampling <- awk_translate(filters = x$filters,
+    # remove species filter
+    s_filters <- x$filters
+    s_filters$species <- character()
+    awk_script_sampling <- awk_translate(filters = s_filters,
                                          col_idx = x$col_idx_sampling,
                                          sep = sep)
   }
-
+  writeLines(awk_script_sampling, "blah.txt")
   # output awk file
   if (!missing(awk_file)) {
     writeLines(awk_script, awk_file)
@@ -150,7 +160,7 @@ auk_filter.auk_ebd <- function(x, file, file_sampling, awk_file, sep = "\t",
   # ebd sampling
   if (filter_sampling) {
     awk <- paste0("awk '", awk_script_sampling, "' ")
-    com <- paste0(awk, x$file_sampling, " > ", file)
+    com <- paste0(awk, x$file_sampling, " > ", file_sampling)
     exit_code <- system(com)
     if (exit_code != 0) {
       stop("Error running AWK command.")

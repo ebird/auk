@@ -21,13 +21,28 @@
 #'   or a small region it is possible to submit a custom download request. This
 #'   approach is suggested to speed up processing time.
 #'
+#' @details
+#' There are two potential pathways for preparing eBird data. Users wishing to
+#' produce presence only data, should download the [eBird Basic
+#' Dataset](http://ebird.org/ebird/data/download/) and reference this file when
+#' calling `auk_ebd()`. Users wishing to produce zero-filled, presence absence
+#' data should additionally download the sampling event data file associated
+#' with the EBD. This file contains only checklist information and can be used
+#' to infer absences. The sampling event data file should be provided to
+#' `auk_ebd()` via the `file_sampling` argument. For further details consult the
+#' vignettes.
+#'
 #' @return An `auk_ebd` object storing the file reference and the desired
 #'   filters once created with other package functions.
 #' @export
 #' @examples
-#' # example data
+#' # set up reference to sample EBD file
 #' f <- system.file("extdata/ebd-sample.txt", package = "auk")
 #' auk_ebd(f)
+#' # to produce zero-filled data, provide a sampling event data file
+#' f_ebd <- system.file("extdata/zerofill-ex_ebd.txt", package = "auk")
+#' f_smpl <- system.file("extdata/zerofill-ex_sampling.txt", package = "auk")
+#' auk_ebd(f_ebd, file_sampling = f_smpl)
 auk_ebd <- function(file, file_sampling, sep = "\t") {
   # checks
   assert_that(
@@ -104,7 +119,7 @@ print.auk_ebd <- function(x, ...) {
   cat("Input \n")
   cat(paste("  EBD:", x$file, "\n"))
   if (!is.null(x$file_sampling)) {
-    cat(paste("  EBD:", x$file_sampling, "\n"))
+    cat(paste("  Sampling events:", x$file_sampling, "\n"))
   }
   cat("\n")
 
@@ -114,7 +129,7 @@ print.auk_ebd <- function(x, ...) {
   } else {
     cat(paste("  EBD:", x$output, "\n"))
     if (!is.null(x$output_sampling)) {
-      cat(paste("  EBD:", x$output_sampling, "\n"))
+      cat(paste("  Sampling events:", x$output_sampling, "\n"))
     }
   }
   cat("\n")

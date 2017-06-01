@@ -2,8 +2,9 @@
 #'
 #' eBird checklists can be shared among a group of multiple observers, in which
 #' case observations will be duplicated in the database. This functions removes
-#' these duplicates from the eBird Basic Dataset (EBD) creating a set of unique
-#' bird observations. This function is called automatically by [read_ebd()].
+#' these duplicates from the eBird Basic Dataset (EBD) or the EBD sampling event
+#' data, creating a set of unique bird observations. This function is called
+#' automatically by [read_ebd()] and [read_sampling()].
 #'
 #' @param x data.frame; the EBD data frame, typically as imported by
 #'   [read_ebd()].

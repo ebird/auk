@@ -4,6 +4,9 @@
 \alias{read_ebd}
 \alias{read_ebd.character}
 \alias{read_ebd.auk_ebd}
+\alias{read_sampling}
+\alias{read_sampling.character}
+\alias{read_sampling.auk_ebd}
 \title{Read an EBD file}
 \usage{
 read_ebd(x, sep, unique, setclass)
@@ -13,9 +16,17 @@ read_ebd(x, sep, unique, setclass)
 
 \method{read_ebd}{auk_ebd}(x, sep = "\\t", unique = TRUE,
   setclass = c("tbl", "data.frame", "data.table"))
+
+read_sampling(x, sep, unique, setclass)
+
+\method{read_sampling}{character}(x, sep = "\\t", unique = TRUE,
+  setclass = c("tbl", "data.frame", "data.table"))
+
+\method{read_sampling}{auk_ebd}(x, sep = "\\t", unique = TRUE,
+  setclass = c("tbl", "data.frame", "data.table"))
 }
 \arguments{
-\item{x}{filename of EBD file or \code{auk_ebd} object with associtated output
+\item{x}{filename or \code{auk_ebd} object with associtated output
 files as created by \code{\link[=auk_filter]{auk_filter()}}.}
 
 \item{sep}{character; single character used to separate fields within a row.}
@@ -36,7 +47,8 @@ in which case a standard \code{data.frame} or \code{data.table} can be returned.
 \description{
 Read an eBird Basic Dataset file using \code{\link[data.table:fread]{data.table::fread()}},
 \code{\link[readr:read_delim]{readr::read_delim()}}, or \link{read.delim} depending on which packages are
-installed.
+installed. \code{read_ebd()} reads the EBD itself, while read_sampling()` reads a
+sampling event data file.
 }
 \details{
 This functions performs the following processing steps:
@@ -52,9 +64,14 @@ function used.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{character}: Filename of filtered EBD.
+\item \code{character}: Filename of EBD.
 
 \item \code{auk_ebd}: \code{auk_ebd} object output from \code{\link[=auk_filter]{auk_filter()}}
+
+\item \code{character}: Filename of sampling event data file
+
+\item \code{auk_ebd}: \code{auk_ebd} object output from \code{\link[=auk_filter]{auk_filter()}}. Must have
+had a sampling event data file set in the original call to \code{\link[=auk_ebd]{auk_ebd()}}.
 }}
 
 \examples{
@@ -63,4 +80,7 @@ ebd <- system.file("extdata/ebd-sample.txt", package = "auk") \%>\%
 # optionally return a plain data.frame
 ebd_df <- system.file("extdata/ebd-sample.txt", package = "auk") \%>\%
   read_ebd(setclass = "data.frame")
+# read a sampling event data file
+x <- system.file("extdata/zerofill-ex_sampling.txt", package = "auk") \%>\%
+  read_sampling()
 }

@@ -24,8 +24,9 @@ A data.frame with unique observations.
 \description{
 eBird checklists can be shared among a group of multiple observers, in which
 case observations will be duplicated in the database. This functions removes
-these duplicates from the eBird Basic Dataset (EBD) creating a set of unique
-bird observations. This function is called automatically by \code{\link[=read_ebd]{read_ebd()}}.
+these duplicates from the eBird Basic Dataset (EBD) or the EBD sampling event
+data, creating a set of unique bird observations. This function is called
+automatically by \code{\link[=read_ebd]{read_ebd()}} and \code{\link[=read_sampling]{read_sampling()}}.
 }
 \details{
 This function chooses the checklist within in each that has the

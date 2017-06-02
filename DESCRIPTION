@@ -26,5 +26,7 @@ Suggests:
     readr,
     data.table,
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat,
+    covr
 VignetteBuilder: knitr

@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
 # auk: eBird Data Processing with AWK
 
 [![Travis-CI Build Status](https://img.shields.io/travis/mstrimas/auk/master.svg?label=Mac%20OSX%20%26%20Linux)](https://travis-ci.org/mstrimas/auk)
+[![Coverage Status](https://img.shields.io/codecov/c/github/mstrimas/auk/master.svg)](https://codecov.io/github/mstrimas/auk?branch=master)
 
 **This package is the early stages of development and should be used with caution. If you encounter any bugs, please open an issue on GitHub**
 

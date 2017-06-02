@@ -2,12 +2,16 @@
 % Please edit documentation in R/auk-zerofill.r
 \name{auk_zerofill}
 \alias{auk_zerofill}
+\alias{auk_zerofill.data.frame}
 \alias{auk_zerofill.character}
 \alias{auk_zerofill.auk_ebd}
 \alias{collapse_zerofill}
 \title{Read and zero-fill an EBD file}
 \usage{
 auk_zerofill(x, ...)
+
+\method{auk_zerofill}{data.frame}(x, sampling_events, species, sep = "\\t",
+  collapse = FALSE, setclass = c("tbl", "data.frame", "data.table"), ...)
 
 \method{auk_zerofill}{character}(x, sampling_events, species, sep = "\\t",
   collapse = FALSE, setclass = c("tbl", "data.frame", "data.table"), ...)
@@ -18,14 +22,22 @@ auk_zerofill(x, ...)
 collapse_zerofill(x, setclass = c("tbl", "data.frame", "data.table"))
 }
 \arguments{
-\item{x}{filename or \code{auk_ebd} object with associtated output
-files as created by \code{\link[=auk_filter]{auk_filter()}}. If a filename is provided, it must
-point to the EBD and the \code{sampling_events} argument must point to the
-sampling event data file.}
+\item{x}{filename, \code{data.frame} of EBD observations, or \code{auk_ebd} object with
+associtated output files as created by \code{\link[=auk_filter]{auk_filter()}}. If a filename is
+provided, it must point to the EBD and the \code{sampling_events} argument must
+point to the sampling event data file. If a \code{data.frame} is provided it
+should have been imported with \code{\link[=read_ebd]{read_ebd()}}, to ensure the variables names
+have been set correctly, and it must have been passed through
+\code{\link[=auk_unique]{auk_unique()}} to ensure duplicate group checklists have been removed.}
 
 \item{...}{additional arguments passed to methods.}
 
-\item{sampling_events}{character; filename for the sampling event data.}
+\item{sampling_events}{character or \code{data.frame}; filename for the sampling
+event data or a \code{data.frame} of the same data. If a \code{data.frame} is
+provided it should have been imported with \code{\link[=read_sampling]{read_sampling()}}, to ensure the
+variables names have been set correctly, and it must have been passed
+through \code{\link[=auk_unique]{auk_unique()}} to ensure duplicate group checklists have been
+removed.}
 
 \item{species}{character; species to include in zero-filled dataset, provided
 as scientific or English common names, or a mixture of both. These names
@@ -71,6 +83,8 @@ sighting.
 }
 \section{Methods (by class)}{
 \itemize{
+\item \code{data.frame}: EBD data frame.
+
 \item \code{character}: Filename of EBD.
 
 \item \code{auk_ebd}: \code{auk_ebd} object output from \code{\link[=auk_filter]{auk_filter()}}. Must
@@ -82,8 +96,12 @@ have had a sampling event data file set in the original call to
 # read and zero-fill the sampling data
 f_ebd <- system.file("extdata/zerofill-ex_ebd.txt", package = "auk")
 f_smpl <- system.file("extdata/zerofill-ex_sampling.txt", package = "auk")
-ebd <- auk_zerofill(x = f_ebd, sampling_events = f_smpl)
+auk_zerofill(x = f_ebd, sampling_events = f_smpl)
+
 # use the species argument to only include a subset of species
-ebd_sp <- auk_zerofill(x = f_ebd, sampling_events = f_smpl,
-                        species = "Collared Kingfisher")
+auk_zerofill(x = f_ebd, sampling_events = f_smpl,
+             species = "Collared Kingfisher")
+
+# to return a data frame use collapse = TRUE
+ebd_df <- auk_zerofill(x = f_ebd, sampling_events = f_smpl, collapse = TRUE)
 }

@@ -6,11 +6,19 @@
 #' combined to infer absence data by assuming any species not reported on a
 #' checklist was had a count of zero.
 #'
-#' @param x filename or `auk_ebd` object with associtated output
-#'   files as created by [auk_filter()]. If a filename is provided, it must
-#'   point to the EBD and the `sampling_events` argument must point to the
-#'   sampling event data file.
-#' @param sampling_events character; filename for the sampling event data.
+#' @param x filename, `data.frame` of EBD observations, or `auk_ebd` object with
+#'   associtated output files as created by [auk_filter()]. If a filename is
+#'   provided, it must point to the EBD and the `sampling_events` argument must
+#'   point to the sampling event data file. If a `data.frame` is provided it
+#'   should have been imported with [read_ebd()], to ensure the variables names
+#'   have been set correctly, and it must have been passed through
+#'   [auk_unique()] to ensure duplicate group checklists have been removed.
+#' @param sampling_events character or `data.frame`; filename for the sampling
+#'   event data or a `data.frame` of the same data. If a `data.frame` is
+#'   provided it should have been imported with [read_sampling()], to ensure the
+#'   variables names have been set correctly, and it must have been passed
+#'   through [auk_unique()] to ensure duplicate group checklists have been
+#'   removed.
 #' @param species character; species to include in zero-filled dataset, provided
 #'   as scientific or English common names, or a mixture of both. These names
 #'   must match the official eBird Taxomony ([ebird_taxonomy]). To include all
@@ -48,24 +56,27 @@
 #' # read and zero-fill the sampling data
 #' f_ebd <- system.file("extdata/zerofill-ex_ebd.txt", package = "auk")
 #' f_smpl <- system.file("extdata/zerofill-ex_sampling.txt", package = "auk")
-#' ebd <- auk_zerofill(x = f_ebd, sampling_events = f_smpl)
+#' auk_zerofill(x = f_ebd, sampling_events = f_smpl)
+#'
 #' # use the species argument to only include a subset of species
-#' ebd_sp <- auk_zerofill(x = f_ebd, sampling_events = f_smpl,
-#'                         species = "Collared Kingfisher")
+#' auk_zerofill(x = f_ebd, sampling_events = f_smpl,
+#'              species = "Collared Kingfisher")
+#'
+#' # to return a data frame use collapse = TRUE
+#' ebd_df <- auk_zerofill(x = f_ebd, sampling_events = f_smpl, collapse = TRUE)
 auk_zerofill <- function(x, ...) {
   UseMethod("auk_zerofill")
 }
 
 #' @export
-#' @describeIn auk_zerofill Filename of EBD.
-auk_zerofill.character <- function(x, sampling_events, species, sep = "\t",
-                                   collapse = FALSE,
-                                   setclass = c("tbl", "data.frame",
-                                                "data.table"), ...) {
+#' @describeIn auk_zerofill EBD data frame.
+auk_zerofill.data.frame <- function(x, sampling_events, species, sep = "\t",
+                                    collapse = FALSE,
+                                    setclass = c("tbl", "data.frame",
+                                                 "data.table"), ...) {
   # checks
   assert_that(
-    assertthat::is.string(x), file.exists(x),
-    assertthat::is.string(sampling_events), file.exists(sampling_events),
+    is.data.frame(sampling_events),
     missing(species) || is.character(species),
     assertthat::is.string(sep), nchar(sep) == 1, sep != " ")
   setclass <- match.arg(setclass)
@@ -93,44 +104,34 @@ auk_zerofill.character <- function(x, sampling_events, species, sep = "\t",
     }
   }
 
-  # read in the two files
-  ebd <- read_ebd(x = x, sep = sep, unique = TRUE, setclass = setclass)
-  sed <- read_sampling(x = sampling_events, sep = sep, unique = TRUE,
-                       setclass = setclass)
-
   # check that auk_unique has been run
-  if (!"checklist_id" %in% names(ebd)) {
-    stop("The EBD file doesn't appear to have been run through auk_unique().")
+  if (!"checklist_id" %in% names(x)) {
+    stop("The EBD doesn't appear to have been run through auk_unique().")
   }
-  if (!"checklist_id" %in% names(sed)) {
-    stop(paste("The sampling events file doesn't appear to have been run",
+  if (!"checklist_id" %in% names(sampling_events) ||
+      anyDuplicated(sampling_events[, "checklist_id"])) {
+    stop(paste("The sampling events data doesn't appear to have been run",
                "through auk_unique()."))
   }
 
   # subset ebd to remove checklist level fields
   species_cols <- c("checklist_id", "scientific_name", "observation_count")
-  if (any(!species_cols %in% names(ebd))) {
+  if (any(!species_cols %in% names(x))) {
     stop(
       paste0("The following fields must appear in the EBD: \n\t",
              paste(species_cols, collapse =", "))
     )
   }
-  ebd <- ebd[, species_cols]
+  x <- x[, species_cols]
 
   # ensure all checklist in ebd are in sampling file
-  if (!"checklist_id" %in% names(sed)) {
-    stop("The sampling event data file must have a checklist_id field.")
-  }
-  if (!all(ebd$checklist_id %in% sed$checklist_id)) {
-    stop("Some checklists in EBD are missing from sampling event data file.")
+  if (!all(x$checklist_id %in% sampling_events$checklist_id)) {
+    stop("Some checklists in EBD are missing from sampling event data.")
   }
 
   # subset ebd by species
-  if (!"scientific_name" %in% names(ebd)) {
-    stop("No scientific_name field found in EBD.")
-  }
   if (!missing(species)) {
-    in_ebd <- (species_clean %in% ebd$scientific_name)
+    in_ebd <- (species_clean %in% x$scientific_name)
     if (all(!in_ebd)) {
       stop("None of the provided species appear in the EBD.")
     } else if (any(!in_ebd)) {
@@ -140,27 +141,28 @@ auk_zerofill.character <- function(x, sampling_events, species, sep = "\t",
       )
     }
     species_clean <- species_clean[in_ebd]
-    ebd <- ebd[ebd$scientific_name %in% species_clean, ]
+    x <- x[x$scientific_name %in% species_clean, ]
   }
 
   # add presence absence column
-  ebd$species_observed <- ebd$observation_count
-  ebd$species_observed[ebd$species_observed == "X"] <- "1"
-  ebd$species_observed <- (as.numeric(ebd$species_observed) >= 1)
+  x$species_observed <- x$observation_count
+  x$species_observed[x$species_observed == "X"] <- "1"
+  x$species_observed <- (as.numeric(x$species_observed) >= 1)
 
   # remove absences that may have sneaked through
   # there shouldn't be any of these, but just in case...
-  ebd <- ebd[ebd$species_observed == 1, ]
+  x <- x[x$species_observed == 1, ]
 
   # fill in implicit missing values
-  ebd <- tidyr::complete_(ebd,
-                          cols = list(checklist_id = ~ sed$checklist_id,
-                                      "scientific_name"),
-                          fill = list(observation_count = "0",
-                                      species_observed = 0))
+  x <- tidyr::complete_(
+    x,
+    cols = list(checklist_id = ~ sampling_events$checklist_id,
+                "scientific_name"),
+    fill = list(observation_count = "0", species_observed = 0)
+  )
 
   out <- structure(
-    list(observations = ebd, sampling_events = sed),
+    list(observations = x, sampling_events = sampling_events),
     class = "auk_zerofill"
   )
   # return a data frame?
@@ -169,6 +171,30 @@ auk_zerofill.character <- function(x, sampling_events, species, sep = "\t",
   } else {
     return(out)
   }
+}
+
+#' @export
+#' @describeIn auk_zerofill Filename of EBD.
+auk_zerofill.character <- function(x, sampling_events, species, sep = "\t",
+                                   collapse = FALSE,
+                                   setclass = c("tbl", "data.frame",
+                                                "data.table"), ...) {
+  # checks
+  assert_that(
+    assertthat::is.string(x), file.exists(x),
+    assertthat::is.string(sampling_events), file.exists(sampling_events),
+    missing(species) || is.character(species),
+    assertthat::is.string(sep), nchar(sep) == 1, sep != " ")
+  setclass <- match.arg(setclass)
+
+  # read in the two files
+  ebd <- read_ebd(x = x, sep = sep, unique = TRUE, setclass = "data.frame")
+  sed <- read_sampling(x = sampling_events, sep = sep, unique = TRUE,
+                       setclass = "data.frame")
+
+  # pass on to df method
+  auk_zerofill(x = ebd, sampling_events = sed, sep = sep, collapse = collapse,
+               setclass = setclass)
 }
 
 #' @export
@@ -194,8 +220,10 @@ auk_zerofill.auk_ebd <- function(x, species, sep = "\t",
   if (is.null(x$output_sampling)) {
     stop("No output sampling event data file in this auk_ebd object.")
   }
+
+  # pass on to file method
   auk_zerofill(x = x$output, sampling_events = x$output_sampling,
-               sep = sep, setclass = setclass)
+               sep = sep, collapse = collapse, setclass = setclass)
 }
 
 #' @export

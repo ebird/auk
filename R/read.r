@@ -27,7 +27,11 @@
 #' [auk_unique()], unless `unique = FALSE`.
 #'
 #' @return A `data.frame` with additional class `tbl` unless `setclass` is used,
-#'   in which case a standard `data.frame` or `data.table` can be returned.
+#'   in which case a standard `data.frame` or `data.table` can be returned. An
+#'   additional column, `checklist_id`, is added to output files if
+#'   `unique = TRUE`, that uniquely identifies the checklist from which the
+#'   observation came. This field is equal to `sampling_event_identifier` for
+#'   non-group checklists, and `group_identifier` for group checklists.
 #' @export
 #' @examples
 #' ebd <- system.file("extdata/ebd-sample.txt", package = "auk") %>%
@@ -119,21 +123,7 @@ read_ebd.character <- function(x, sep = "\t", unique = TRUE,
   if (unique) {
     out <- auk_unique(out)
   }
-
-  # set output format
-  if (setclass == "tbl") {
-    if (inherits(out, "tbl")) {
-      return(out)
-    }
-    return(structure(out, class = c("tbl_df", "tbl", "data.frame")))
-  } else if (setclass == "data.table") {
-    if (inherits(out, "data.table")) {
-      return(out)
-    }
-    return(data.table::as.data.table(out))
-  } else {
-    return(structure(out, class = "data.frame"))
-  }
+  set_class(out, setclass = setclass)
 }
 
 #' @export

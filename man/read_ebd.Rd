@@ -42,7 +42,11 @@ is to return a tibble.}
 }
 \value{
 A \code{data.frame} with additional class \code{tbl} unless \code{setclass} is used,
-in which case a standard \code{data.frame} or \code{data.table} can be returned.
+in which case a standard \code{data.frame} or \code{data.table} can be returned. An
+additional column, \code{checklist_id}, is added to output files if
+\code{unique = TRUE}, that uniquely identifies the checklist from which the
+observation came. This field is equal to \code{sampling_event_identifier} for
+non-group checklists, and \code{group_identifier} for group checklists.
 }
 \description{
 Read an eBird Basic Dataset file using \code{\link[data.table:fread]{data.table::fread()}},

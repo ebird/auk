@@ -31,7 +31,8 @@
 #'   specified in the `checklist_id` parameter for non-group checklists and from
 #'   the field specified by the `group_id` parameter for grouped checklists.
 #'
-#' @return A data.frame with unique observations.
+#' @return A data.frame with unique observations, and an additional field,
+#'   `checklist_id`, which is a combination of the sampling event and group IDs.
 #' @export
 #' @examples
 #' # read in an ebd file and don't automatically remove duplicates
@@ -86,7 +87,10 @@ auk_unique <- function(x,
   # only keep non-group or non-duplicated records
   out <- rbind(x[!grouped, ], x_grouped)
 
+  # move id field to front
+  out <- out[, c("checklist_id", setdiff(names(out), "checklist_id"))]
+
   # re-assign class
   class(out) <- orig_class
-  return(class)
+  return(out)
 }

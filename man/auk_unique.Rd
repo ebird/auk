@@ -32,7 +32,8 @@ argument is \code{TRUE}, then the \code{species_id} argument is igonored and rem
 of duplicated is done at the checklist level not the species level.}
 }
 \value{
-A data.frame with unique observations.
+A data.frame with unique observations, and an additional field,
+\code{checklist_id}, which is a combination of the sampling event and group IDs.
 }
 \description{
 eBird checklists can be shared among a group of multiple observers, in which

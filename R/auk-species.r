@@ -42,9 +42,10 @@ auk_species.auk_ebd <- function(x, species, replace = FALSE) {
 
   # check all species names are valid
   if (any(is.na(species_clean))) {
-    paste0("The following species were not found in the eBird taxonomy: \n\t",
-           paste(species[is.na(species_clean)], collapse =", ")) %>%
-      stop()
+    stop(
+      paste0("The following species were not found in the eBird taxonomy: \n\t",
+             paste(species[is.na(species_clean)], collapse =", "))
+    )
   }
 
   # add species to filter list

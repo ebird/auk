@@ -83,3 +83,27 @@ get_col_types <- function(header,
   }
   col_types
 }
+
+
+# set output format
+set_class <- function(x, setclass = c("tbl", "data.frame", "data.table")) {
+  setclass = match.arg(setclass)
+  if (setclass == "data.table" &&
+      !requireNamespace("data.table", quietly = TRUE)) {
+    stop("data.table package must be installed to return a data.table.")
+  }
+
+  if (setclass == "tbl") {
+    if (inherits(x, "tbl")) {
+      return(x)
+    }
+    return(structure(x, class = c("tbl_df", "tbl", "data.frame")))
+  } else if (setclass == "data.table") {
+    if (inherits(x, "data.table")) {
+      return(x)
+    }
+    return(data.table::as.data.table(x))
+  } else {
+    return(structure(x, class = "data.frame"))
+  }
+}

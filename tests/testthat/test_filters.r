@@ -40,6 +40,17 @@ test_that("auk_country", {
   # works correctly
   expect_equal(ebd$filters$country, c("CA", "MX", "US"))
 
+  # just code
+  ebd <- system.file("extdata/ebd-sample.txt", package = "auk") %>%
+    auk_ebd() %>%
+    auk_country("CA")
+  expect_equal(ebd$filters$country, "CA")
+  # just name
+  ebd <- system.file("extdata/ebd-sample.txt", package = "auk") %>%
+    auk_ebd() %>%
+    auk_country("Canada")
+  expect_equal(ebd$filters$country, "CA")
+
   # add
   ebd <- auk_country(ebd, "Belize")
   expect_equal(ebd$filters$country, c("BZ", "CA", "MX", "US"))

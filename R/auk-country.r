@@ -36,28 +36,24 @@ auk_country.auk_ebd <- function(x, country, replace = FALSE) {
     assertthat::is.flag(replace)
   )
 
-  # split into names and 2-letter codes
-  country_split <- split(country, ifelse(nchar(country) == 2, "code", "name"))
-
   # convert country names to codes
-  name_codes <- countrycode::countrycode(country_split$name,
+  name_codes <- countrycode::countrycode(country,
                                          origin = "country.name",
                                          destination = "iso2c",
                                          warn = FALSE)
-  # check all countries are valid
-  if (any(is.na(name_codes))) {
-    m <- paste0("The following country names are invalid: \n\t",
-                paste(country_split$name[is.na(name_codes)], collapse =", "))
-    stop(m)
-  }
-  country_codes <- c(name_codes, country_split$code)
+  # lookup codes
+  code_codes <- match(tolower(country),
+                      tolower(countrycode::countrycode_data$iso2c))
+  code_codes <- countrycode::countrycode_data$iso2c[code_codes]
+  # combine, preference to codes
+  country_codes <- ifelse(is.na(code_codes), name_codes, code_codes)
 
   # check codes are valid
-  valid_codes <- country_codes %in% countrycode::countrycode_data$iso2c
+  valid_codes <- !is.na(country_codes)
   if (!all(valid_codes)) {
-    m <- paste0("The following country codes are invalid: \n\t",
-                paste(country_codes[!valid_codes], collapse =", "))
-      stop(m)
+    m <- paste0("The following countries are not valid: \n\t",
+                paste(country[!valid_codes], collapse =", "))
+    stop(m)
   }
 
   # add countries to filter list

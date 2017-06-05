@@ -1,7 +1,6 @@
 context("auk_zerofill")
 
 test_that("auk_zerofill zerofill works normally", {
-  # read and zero-fill the sampling data
   f_ebd <- system.file("extdata/zerofill-ex_ebd.txt", package = "auk")
   f_smpl <- system.file("extdata/zerofill-ex_sampling.txt", package = "auk")
   zf <- auk_zerofill(x = f_ebd, sampling_events = f_smpl)
@@ -19,7 +18,6 @@ test_that("auk_zerofill zerofill works normally", {
 })
 
 test_that("auk_zerofill input types", {
-  # read and zero-fill the sampling data
   f_ebd <- system.file("extdata/zerofill-ex_ebd.txt", package = "auk")
   f_smpl <- system.file("extdata/zerofill-ex_sampling.txt", package = "auk")
   ebd <- auk_ebd(f_ebd, f_smpl) %>%
@@ -72,4 +70,43 @@ test_that("auk_zerofill prints method", {
 
   p_format <- "Zero-filled EBD: [0-9]+ unique checklists, for [0-9]+ species."
   expect_output(print(zf), p_format)
+})
+
+test_that("auk_zerofill error is auk_unique() hasn't been run", {
+  f_ebd <- system.file("extdata/zerofill-ex_ebd.txt", package = "auk")
+  f_smpl <- system.file("extdata/zerofill-ex_sampling.txt", package = "auk")
+  zf <- auk_zerofill(x = f_ebd, sampling_events = f_smpl)
+
+  ebd <- read_ebd(f_ebd, unique = FALSE)
+  smp <- read_sampling(f_smpl, unique = FALSE)
+  expect_error(auk_zerofill(ebd, smp, unique = FALSE))
+  ebd <- auk_unique(ebd)
+  expect_error(auk_zerofill(ebd, smp, unique = FALSE))
+})
+
+test_that("auk_zerofill lack of complete checklists throws error", {
+  f_ebd <- system.file("extdata/zerofill-ex_ebd.txt", package = "auk")
+  f_smpl <- system.file("extdata/zerofill-ex_sampling.txt", package = "auk")
+  ebd <- auk_ebd(f_ebd, f_smpl)
+  ebd$output <- f_ebd
+  ebd$output_sampling <- f_smpl
+
+  expect_error(auk_zerofill(ebd))
+})
+
+test_that("auk_zerofill throws errors with bad input data", {
+  f_ebd <- system.file("extdata/zerofill-ex_ebd.txt", package = "auk")
+  f_smpl <- system.file("extdata/zerofill-ex_sampling.txt", package = "auk")
+  ebd <- auk_ebd(f_ebd, f_smpl) %>%
+    auk_complete()
+
+  expect_error(auk_zerofill(ebd))
+  ebd$output <- f_ebd
+  expect_error(auk_zerofill(ebd))
+  ebd$output_sampling <- f_smpl
+
+  expect_error(auk_zerofill(ebd, species = "asdf"))
+  expect_error(auk_zerofill(ebd, species = "Blue Jay"))
+  expect_warning(auk_zerofill(ebd, species = c("Collared Kingfisher",
+                                               "Blue Jay")))
 })

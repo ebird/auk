@@ -6,3 +6,4 @@
 messing-around.r
 ^\.travis\.yml$
 ^codecov\.yml$
+^appveyor\.yml$

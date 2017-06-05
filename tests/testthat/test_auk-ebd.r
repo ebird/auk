@@ -69,4 +69,22 @@ test_that("auk_ebd prints properly", {
   expect_output(print(ebd), normalizePath(f_smpl), fixed = TRUE)
   expect_output(print(ebd), "Filters not executed")
   expect_output(print(ebd), "Complete checklists only: no")
+
+  # now fake apply filters
+  filters <- ebd %>%
+    auk_species(species = c("Gray Jay", "Blue Jay")) %>%
+    auk_country(country = c("US", "Canada")) %>%
+    auk_extent(extent = c(-100, 37, -80, 52)) %>%
+    auk_date(date = c("2012-01-01", "2012-12-31")) %>%
+    auk_last_edited(date = c("2010-01-01", "2017-12-31")) %>%
+    auk_time(time = c("06:00", "09:00")) %>%
+    auk_duration(duration = c(0, 60)) %>%
+    auk_complete()
+  filters$output <- "output.txt"
+  filters$output_sampling <- "output_sampling.txt"
+
+  expect_output(print(filters), "output.txt", fixed = TRUE)
+  expect_output(print(filters), "output_sampling.txt", fixed = TRUE)
+  expect_output(print(filters), "Countries: CA, US")
+  expect_output(print(filters), "Complete checklists only: yes")
 })

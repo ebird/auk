@@ -1,222 +1,185 @@
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 auk: eBird Data Processing with AWK
 ===================================
 
-[![Travis-CI Build
-Status](https://img.shields.io/travis/mstrimas/auk/master.svg?label=Mac%20OSX%20%26%20Linux)](https://travis-ci.org/mstrimas/auk)
-[![AppVeyor Build
-Status](https://img.shields.io/appveyor/ci/mstrimas/auk/master.svg?label=Windows)](https://ci.appveyor.com/project/mstrimas/auk)
-[![Coverage
-Status](https://img.shields.io/codecov/c/github/mstrimas/auk/master.svg)](https://codecov.io/github/mstrimas/auk?branch=master)
+[![Travis-CI Build Status](https://img.shields.io/travis/mstrimas/auk/master.svg?label=Mac%20OSX%20%26%20Linux)](https://travis-ci.org/mstrimas/auk) [![AppVeyor Build Status](https://img.shields.io/appveyor/ci/mstrimas/auk/master.svg?label=Windows)](https://ci.appveyor.com/project/mstrimas/auk) [![Coverage Status](https://img.shields.io/codecov/c/github/mstrimas/auk/master.svg)](https://codecov.io/github/mstrimas/auk?branch=master) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/auk)](https://cran.r-project.org/package=auk)\]
 
-**This package is the early stages of development and should be used
-with caution. If you encounter any bugs, please open an issue on
-GitHub**
+**This package is the early stages of development and should be used with caution. If you encounter any bugs, please open an issue on GitHub**
 
 Overview
 --------
 
-[eBird](http://www.ebird.org) is an online tool for recording bird
-observations. Since its inception, nearly 500 million sightings records
-have been collected, making it among the largest citizen science
-projects in history and an extremely valuable resource for bird research
-and conservation. The full eBird database is packaged as a text file and
-available for download as the [eBird Basic Dataset
-(EBD)](http://ebird.org/ebird/data/download). Due to the large size of
-this dataset, it must be filtered to a smaller subset of desired
-observations before reading into R. This subsetting is most efficiently
-done using AWK, a unix utility and programming language for processing
-column formatted text data. This package acts as a front end for AWK,
-allowing users to filter eBird data before import into R.
+[eBird](http://www.ebird.org) is an online tool for recording bird observations. Since its inception, nearly 500 million sightings records have been collected, making it among the largest citizen science projects in history and an extremely valuable resource for bird research and conservation. The full eBird database is packaged as a text file and available for download as the [eBird Basic Dataset (EBD)](http://ebird.org/ebird/data/download). Due to the large size of this dataset, it must be filtered to a smaller subset of desired observations before reading into R. This subsetting is most efficiently done using AWK, a unix utility and programming language for processing column formatted text data. This package acts as a front end for AWK, allowing users to filter eBird data before import into R.
 
 Installation
 ------------
 
 This package can be installed directly from GitHub with:
 
-    # install.packages("devtools")
-    devtools::install_github("mstrimas/auk")
+``` r
+# install.packages("devtools")
+devtools::install_github("mstrimas/auk")
+```
 
-`auk` requires the unix utility AWK and therefore currently only works
-on Linux and Mac OS X.
+`auk` requires the unix utility AWK and therefore currently only works on Linux and Mac OS X.
 
 Usage
 -----
 
 ### Cleaning
 
-Some rows in the eBird Basic Dataset (EBD) may have an incorrect number
-of columns and the dataset has an extra blank column at the end. The
-function `auk_clean()` drops these erroneous records and removes the
-blank column.
+Some rows in the eBird Basic Dataset (EBD) may have an incorrect number of columns and the dataset has an extra blank column at the end. The function `auk_clean()` drops these erroneous records and removes the blank column.
 
-    library(auk)
-    # sample data
-    f <- system.file("extdata/ebd-sample_messy.txt", package="auk")
-    tmp <- tempfile()
-    # remove problem runs
-    auk_clean(f, tmp)
-    #> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmptHW0f3/file491d435309df"
-    # number of lines in input
-    length(readLines(f))
-    #> [1] 101
-    # number of lines in output
-    length(readLines(tmp))
-    #> [1] 96
-    unlink(tmp)
+``` r
+library(auk)
+# sample data
+f <- system.file("extdata/ebd-sample_messy.txt", package="auk")
+tmp <- tempfile()
+# remove problem runs
+auk_clean(f, tmp)
+#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpI1ptI5/filea5de49a42a54"
+# number of lines in input
+length(readLines(f))
+#> [1] 101
+# number of lines in output
+length(readLines(tmp))
+#> [1] 96
+unlink(tmp)
+```
 
 ### Filtering
 
-`auk` uses a [pipeline-based workflow](http://r4ds.had.co.nz/pipes.html)
-for defining filters, which can be compiled into an AWK script. Users
-should start by defining a reference to the EBD file with `auk_ebd()`.
-Then the following filters can be applied:
+`auk` uses a [pipeline-based workflow](http://r4ds.had.co.nz/pipes.html) for defining filters, which can be compiled into an AWK script. Users should start by defining a reference to the EBD file with `auk_ebd()`. Then the following filters can be applied:
 
 -   `auk_species()`: filter by species using common or scientific names.
--   `auk_country()`: filter by country using the standard Engligh name
-    or [ISO 2-letter country
-    codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
--   `auk_extent()`: filter by spatial extent, i.e. a range of latitudes
-    and longitudes.
+-   `auk_country()`: filter by country using the standard Engligh name or [ISO 2-letter country codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+-   `auk_extent()`: filter by spatial extent, i.e. a range of latitudes and longitudes.
 -   `auk_date()`: filter to checklists from a range of dates
 -   `auk_time()`: filter to checklists started during a range of times.
--   `auk_duration()`: filter to checklists that lasted a given length
-    of time.
--   `auk_complete()`: only retain checklists in which the observer has
-    specified that they recorded all species seen or heard. These
-    records are the most useful for modelling because they provide both
-    presence and absenced data.
+-   `auk_duration()`: filter to checklists that lasted a given length of time.
+-   `auk_complete()`: only retain checklists in which the observer has specified that they recorded all species seen or heard. These records are the most useful for modelling because they provide both presence and absenced data.
 
-<!-- -->
+``` r
+# sample data
+f <- system.file("extdata/ebd-sample.txt", package="auk")
+# define an EBD reference and a set of filters
+ebd <- auk_ebd(f) %>% 
+  # species: common and scientific names can be mixed
+  auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>%
+  # country: codes and names can be mixed; case insensitive
+  auk_country(country = c("US", "Canada", "mexico")) %>%
+  # extent: formatted as `c(lng_min, lat_min, lng_max, lat_max)`
+  auk_extent(extent = c(-100, 37, -80, 52)) %>%
+  # date: use standard ISO date format `"YYYY-MM-DD"`
+  auk_date(date = c("2012-01-01", "2012-12-31")) %>%
+  # time: 24h format
+  auk_time(time = c("06:00", "09:00")) %>%
+  # duration: length in minutes of checklists
+  auk_duration(duration = c(0, 60)) %>%
+  # complete: all species seen or heard are recorded
+  auk_complete()
+ebd
+#> Input 
+#>   EBD: /Library/Frameworks/R.framework/Versions/3.3/Resources/library/auk/extdata/ebd-sample.txt 
+#> 
+#> Output 
+#>   Filters not executed
+#> 
+#> Filters 
+#>   Species: Cyanocitta cristata, Perisoreus canadensis
+#>   Countries: CA, MX, US
+#>   Spatial extent: Lat -100 - -80; Lon 37 - 52
+#>   Date: 2012-01-01 - 2012-12-31
+#>   Time: 06:00-09:00
+#>   Laste edited date: all
+#>   Duration: 0-60 minutes
+#>   Complete checklists only: yes
+```
 
-    # sample data
-    f <- system.file("extdata/ebd-sample.txt", package="auk")
-    # define an EBD reference and a set of filters
-    ebd <- auk_ebd(f) %>% 
-      # species: common and scientific names can be mixed
-      auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>%
-      # country: codes and names can be mixed; case insensitive
-      auk_country(country = c("US", "Canada", "mexico")) %>%
-      # extent: formatted as `c(lng_min, lat_min, lng_max, lat_max)`
-      auk_extent(extent = c(-100, 37, -80, 52)) %>%
-      # date: use standard ISO date format `"YYYY-MM-DD"`
-      auk_date(date = c("2012-01-01", "2012-12-31")) %>%
-      # time: 24h format
-      auk_time(time = c("06:00", "09:00")) %>%
-      # duration: length in minutes of checklists
-      auk_duration(duration = c(0, 60)) %>%
-      # complete: all species seen or heard are recorded
-      auk_complete()
-    ebd
-    #> Input 
-    #>   EBD: /Library/Frameworks/R.framework/Versions/3.3/Resources/library/auk/extdata/ebd-sample.txt 
-    #> 
-    #> Output 
-    #>   Filters not executed.
-    #> 
-    #> Filters 
-    #>   Species: Cyanocitta cristata, Perisoreus canadensis
-    #>   Countries: CA, MX, US
-    #>   Spatial extent: Lat -100 - -80; Lon 37 - 52
-    #>   Date: 2012-01-01 - 2012-12-31
-    #>   Time: 06:00-09:00
-    #>   Laste edited date: all
-    #>   Duration: 0-60 minutes
-    #>   Complete checklists only: yes
+In all cases, checks are performed to ensure filters are valid. For example, species are checked against the official [eBird taxonomy](http://help.ebird.org/customer/portal/articles/1006825-the-ebird-taxonomy) and countries are checked using the [`countrycode`](https://github.com/vincentarelbundock/countrycode) package.
 
-In all cases, checks are performed to ensure filters are valid. For
-example, species are checked against the official [eBird
-taxonomy](http://help.ebird.org/customer/portal/articles/1006825-the-ebird-taxonomy)
-and countries are checked using the
-[`countrycode`](https://github.com/vincentarelbundock/countrycode)
-package.
+Each of these functions only defines the filter. `auk_filter()` should be used to compile all the filters into an AWK script and execute it to produce an output file. So, bringing all this together, one could, for example, extract all Gray Jay and Blue Jay records from Canada with:
 
-Each of these functions only defines the filter. `auk_filter()` should
-be used to compile all the filters into an AWK script and execute it to
-produce an output file. So, bringing all this together, one could, for
-example, extract all Gray Jay and Blue Jay records from Canada with:
-
-    tmp <- tempfile()
-    ebd <- system.file("extdata/ebd-sample.txt", package="auk") %>% 
-      auk_ebd() %>% 
-      auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>% 
-      auk_country(country = "Canada") %>% 
-      auk_filter(file = tmp)
-    unlink(tmp)
+``` r
+tmp <- tempfile()
+ebd <- system.file("extdata/ebd-sample.txt", package="auk") %>% 
+  auk_ebd() %>% 
+  auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>% 
+  auk_country(country = "Canada") %>% 
+  auk_filter(file = tmp)
+unlink(tmp)
+```
 
 ### Reading
 
-EBD files can be read with `read_ebd()`, a wrapper around
-`readr::read_delim()`, that uses `stringsAsFactors = FALSE`,
-`quote = ""`, sets column data types, and converts variable names to
-`snake_case`.
+EBD files can be read with `read_ebd()`, a wrapper around `readr::read_delim()`, that uses `stringsAsFactors = FALSE`, `quote = ""`, sets column data types, and converts variable names to `snake_case`.
 
-    system.file("extdata/ebd-sample.txt", package="auk") %>% 
-      read_ebd() %>% 
-      str()
-    #> Classes 'tbl_df', 'tbl' and 'data.frame':    487 obs. of  47 variables:
-    #>  $ checklist_id              : chr  "S12813888" "S14439115" "S10152130" "S20381156" ...
-    #>  $ global_unique_identifier  : chr  "URN:CornellLabOfOrnithology:EBIRD:OBS179266095" "URN:CornellLabOfOrnithology:EBIRD:OBS201696412" "URN:CornellLabOfOrnithology:EBIRD:OBS144228837" "URN:CornellLabOfOrnithology:EBIRD:OBS278542844" ...
-    #>  $ last_edited_date          : POSIXct, format: "2013-02-02 15:17:20" "2013-06-18 13:03:16" ...
-    #>  $ taxonomic_order           : int  18772 18772 18772 18816 18772 18772 18772 18772 18772 18772 ...
-    #>  $ category                  : chr  "species" "species" "species" "species" ...
-    #>  $ common_name               : chr  "Green Jay" "Green Jay" "Green Jay" "Steller's Jay" ...
-    #>  $ scientific_name           : chr  "Cyanocorax yncas" "Cyanocorax yncas" "Cyanocorax yncas" "Cyanocitta stelleri" ...
-    #>  $ subspecies_common_name    : chr  NA NA NA NA ...
-    #>  $ subspecies_scientific_name: chr  NA NA NA NA ...
-    #>  $ observation_count         : chr  "X" "4" "1" "2" ...
-    #>  $ breeding_bird_atlas_code  : chr  NA NA NA NA ...
-    #>  $ age_sex                   : chr  NA NA NA NA ...
-    #>  $ country                   : chr  "Mexico" "Mexico" "Belize" "Mexico" ...
-    #>  $ country_code              : chr  "MX" "MX" "BZ" "MX" ...
-    #>  $ state                     : chr  "Tamaulipas" "Chiapas" "Belize" "Chiapas" ...
-    #>  $ state_code                : chr  "MX-TAM" "MX-CHP" "BZ-BZ" "MX-CHP" ...
-    #>  $ county                    : chr  NA NA NA NA ...
-    #>  $ county_code               : chr  NA NA NA NA ...
-    #>  $ iba_code                  : chr  NA "MX_169" NA "MX_200" ...
-    #>  $ bcr_code                  : int  36 60 NA NA 56 47 60 56 NA 60 ...
-    #>  $ usfws_code                : chr  NA NA NA NA ...
-    #>  $ atlas_block               : chr  NA NA NA NA ...
-    #>  $ locality                  : chr  "Mexico across river from Salineno" "MtySantuario_Punto_10" "Crooked Tree Village west" "San Antonio( Bosque mesofilo Punto 6)" ...
-    #>  $ locality_id               : chr  "L1914289" "L2234972" "L1444745" "L3141369" ...
-    #>  $ locality_type             : chr  "P" "P" "P" "P" ...
-    #>  $ latitude                  : num  26.5 15.7 17.8 15.1 20.9 ...
-    #>  $ longitude                 : num  -99.1 -92.9 -88.5 -92.1 -88.4 ...
-    #>  $ observation_date          : Date, format: "2010-11-12" "2012-05-06" ...
-    #>  $ time_observations_started : chr  "07:20:00" "10:30:00" "06:50:00" "10:30:00" ...
-    #>  $ observer_id               : chr  "obsr347082" "obsr313215" "obsr246930" "obsr354246" ...
-    #>  $ first_name                : chr  "Beth" "MONITORES COMUNITARIOS" "Lee" "CBM" ...
-    #>  $ last_name                 : chr  "eBirder" "eBirder" "eBirder" "eBirder" ...
-    #>  $ sampling_event_identifier : chr  "S12813888" "S14439115" "S10152130" "S20381156" ...
-    #>  $ protocol_type             : chr  "eBird - Stationary Count" "eBird - Traveling Count" "eBird - Traveling Count" "eBird - Stationary Count" ...
-    #>  $ project_code              : chr  "EBIRD" "EBIRD" "EBIRD" "EBIRD" ...
-    #>  $ duration_minutes          : int  40 10 100 10 110 55 10 60 60 10 ...
-    #>  $ effort_distance_km        : num  NA 0.257 1.127 NA 1.2 ...
-    #>  $ effort_area_ha            : num  NA NA NA NA NA ...
-    #>  $ number_observers          : int  20 1 2 4 2 2 1 1 4 1 ...
-    #>  $ all_species_reported      : logi  TRUE TRUE TRUE TRUE TRUE TRUE ...
-    #>  $ group_identifier          : chr  NA NA NA NA ...
-    #>  $ has_media                 : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
-    #>  $ approved                  : logi  TRUE TRUE TRUE TRUE TRUE TRUE ...
-    #>  $ reviewed                  : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
-    #>  $ reason                    : chr  NA NA NA NA ...
-    #>  $ trip_comments             : chr  "RGV Bird Festival Trip, viewed from the US side of the river" "Placido Morales Hdz en  Santuario, Angel Albino Corzo, 1556 msnm." "With Glenn Crawford and 3 tourists. Glenn says that the frog calls that are heard nearly everywhere in Belize during the rainy "| __truncated__ "Muestreo realizado por Antonio, Ren� y Evaristo" ...
-    #>  $ species_comments          : chr  NA NA NA NA ...
+``` r
+system.file("extdata/ebd-sample.txt", package="auk") %>% 
+  read_ebd() %>% 
+  str()
+#> Classes 'tbl_df', 'tbl' and 'data.frame':    487 obs. of  47 variables:
+#>  $ checklist_id              : chr  "S12813888" "S14439115" "S10152130" "S20381156" ...
+#>  $ global_unique_identifier  : chr  "URN:CornellLabOfOrnithology:EBIRD:OBS179266095" "URN:CornellLabOfOrnithology:EBIRD:OBS201696412" "URN:CornellLabOfOrnithology:EBIRD:OBS144228837" "URN:CornellLabOfOrnithology:EBIRD:OBS278542844" ...
+#>  $ last_edited_date          : chr  "2013-02-02 15:17:20" "2013-06-18 13:03:16" "2017-03-03 11:30:08" "2014-10-30 15:19:52" ...
+#>  $ taxonomic_order           : int  18772 18772 18772 18816 18772 18772 18772 18772 18772 18772 ...
+#>  $ category                  : chr  "species" "species" "species" "species" ...
+#>  $ common_name               : chr  "Green Jay" "Green Jay" "Green Jay" "Steller's Jay" ...
+#>  $ scientific_name           : chr  "Cyanocorax yncas" "Cyanocorax yncas" "Cyanocorax yncas" "Cyanocitta stelleri" ...
+#>  $ subspecies_common_name    : chr  NA NA NA NA ...
+#>  $ subspecies_scientific_name: chr  NA NA NA NA ...
+#>  $ observation_count         : chr  "X" "4" "1" "2" ...
+#>  $ breeding_bird_atlas_code  : chr  NA NA NA NA ...
+#>  $ age_sex                   : chr  NA NA NA NA ...
+#>  $ country                   : chr  "Mexico" "Mexico" "Belize" "Mexico" ...
+#>  $ country_code              : chr  "MX" "MX" "BZ" "MX" ...
+#>  $ state                     : chr  "Tamaulipas" "Chiapas" "Belize" "Chiapas" ...
+#>  $ state_code                : chr  "MX-TAM" "MX-CHP" "BZ-BZ" "MX-CHP" ...
+#>  $ county                    : chr  NA NA NA NA ...
+#>  $ county_code               : chr  NA NA NA NA ...
+#>  $ iba_code                  : chr  NA "MX_169" NA "MX_200" ...
+#>  $ bcr_code                  : int  36 60 NA NA 56 47 60 56 NA 60 ...
+#>  $ usfws_code                : chr  NA NA NA NA ...
+#>  $ atlas_block               : chr  NA NA NA NA ...
+#>  $ locality                  : chr  "Mexico across river from Salineno" "MtySantuario_Punto_10" "Crooked Tree Village west" "San Antonio( Bosque mesofilo Punto 6)" ...
+#>  $ locality_id               : chr  "L1914289" "L2234972" "L1444745" "L3141369" ...
+#>  $ locality_type             : chr  "P" "P" "P" "P" ...
+#>  $ latitude                  : num  26.5 15.7 17.8 15.1 20.9 ...
+#>  $ longitude                 : num  -99.1 -92.9 -88.5 -92.1 -88.4 ...
+#>  $ observation_date          : Date, format: "2010-11-12" "2012-05-06" ...
+#>  $ time_observations_started : chr  "07:20:00" "10:30:00" "06:50:00" "10:30:00" ...
+#>  $ observer_id               : chr  "obsr347082" "obsr313215" "obsr246930" "obsr354246" ...
+#>  $ first_name                : chr  "Beth" "MONITORES COMUNITARIOS" "Lee" "CBM" ...
+#>  $ last_name                 : chr  "eBirder" "eBirder" "eBirder" "eBirder" ...
+#>  $ sampling_event_identifier : chr  "S12813888" "S14439115" "S10152130" "S20381156" ...
+#>  $ protocol_type             : chr  "eBird - Stationary Count" "eBird - Traveling Count" "eBird - Traveling Count" "eBird - Stationary Count" ...
+#>  $ project_code              : chr  "EBIRD" "EBIRD" "EBIRD" "EBIRD" ...
+#>  $ duration_minutes          : int  40 10 100 10 110 55 10 60 60 10 ...
+#>  $ effort_distance_km        : num  NA 0.257 1.127 NA 1.2 ...
+#>  $ effort_area_ha            : num  NA NA NA NA NA ...
+#>  $ number_observers          : int  20 1 2 4 2 2 1 1 4 1 ...
+#>  $ all_species_reported      : logi  TRUE TRUE TRUE TRUE TRUE TRUE ...
+#>  $ group_identifier          : chr  NA NA NA NA ...
+#>  $ has_media                 : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
+#>  $ approved                  : logi  TRUE TRUE TRUE TRUE TRUE TRUE ...
+#>  $ reviewed                  : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
+#>  $ reason                    : chr  NA NA NA NA ...
+#>  $ trip_comments             : chr  "RGV Bird Festival Trip, viewed from the US side of the river" "Placido Morales Hdz en  Santuario, Angel Albino Corzo, 1556 msnm." "With Glenn Crawford and 3 tourists. Glenn says that the frog calls that are heard nearly everywhere in Belize during the rainy "| __truncated__ "Muestreo realizado por Antonio, Ren� y Evaristo" ...
+#>  $ species_comments          : chr  NA NA NA NA ...
+```
 
-By default, `read_ebd()` returns a tibble for use with
-[Tidyverse](http://tidyverse.org) packages. Tibbles will behave just
-like plain data frames in most instances, but users can choose to return
-a plain `data.frame` or `data.table` by using the `setclass` argument.
+By default, `read_ebd()` returns a tibble for use with [Tidyverse](http://tidyverse.org) packages. Tibbles will behave just like plain data frames in most instances, but users can choose to return a plain `data.frame` or `data.table` by using the `setclass` argument.
 
-    ebd_df <- system.file("extdata/ebd-sample.txt", package="auk") %>% 
-      read_ebd(setclass = "data.frame")
+``` r
+ebd_df <- system.file("extdata/ebd-sample.txt", package="auk") %>% 
+  read_ebd(setclass = "data.frame")
+```
 
 Acknowledgements
 ----------------
 
-This package is based on the AWK scripts provided in a presentation
-given by Wesley Hochachka, Daniel Fink, Tom Auer, and Frank La Sorte at
-the 2016 NAOC eBird Data Workshop on August 15, 2016.
+This package is based on the AWK scripts provided in a presentation given by Wesley Hochachka, Daniel Fink, Tom Auer, and Frank La Sorte at the 2016 NAOC eBird Data Workshop on August 15, 2016.
 
 References
 ----------

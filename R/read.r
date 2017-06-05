@@ -7,6 +7,11 @@
 #'
 #' @param x filename or `auk_ebd` object with associtated output
 #'   files as created by [auk_filter()].
+#' @param reader character; the function to use for reading the input file,
+#'   options are `"fread"`, `"readr"`, or `"base"`, for [data.table::fread()],
+#'   [readr::read_delim()], or [read.delim], respectively. This argument should
+#'   typically be left empty to have the function choose the best reader based
+#'   on the installed packages.
 #' @param sep character; single character used to separate fields within a row.
 #' @param unique logical; should duplicate grouped checklists be removed. If
 #'   `unique = TRUE`, [auk_unique()] is called on the EBD before returning.
@@ -39,25 +44,32 @@
 #' # optionally return a plain data.frame
 #' ebd_df <- system.file("extdata/ebd-sample.txt", package = "auk") %>%
 #'   read_ebd(setclass = "data.frame")
-read_ebd <- function(x, sep, unique, setclass) {
+read_ebd <- function(x, reader, sep, unique, setclass) {
   UseMethod("read_ebd")
 }
 
 #' @export
 #' @describeIn read_ebd Filename of EBD.
-read_ebd.character <- function(x, sep = "\t", unique = TRUE,
+read_ebd.character <- function(x, reader, sep = "\t", unique = TRUE,
                                setclass = c("tbl", "data.frame",
                                             "data.table")) {
   # checks
   assert_that(
     assertthat::is.string(x),
     file.exists(x),
+    missing(reader) || is.character(reader),
     assertthat::is.string(sep), nchar(sep) == 1, sep != " ")
   setclass <- match.arg(setclass)
   if (setclass == "data.table" &&
       !requireNamespace("data.table", quietly = TRUE)) {
     stop("data.table package must be installed to return a data.table.")
   }
+
+  # pick reader
+  if (missing(reader)) {
+    reader <- NULL
+  }
+  reader <- choose_reader(reader)
 
   # get header
   header <- get_header(x, sep = sep)
@@ -95,9 +107,6 @@ read_ebd.character <- function(x, sep = "\t", unique = TRUE,
       attr(out, "spec") <- NULL
     }
   } else {
-    w <- paste("read.delim is slow for large EBD files, for better performance",
-               "insall the readr or data.table packages.")
-    warning(w)
     col_types <- get_col_types(header, reader = "read.delim")
     out <- utils::read.delim(x, sep = sep, quote = "", na.strings = "",
                              stringsAsFactors = FALSE, colClasses = col_types)
@@ -128,13 +137,14 @@ read_ebd.character <- function(x, sep = "\t", unique = TRUE,
 
 #' @export
 #' @describeIn read_ebd `auk_ebd` object output from [auk_filter()]
-read_ebd.auk_ebd <- function(x, sep = "\t", unique = TRUE,
+read_ebd.auk_ebd <- function(x, reader, sep = "\t", unique = TRUE,
                          setclass = c("tbl", "data.frame", "data.table")) {
   setclass <- match.arg(setclass)
   if (is.null(x$output)) {
     stop("No output EBD file in this auk_ebd object, try calling auk_filter().")
   }
-  read_ebd(x$output, sep = sep, unique = unique, setclass = setclass)
+  read_ebd(x$output, reader = reader, sep = sep, unique = unique,
+           setclass = setclass)
 }
 
 #' @rdname read_ebd
@@ -143,17 +153,18 @@ read_ebd.auk_ebd <- function(x, sep = "\t", unique = TRUE,
 #' # read a sampling event data file
 #' x <- system.file("extdata/zerofill-ex_sampling.txt", package = "auk") %>%
 #'   read_sampling()
-read_sampling <- function(x, sep, unique, setclass) {
+read_sampling <- function(x, reader, sep, unique, setclass) {
   UseMethod("read_sampling")
 }
 
 #' @export
 #' @describeIn read_ebd Filename of sampling event data file
-read_sampling.character <- function(x, sep = "\t", unique = TRUE,
+read_sampling.character <- function(x, reader, sep = "\t", unique = TRUE,
                                     setclass = c("tbl", "data.frame",
                                                  "data.table")) {
   setclass <- match.arg(setclass)
-  out <- read_ebd(x = x, sep = sep, unique = FALSE, setclass = setclass)
+  out <- read_ebd(x = x, reader = reader, sep = sep, unique = FALSE,
+                  setclass = setclass)
   if (unique) {
     out <- auk_unique(out, checklists_only = TRUE)
   }
@@ -163,13 +174,13 @@ read_sampling.character <- function(x, sep = "\t", unique = TRUE,
 #' @export
 #' @describeIn read_ebd `auk_ebd` object output from [auk_filter()]. Must have
 #'   had a sampling event data file set in the original call to [auk_ebd()].
-read_sampling.auk_ebd <- function(x, sep = "\t", unique = TRUE,
+read_sampling.auk_ebd <- function(x, reader, sep = "\t", unique = TRUE,
                                   setclass = c("tbl", "data.frame",
                                                "data.table")) {
   setclass <- match.arg(setclass)
   if (is.null(x$output_sampling)) {
     stop("No output sampling event data file in this auk_ebd object.")
   }
-  read_sampling(x$output_sampling, sep = sep, unique = unique,
+  read_sampling(x$output_sampling, reader = reader, sep = sep, unique = unique,
                 setclass = setclass)
 }

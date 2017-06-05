@@ -5,7 +5,6 @@ get_header <- function(x, sep) {
     trimws()
 }
 
-
 clean_names <- function(x) {
   x_clean <- tolower(x) %>%
     trimws() %>%
@@ -105,5 +104,35 @@ set_class <- function(x, setclass = c("tbl", "data.frame", "data.table")) {
     return(data.table::as.data.table(x))
   } else {
     return(structure(x, class = "data.frame"))
+  }
+}
+
+choose_reader <- function(x) {
+  assert_that(is.null(x) || x %in% c("fread", "readr", "base"))
+
+  if (is.null(x)) {
+    if (requireNamespace("data.table", quietly = TRUE)) {
+      reader <- "fread"
+    } else if (requireNamespace("data.table", quietly = TRUE)) {
+      reader <- "readr"
+    } else {
+      reader <- "base"
+    }
+  } else {
+    reader <- x
+  }
+
+  if (reader == "fread") {
+    if (!requireNamespace("data.table", quietly = TRUE)) {
+      stop("Install the data.table package to use reader = fread.")
+    }
+  } else if (reader == "readr") {
+    if (!requireNamespace("readr", quietly = TRUE)) {
+      stop("Install the readr package to use reader = readr.")
+    }
+  } else {
+    m <- paste("read.delim is slow for large EBD files, for better performance",
+               "insall the readr or data.table packages.")
+    message(m)
   }
 }

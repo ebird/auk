@@ -9,25 +9,31 @@
 \alias{read_sampling.auk_ebd}
 \title{Read an EBD file}
 \usage{
-read_ebd(x, sep, unique, setclass)
+read_ebd(x, reader, sep, unique, setclass)
 
-\method{read_ebd}{character}(x, sep = "\\t", unique = TRUE,
+\method{read_ebd}{character}(x, reader, sep = "\\t", unique = TRUE,
   setclass = c("tbl", "data.frame", "data.table"))
 
-\method{read_ebd}{auk_ebd}(x, sep = "\\t", unique = TRUE,
+\method{read_ebd}{auk_ebd}(x, reader, sep = "\\t", unique = TRUE,
   setclass = c("tbl", "data.frame", "data.table"))
 
-read_sampling(x, sep, unique, setclass)
+read_sampling(x, reader, sep, unique, setclass)
 
-\method{read_sampling}{character}(x, sep = "\\t", unique = TRUE,
+\method{read_sampling}{character}(x, reader, sep = "\\t", unique = TRUE,
   setclass = c("tbl", "data.frame", "data.table"))
 
-\method{read_sampling}{auk_ebd}(x, sep = "\\t", unique = TRUE,
+\method{read_sampling}{auk_ebd}(x, reader, sep = "\\t", unique = TRUE,
   setclass = c("tbl", "data.frame", "data.table"))
 }
 \arguments{
 \item{x}{filename or \code{auk_ebd} object with associtated output
 files as created by \code{\link[=auk_filter]{auk_filter()}}.}
+
+\item{reader}{character; the function to use for reading the input file,
+options are \code{"fread"}, \code{"readr"}, or \code{"base"}, for \code{\link[data.table:fread]{data.table::fread()}},
+\code{\link[readr:read_delim]{readr::read_delim()}}, or \link{read.delim}, respectively. This argument should
+typically be left empty to have the function choose the best reader based
+on the installed packages.}
 
 \item{sep}{character; single character used to separate fields within a row.}
 

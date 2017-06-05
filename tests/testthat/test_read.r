@@ -28,6 +28,22 @@ test_that("read_ebd reads an ebd file correctly", {
   expect_true(all(grepl("^[_a-z]+$", nm)))
 })
 
+test_that("read_ebd using different reader functions", {
+  f <- system.file("extdata/zerofill-ex_ebd.txt", package = "auk")
+  ebd_fr <- read_ebd(f, reader = "fread")
+  ebd_rd <- read_ebd(f, reader = "readr")
+  ebd_bs <- suppressMessages(read_ebd(f, reader = "base"))
+
+  expect_is(ebd_fr, "data.frame")
+  expect_is(ebd_rd, "data.frame")
+  expect_is(ebd_bs, "data.frame")
+
+  expect_equal(ebd_fr, ebd_rd)
+  expect_equal(ebd_rd, ebd_bs)
+
+  expect_message(read_ebd(f, reader = "base"))
+})
+
 test_that("read_ebd sets correct output class", {
   f_ebd <- system.file("extdata/zerofill-ex_ebd.txt", package = "auk")
   f_smp <- system.file("extdata/zerofill-ex_sampling.txt", package = "auk")

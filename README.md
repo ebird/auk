@@ -4,6 +4,8 @@ auk: eBird Data Processing with AWK
 
 [![Travis-CI Build
 Status](https://img.shields.io/travis/mstrimas/auk/master.svg?label=Mac%20OSX%20%26%20Linux)](https://travis-ci.org/mstrimas/auk)
+[![AppVeyor Build
+Status](https://img.shields.io/appveyor/ci/mstrimas/auk/master.svg?label=Windows)](https://ci.appveyor.com/project/mstrimas/auk)
 [![Coverage
 Status](https://img.shields.io/codecov/c/github/mstrimas/auk/master.svg)](https://codecov.io/github/mstrimas/auk?branch=master)
 
@@ -54,13 +56,13 @@ blank column.
     tmp <- tempfile()
     # remove problem runs
     auk_clean(f, tmp)
-    #> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpdSMPsW/file2a6e19af5d"
+    #> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmptHW0f3/file491d435309df"
     # number of lines in input
     length(readLines(f))
     #> [1] 101
     # number of lines in output
     length(readLines(tmp))
-    #> [1] 3
+    #> [1] 96
     unlink(tmp)
 
 ### Filtering

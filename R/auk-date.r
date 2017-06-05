@@ -32,6 +32,13 @@ auk_date.auk_ebd <- function(x, date) {
   date <- as.Date(date) %>%
     format("%Y-%m-%d")
 
+  assert_that(
+    all(!is.na(date)),
+    date[1] <= date[2],
+    date[1] >= "1850-01-01",
+    date[2] >= "1850-01-01"
+  )
+
   # define filter
   x$filters$date <- date
   return(x)

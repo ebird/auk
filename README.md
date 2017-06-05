@@ -15,11 +15,11 @@ Overview
 --------
 
 [eBird](http://www.ebird.org) is an online tool for recording bird
-observations. The eBird database contains nearly 500 million sightings
-records making it among the largest citizen science projects in history
-and an extremely valuable resource for bird research and conservation.
-The full eBird database is packaged as a text file and available for
-download as the [eBird Basic Dataset
+observations. Since its inception, nearly 500 million sightings records
+have been collected, making it among the largest citizen science
+projects in history and an extremely valuable resource for bird research
+and conservation. The full eBird database is packaged as a text file and
+available for download as the [eBird Basic Dataset
 (EBD)](http://ebird.org/ebird/data/download). Due to the large size of
 this dataset, it must be filtered to a smaller subset of desired
 observations before reading into R. This subsetting is most efficiently
@@ -54,7 +54,7 @@ blank column.
     tmp <- tempfile()
     # remove problem runs
     auk_clean(f, tmp)
-    #> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpdEvb5D/file26c34f8688e7"
+    #> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpdSMPsW/file2a6e19af5d"
     # number of lines in input
     length(readLines(f))
     #> [1] 101

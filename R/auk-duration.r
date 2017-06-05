@@ -26,7 +26,8 @@ auk_duration.auk_ebd <- function(x, duration) {
   assert_that(
     length(duration) == 2,
     is.numeric(duration),
-    duration[1] <= duration[2]
+    duration[1] <= duration[2],
+    all(duration >= 0)
   )
 
   # define filter

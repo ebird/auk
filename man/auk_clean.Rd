@@ -4,21 +4,17 @@
 \alias{auk_clean}
 \title{Clean an EBD file}
 \usage{
-auk_clean(f_in, f_out, sep_in = "\\t", sep_out = "\\t",
-  remove_blank = TRUE, overwrite = FALSE)
+auk_clean(f_in, f_out, sep = "\\t", remove_blank = TRUE,
+  overwrite = FALSE)
 }
 \arguments{
 \item{f_in}{character; input file.}
 
 \item{f_out}{character; output file.}
 
-\item{sep_in}{character; the input field seperator, the EBD is tab separated
-by default. Must only be a single character and space delimited is not
-allowed since spaces appear in many of the fields.}
-
-\item{sep_out}{character; the output field seperator, defaults to tab
-delimited. Must only be a single character and space delimited is not
-allowed since spaces appear in many of the fields.}
+\item{sep}{character; the input field seperator, the EBD is tab separated by
+default. Must only be a single character and space delimited is not allowed
+since spaces appear in many of the fields.}
 
 \item{remove_blank}{logical; whether the trailing blank should be removed
 from the end of each row. The EBD comes with an extra tab at the end of
@@ -38,11 +34,6 @@ function typically takes at least 3 hours to run.}
 }
 \details{
 This function can clean an EBD file or an EBD sampling file.
-
-In addition to cleaning the dataset, the field separator can be changed from
-tab to another character. However, this functionality should be used with
-caution because text fields are not quoted in the EBD and may contain the
-field separator.
 
 Calling this function requires that the command line utility AWK is
 installed. Linux and Mac machines should have AWK by default, Windows users
@@ -64,5 +55,6 @@ length(readLines(tmp))
 # note that the extra blank column has also been removed
 ncol(read.delim(f, nrows = 5, quote = ""))
 ncol(read.delim(tmp, nrows = 5, quote = ""))
+unlink(tmp)
 }
 }

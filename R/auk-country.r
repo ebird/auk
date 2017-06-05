@@ -66,8 +66,6 @@ auk_country.auk_ebd <- function(x, country, replace = FALSE) {
   } else {
     x$filters$country <- c(x$filters$country, country_codes)
   }
-  x$filters$country <- c(x$filters$country, country_codes) %>%
-    unique() %>%
-    sort()
+  x$filters$country <- sort(unique(c(x$filters$country, country_codes)))
   return(x)
 }

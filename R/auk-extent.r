@@ -28,10 +28,10 @@ auk_extent.auk_ebd <- function(x, extent) {
     length(extent) == 4,
     extent[1] < extent[3],
     extent[2] < extent[4],
-    extent[1] > -180, extent[1] < 180,
-    extent[3] > -180, extent[3] < 180,
-    extent[2] > -90, extent[2] < 90,
-    extent[4] > -90, extent[4] < 90
+    extent[1] >= -180, extent[1] <= 180,
+    extent[3] >= -180, extent[3] <= 180,
+    extent[2] >= -90, extent[2] <= 90,
+    extent[4] >= -90, extent[4] <= 90
   )
 
   # define filter

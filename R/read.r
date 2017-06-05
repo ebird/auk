@@ -154,7 +154,10 @@ read_sampling.character <- function(x, sep = "\t", unique = TRUE,
                                                  "data.table")) {
   setclass <- match.arg(setclass)
   out <- read_ebd(x = x, sep = sep, unique = FALSE, setclass = setclass)
-  auk_unique(out, checklists_only = TRUE)
+  if (unique) {
+    out <- auk_unique(out, checklists_only = TRUE)
+  }
+  return(out)
 }
 
 #' @export

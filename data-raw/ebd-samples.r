@@ -60,3 +60,4 @@ write_tsv(x_samp, "inst/extdata/zerofill-ex_sampling.txt", na = "")
 # manual editing after script is run
 # 1. Remove all " characters from all four files
 # 2. Manually edited the messy file to introduce errors, especially tabs in comment fields
+# 3. Remove x1 from the end of the header row in the messy file.

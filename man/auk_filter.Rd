@@ -40,7 +40,7 @@ this script to produce a filtered eBird Reference Dataset (ERD). The initial
 creation of the \code{auk_ebd} object should be done with \code{\link[=auk_ebd]{auk_ebd()}} and filters
 can be defined using the various other functions in this package, e.g.
 \code{\link[=auk_species]{auk_species()}} or \code{\link[=auk_country]{auk_country()}}. \strong{Note that this function typically takes
-at least a couple hours to run.}
+at least a couple hours to run on the full EBD.}
 }
 \details{
 If an EBD sampling file is provided in the \link[=auk_ebd]{auk_ebd}

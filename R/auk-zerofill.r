@@ -24,6 +24,9 @@
 #'   must match the official eBird Taxomony ([ebird_taxonomy]). To include all
 #'   species, don't pass anything to this argument.
 #' @param sep character; single character used to separate fields within a row.
+#' @param unique logical; should [auk_unique()] be run on the input data if it
+#'   hasn't already. The check that [auk_unique()] has been run is simplistic:
+#'   is there a `checklist_id` field or not.
 #' @param collapse logical; whether to call `zerofill_collapse()` to return a
 #'   data frame rather than an `auk_zerofill` object.
 #' @param setclass `tbl`, `data.frame`, or `data.table`; optionally set
@@ -70,15 +73,15 @@ auk_zerofill <- function(x, ...) {
 
 #' @export
 #' @describeIn auk_zerofill EBD data frame.
-auk_zerofill.data.frame <- function(x, sampling_events, species, sep = "\t",
-                                    collapse = FALSE,
+auk_zerofill.data.frame <- function(x, sampling_events, species,
+                                    unique = TRUE, collapse = FALSE,
                                     setclass = c("tbl", "data.frame",
                                                  "data.table"), ...) {
   # checks
   assert_that(
     is.data.frame(sampling_events),
     missing(species) || is.character(species),
-    assertthat::is.string(sep), nchar(sep) == 1, sep != " ")
+    assertthat::is.flag(unique))
   setclass <- match.arg(setclass)
   if (setclass == "data.table" &&
       !requireNamespace("data.table", quietly = TRUE)) {
@@ -102,12 +105,22 @@ auk_zerofill.data.frame <- function(x, sampling_events, species, sep = "\t",
 
   # check that auk_unique has been run
   if (!"checklist_id" %in% names(x)) {
-    stop("The EBD doesn't appear to have been run through auk_unique().")
+    if (!unique){
+      stop(paste0(
+        "The EBD doesn't appear to have been run through auk_unique(). ",
+        "Set unique = TRUE."))
+    } else {
+      x <- auk_unique(x)
+    }
   }
   if (!"checklist_id" %in% names(sampling_events) ||
       anyDuplicated(sampling_events[, "checklist_id"])) {
-    stop(paste("The sampling events data doesn't appear to have been run",
-               "through auk_unique()."))
+    if (!unique){
+      stop(paste("The sampling events data doesn't appear to have been run",
+                 "through auk_unique(). Set unique = TRUE."))
+    } else {
+      sampling_events <- auk_unique(sampling_events, checklists_only = TRUE)
+    }
   }
 
   # subset ebd to remove checklist level fields
@@ -158,12 +171,13 @@ auk_zerofill.data.frame <- function(x, sampling_events, species, sep = "\t",
   )
 
   out <- structure(
-    list(observations = x, sampling_events = sampling_events),
+    list(observations = set_class(x, setclass = setclass),
+         sampling_events = set_class(sampling_events, setclass = setclass)),
     class = "auk_zerofill"
   )
   # return a data frame?
   if (collapse) {
-    return(collapse_zerofill(out))
+    return(collapse_zerofill(out, setclass = setclass))
   } else {
     return(out)
   }
@@ -172,7 +186,7 @@ auk_zerofill.data.frame <- function(x, sampling_events, species, sep = "\t",
 #' @export
 #' @describeIn auk_zerofill Filename of EBD.
 auk_zerofill.character <- function(x, sampling_events, species, sep = "\t",
-                                   collapse = FALSE,
+                                   unique = TRUE, collapse = FALSE,
                                    setclass = c("tbl", "data.frame",
                                                 "data.table"), ...) {
   # checks
@@ -184,12 +198,13 @@ auk_zerofill.character <- function(x, sampling_events, species, sep = "\t",
   setclass <- match.arg(setclass)
 
   # read in the two files
-  ebd <- read_ebd(x = x, sep = sep, unique = TRUE, setclass = "data.frame")
-  sed <- read_sampling(x = sampling_events, sep = sep, unique = TRUE,
+  ebd <- read_ebd(x = x, sep = sep, unique = FALSE, setclass = "data.frame")
+  sed <- read_sampling(x = sampling_events, sep = sep, unique = FALSE,
                        setclass = "data.frame")
 
   # pass on to df method
-  auk_zerofill(x = ebd, sampling_events = sed, sep = sep, collapse = collapse,
+  auk_zerofill(x = ebd, sampling_events = sed, species = species,
+               unique = unique, collapse = collapse,
                setclass = setclass)
 }
 
@@ -198,13 +213,13 @@ auk_zerofill.character <- function(x, sampling_events, species, sep = "\t",
 #'   have had a sampling event data file set in the original call to
 #'   [auk_ebd()].
 auk_zerofill.auk_ebd <- function(x, species, sep = "\t",
-                                 collapse = FALSE,
+                                 unique = TRUE, collapse = FALSE,
                                  setclass = c("tbl", "data.frame",
                                               "data.table"), ...) {
   setclass <- match.arg(setclass)
   # zero-filling requires complete checklists
   if (!x$filters$complete) {
-    e <- paste("Sampling event data file provided, but filters have not been ",
+    e <- paste0("Sampling event data file provided, but filters have not been ",
                "set to only return complete checklists. Complete checklists ",
                "are required for zero-filling. Try calling auk_complete().")
     stop(e)
@@ -219,20 +234,8 @@ auk_zerofill.auk_ebd <- function(x, species, sep = "\t",
 
   # pass on to file method
   auk_zerofill(x = x$output, sampling_events = x$output_sampling,
-               sep = sep, collapse = collapse, setclass = setclass)
-}
-
-#' @export
-print.auk_zerofill <- function(x, ...) {
-  checklists <- nrow(x$sampling_events)
-  species <- length(unique(x$observations$scientific_name))
-  cat(
-    paste0(
-      "Zero-filled EBD: ",
-      format(checklists, big.mark = ","), " unique checklists, ",
-      "for ", format(species, big.mark = ","), " species.\n"
-    )
-  )
+               species = species, sep = sep, unique = unique,
+               collapse = collapse, setclass = setclass)
 }
 
 #' @rdname auk_zerofill
@@ -248,4 +251,17 @@ collapse_zerofill.auk_zerofill <- function(x, setclass = c("tbl", "data.frame",
   setclass = match.arg(setclass)
   out <- merge(x$sampling_events, x$observations, by = "checklist_id")
   set_class(out, setclass = setclass)
+}
+
+#' @export
+print.auk_zerofill <- function(x, ...) {
+  checklists <- nrow(x$sampling_events)
+  species <- length(unique(x$observations$scientific_name))
+  cat(
+    paste0(
+      "Zero-filled EBD: ",
+      format(checklists, big.mark = ","), " unique checklists, ",
+      "for ", format(species, big.mark = ","), " species.\n"
+    )
+  )
 }

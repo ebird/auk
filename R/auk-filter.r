@@ -5,7 +5,7 @@
 #' creation of the `auk_ebd` object should be done with [auk_ebd()] and filters
 #' can be defined using the various other functions in this package, e.g.
 #' [auk_species()] or [auk_country()]. **Note that this function typically takes
-#' at least a couple hours to run.**
+#' at least a couple hours to run on the full EBD.**
 #'
 #' @param x `auk_ebd` object; reference to EBD file created by [auk_ebd()] with
 #'   filters defined.

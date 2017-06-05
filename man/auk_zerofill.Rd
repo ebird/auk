@@ -10,14 +10,15 @@
 \usage{
 auk_zerofill(x, ...)
 
-\method{auk_zerofill}{data.frame}(x, sampling_events, species, sep = "\\t",
+\method{auk_zerofill}{data.frame}(x, sampling_events, species, unique = TRUE,
   collapse = FALSE, setclass = c("tbl", "data.frame", "data.table"), ...)
 
 \method{auk_zerofill}{character}(x, sampling_events, species, sep = "\\t",
-  collapse = FALSE, setclass = c("tbl", "data.frame", "data.table"), ...)
+  unique = TRUE, collapse = FALSE, setclass = c("tbl", "data.frame",
+  "data.table"), ...)
 
-\method{auk_zerofill}{auk_ebd}(x, species, sep = "\\t", collapse = FALSE,
-  setclass = c("tbl", "data.frame", "data.table"), ...)
+\method{auk_zerofill}{auk_ebd}(x, species, sep = "\\t", unique = TRUE,
+  collapse = FALSE, setclass = c("tbl", "data.frame", "data.table"), ...)
 
 collapse_zerofill(x, setclass = c("tbl", "data.frame", "data.table"))
 }
@@ -44,7 +45,9 @@ as scientific or English common names, or a mixture of both. These names
 must match the official eBird Taxomony (\link{ebird_taxonomy}). To include all
 species, don't pass anything to this argument.}
 
-\item{sep}{character; single character used to separate fields within a row.}
+\item{unique}{logical; should \code{\link[=auk_unique]{auk_unique()}} be run on the input data if it
+hasn't already. The check that \code{\link[=auk_unique]{auk_unique()}} has been run is simplistic:
+is there a \code{checklist_id} field or not.}
 
 \item{collapse}{logical; whether to call \code{zerofill_collapse()} to return a
 data frame rather than an \code{auk_zerofill} object.}
@@ -54,6 +57,8 @@ additional classes to set on the output data. All return objects are
 data frames, but may additionally be \code{tbl} (for use with \code{dplyr}
 and the tidyverse) or \code{data.table} (for use with \code{data.table}). The default
 is to return a tibble.}
+
+\item{sep}{character; single character used to separate fields within a row.}
 }
 \value{
 By default, an \code{auk_zerofill} object, or a data frame if \code{collapse = TRUE}.

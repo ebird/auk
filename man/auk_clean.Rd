@@ -29,8 +29,8 @@ however, if an error was encountered the exit code is returned.
 \description{
 Some rows in the eBird Basic Dataset (EBD) may have an incorrect number of
 columns, often resulting from tabs embedded in the comments field. This
-function drops these problematic records. \strong{Note that this
-function typically takes at least 3 hours to run.}
+function drops these problematic records. \strong{Note that this function typically
+takes at least 3 hours to run on the full EBD.}
 }
 \details{
 This function can clean an EBD file or an EBD sampling file.

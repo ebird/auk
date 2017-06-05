@@ -57,8 +57,10 @@ test_that("read_ebd data frames identical for different read functions", {
   ebd_rd <- read_ebd(f, reader = "readr")
   ebd_bs <- suppressWarnings(read_ebd(f, reader = "base"))
 
-  expect_equal(ebd_fr, ebd_rd)
-  expect_equal(ebd_rd, ebd_bs)
+  expect_equal(ebd_fr$global_unique_identifier,
+               ebd_rd$global_unique_identifier)
+  expect_equal(ebd_rd$global_unique_identifier,
+               ebd_bs$global_unique_identifier)
 })
 
 test_that("read_ebd sets correct output class", {

@@ -2,8 +2,8 @@
 #'
 #' Some rows in the eBird Basic Dataset (EBD) may have an incorrect number of
 #' columns, often resulting from tabs embedded in the comments field. This
-#' function drops these problematic records. **Note that this
-#' function typically takes at least 3 hours to run.**
+#' function drops these problematic records. **Note that this function typically
+#' takes at least 3 hours to run on the full EBD.**
 #'
 #' @param f_in character; input file.
 #' @param f_out character; output file.

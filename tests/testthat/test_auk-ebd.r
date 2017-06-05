@@ -60,7 +60,7 @@ test_that("auk_ebd incorrect separator throws error", {
   expect_error(auk_ebd(f, sep = ",,,,,"))
 })
 
-test_that("auk_ebd prints properly", {
+test_that("auk_ebd prints method", {
   f_ebd <- system.file("extdata/zerofill-ex_ebd.txt", package = "auk")
   f_smpl <- system.file("extdata/zerofill-ex_sampling.txt", package = "auk")
   ebd <- auk_ebd(f_ebd, file_sampling = f_smpl)

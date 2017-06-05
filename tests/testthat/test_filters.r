@@ -53,9 +53,10 @@ test_that("auk_country", {
   expect_equal(ebd$filters$country, "BZ")
 
   # raises error for bad countries
-  expect_error(auk_species(ebd, "Atlantis"))
-  expect_error(auk_species(ebd, ""))
-  expect_error(auk_species(ebd, NA))
+  expect_error(auk_country(ebd, "Atlantis"))
+  expect_error(auk_country(ebd, "XX"))
+  expect_error(auk_country(ebd, ""))
+  expect_error(auk_country(ebd, NA))
 })
 
 test_that("auk_extent", {

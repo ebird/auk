@@ -46,18 +46,18 @@ auk_country.auk_ebd <- function(x, country, replace = FALSE) {
                                          warn = FALSE)
   # check all countries are valid
   if (any(is.na(name_codes))) {
-    paste0("The following country names are invalid: \n\t",
-           paste(country_split$name[is.na(name_codes)], collapse =", ")) %>%
-      stop()
+    m <- paste0("The following country names are invalid: \n\t",
+                paste(country_split$name[is.na(name_codes)], collapse =", "))
+    stop(m)
   }
   country_codes <- c(name_codes, country_split$code)
 
   # check codes are valid
   valid_codes <- country_codes %in% countrycode::countrycode_data$iso2c
   if (!all(valid_codes)) {
-    paste0("The following country codes are invalid: \n\t",
-           paste(country_codes[!valid_codes], collapse =", ")) %>%
-      stop()
+    m <- paste0("The following country codes are invalid: \n\t",
+                paste(country_codes[!valid_codes], collapse =", "))
+      stop(m)
   }
 
   # add countries to filter list

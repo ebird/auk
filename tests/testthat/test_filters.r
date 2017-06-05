@@ -40,17 +40,6 @@ test_that("auk_country", {
   # works correctly
   expect_equal(ebd$filters$country, c("CA", "MX", "US"))
 
-  # just code
-  ebd <- system.file("extdata/ebd-sample.txt", package = "auk") %>%
-    auk_ebd() %>%
-    auk_country("CA")
-  expect_equal(ebd$filters$country, "CA")
-  # just name
-  ebd <- system.file("extdata/ebd-sample.txt", package = "auk") %>%
-    auk_ebd() %>%
-    auk_country("Canada")
-  expect_equal(ebd$filters$country, "CA")
-
   # add
   ebd <- auk_country(ebd, "Belize")
   expect_equal(ebd$filters$country, c("BZ", "CA", "MX", "US"))
@@ -62,6 +51,17 @@ test_that("auk_country", {
   # overwrite
   ebd <- auk_country(ebd, "Belize", replace = TRUE)
   expect_equal(ebd$filters$country, "BZ")
+
+  # just code
+  ebd <- system.file("extdata/ebd-sample.txt", package = "auk") %>%
+    auk_ebd() %>%
+    auk_country("CA")
+  expect_equal(ebd$filters$country, "CA")
+  # just name
+  ebd <- system.file("extdata/ebd-sample.txt", package = "auk") %>%
+    auk_ebd() %>%
+    auk_country("Canada")
+  expect_equal(ebd$filters$country, "CA")
 
   # raises error for bad countries
   expect_error(auk_country(ebd, "Atlantis"))

@@ -127,7 +127,7 @@ print.auk_ebd <- function(x, ...) {
 
   cat("Output \n")
   if (is.null(x$output)) {
-    cat("  Filters not executed.\n")
+    cat("  Filters not executed\n")
   } else {
     cat(paste("  EBD:", x$output, "\n"))
     if (!is.null(x$output_sampling)) {

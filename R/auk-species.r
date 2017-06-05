@@ -31,14 +31,7 @@ auk_species.auk_ebd <- function(x, species, replace = FALSE) {
     is.character(species),
     assertthat::is.flag(replace)
   )
-
-  # first check for scientific names
-  scientific <- species %in% ebird_taxonomy$name_scientific
-  # then for common names
-  common <- match(species, ebird_taxonomy$name_common)
-  common <- ebird_taxonomy$name_scientific[common]
-  # convert common names to scientific
-  species_clean <- ifelse(scientific, species, common)
+  species_clean <- ebird_species(species)
 
   # check all species names are valid
   if (any(is.na(species_clean))) {

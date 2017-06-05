@@ -32,7 +32,7 @@ test_that("read_ebd using different reader functions", {
   f <- system.file("extdata/zerofill-ex_ebd.txt", package = "auk")
   ebd_fr <- read_ebd(f, reader = "fread")
   ebd_rd <- read_ebd(f, reader = "readr")
-  ebd_bs <- suppressMessages(read_ebd(f, reader = "base"))
+  ebd_bs <- suppressWarnings(read_ebd(f, reader = "base"))
 
   expect_is(ebd_fr, "data.frame")
   expect_is(ebd_rd, "data.frame")
@@ -41,7 +41,7 @@ test_that("read_ebd using different reader functions", {
   expect_equal(ebd_fr, ebd_rd)
   expect_equal(ebd_rd, ebd_bs)
 
-  expect_message(read_ebd(f, reader = "base"))
+  expect_warning(read_ebd(f, reader = "base"))
 })
 
 test_that("read_ebd sets correct output class", {

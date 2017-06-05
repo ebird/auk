@@ -78,8 +78,8 @@ read_ebd.character <- function(x, reader, sep = "\t", unique = TRUE,
   }
 
   # read using fread, read_delim, or read.delim
-  if (requireNamespace("data.table", quietly = TRUE)) {
-    col_types <- get_col_types(header, reader = "fread")
+  col_types <- get_col_types(header, reader = reader)
+  if (reader == "fread") {
     out <- data.table::fread(x, sep = sep, quote = "", na.strings = "",
                              colClasses = col_types)
     # convert columns to logical
@@ -89,25 +89,18 @@ read_ebd.character <- function(x, reader, sep = "\t", unique = TRUE,
         out[[i]] <- as.logical(out[[i]])
       }
     }
-    # convert date and time columns
-    if ("LAST EDITED DATE" %in% names(out)) {
-      out[["LAST EDITED DATE"]] <- as.POSIXct(out[["LAST EDITED DATE"]],
-                                              format = "%Y-%m-%d %H:%M:%S")
-    }
+    # convert date column
     if ("OBSERVATION DATE" %in% names(out)) {
       out[["OBSERVATION DATE"]] <- as.Date(out[["OBSERVATION DATE"]],
                                            format = "%Y-%m-%d")
     }
-  } else if (requireNamespace("readr", quietly = TRUE)) {
-    col_types <- get_col_types(header, reader = "read_delim")
-    print(col_types)
+  } else if (reader == "readr") {
     out <- readr::read_delim(x, delim = sep, quote = "", na = "",
                              col_types = col_types)
     if ("spec" %in% names(attributes(out))) {
       attr(out, "spec") <- NULL
     }
   } else {
-    col_types <- get_col_types(header, reader = "read.delim")
     out <- utils::read.delim(x, sep = sep, quote = "", na.strings = "",
                              stringsAsFactors = FALSE, colClasses = col_types)
     # convert columns to logical
@@ -132,13 +125,14 @@ read_ebd.character <- function(x, reader, sep = "\t", unique = TRUE,
   if (unique) {
     out <- auk_unique(out)
   }
+  row.names(out) <- NULL
   set_class(out, setclass = setclass)
 }
 
 #' @export
 #' @describeIn read_ebd `auk_ebd` object output from [auk_filter()]
 read_ebd.auk_ebd <- function(x, reader, sep = "\t", unique = TRUE,
-                         setclass = c("tbl", "data.frame", "data.table")) {
+                             setclass = c("tbl", "data.frame", "data.table")) {
   setclass <- match.arg(setclass)
   if (is.null(x$output)) {
     stop("No output EBD file in this auk_ebd object, try calling auk_filter().")

@@ -13,13 +13,13 @@ clean_names <- function(x) {
 }
 
 get_col_types <- function(header,
-                          reader = c("fread", "read_delim", "read.delim")) {
+                          reader = c("fread", "readr", "base")) {
   reader <- match.arg(reader)
 
   # column types based on feb 2017 ebd
   col_types = c(
     "GLOBAL UNIQUE IDENTIFIER" = "character",
-    "LAST EDITED DATE" = "POSIXct",
+    "LAST EDITED DATE" = "character",
     "TAXONOMIC ORDER" = "integer",
     "CATEGORY" = "character",
     "COMMON NAME" = "character",
@@ -71,18 +71,19 @@ get_col_types <- function(header,
   # make reader specific changes
   if (reader == "fread") {
     col_types[col_types == "logical"] = "integer"
-    col_types[col_types == "POSIXct"] = "character"
     col_types[col_types == "Date"] = "character"
-  } else if (reader == "read_delim") {
-    col_types[col_types == "POSIXct"] = "Time"
+  } else if (reader == "readr") {
     col_types = substr(col_types, 1, 1)
+    # add in guesses
+    col_types <- col_types[header]
+    col_types[is.na(col_types)] <- "?"
+    col_types <- paste(col_types, collapse = "")
   } else {
     col_types[col_types == "logical"] = "integer"
-    names(col_types) <- stringr::str_replace_all(names(col_types), " ", ".")
+    names(col_types) <- stringr::str_replace_all(names(col_types), "[ /]", ".")
   }
   col_types
 }
-
 
 # set output format
 set_class <- function(x, setclass = c("tbl", "data.frame", "data.table")) {
@@ -133,6 +134,7 @@ choose_reader <- function(x) {
   } else {
     m <- paste("read.delim is slow for large EBD files, for better performance",
                "insall the readr or data.table packages.")
-    message(m)
+    warning(m)
   }
+  return(reader)
 }

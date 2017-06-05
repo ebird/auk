@@ -8,8 +8,8 @@ test_that("auk_ebd refrence ebd file", {
                     "last_edited", "duration", "complete")
 
   expect_is(ebd, "auk_ebd")
-  expect_equal(ebd$file, f)
-  expect_equal(ebd$file, f)
+  expect_equal(ebd$file, normalizePath(f))
+  expect_equal(ebd$file, normalizePath(f))
   expect_null(ebd$file_sampling)
   expect_null(ebd$output)
   expect_null(ebd$output_sampling)
@@ -29,8 +29,8 @@ test_that("auk_ebd refrence ebd and sampling files", {
                     "last_edited", "duration", "complete")
 
   expect_is(ebd, "auk_ebd")
-  expect_equal(ebd$file, f_ebd)
-  expect_equal(ebd$file_sampling, f_smpl)
+  expect_equal(ebd$file, normalizePath(f_ebd))
+  expect_equal(ebd$file_sampling, normalizePath(f_smpl))
   expect_null(ebd$output)
   expect_null(ebd$output_sampling)
   expect_is(ebd$col_idx, "data.frame")

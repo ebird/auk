@@ -6,6 +6,8 @@
 #'
 #' @param x character; species to look up, provided as scientific or
 #'   English common names, or a mixture of both. Case insensitive.
+#' @param scientific logical; whether to return scientific (`TRUE`) or English
+#'   common names (`FALSE`).
 #'
 #' @return Character vector of scientific names or common names if names if
 #'   `scientific = FALSE`.

@@ -9,6 +9,9 @@ ebird_species(x, scientific = TRUE)
 \arguments{
 \item{x}{character; species to look up, provided as scientific or
 English common names, or a mixture of both. Case insensitive.}
+
+\item{scientific}{logical; whether to return scientific (\code{TRUE}) or English
+common names (\code{FALSE}).}
 }
 \value{
 Character vector of scientific names or common names if names if

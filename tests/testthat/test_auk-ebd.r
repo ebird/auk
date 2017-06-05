@@ -65,8 +65,8 @@ test_that("auk_ebd prints properly", {
   f_smpl <- system.file("extdata/zerofill-ex_sampling.txt", package = "auk")
   ebd <- auk_ebd(f_ebd, file_sampling = f_smpl)
 
-  expect_output(print(ebd), normalizePath(f_ebd))
-  expect_output(print(ebd), normalizePath(f_smpl))
+  expect_output(print(ebd), normalizePath(f_ebd), fixed = TRUE)
+  expect_output(print(ebd), normalizePath(f_smpl), fixed = TRUE)
   expect_output(print(ebd), "Filters not executed")
   expect_output(print(ebd), "Complete checklists only: no")
 })

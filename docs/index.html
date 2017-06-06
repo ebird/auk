@@ -60,7 +60,7 @@
 <div id="overview" class="section level2">
 <h2 class="hasAnchor">
 <a href="#overview" class="anchor"></a>Overview</h2>
-<p><a href="http://www.ebird.org">eBird</a> is an online tool for recording bird observations. Since its inception, nearly 500 million sightings records have been collected, making it among the largest citizen science projects in history and an extremely valuable resource for bird research and conservation. The full eBird database is packaged as a text file and available for download as the <a href="http://ebird.org/ebird/data/download">eBird Basic Dataset (EBD)</a>. Due to the large size of this dataset, it must be filtered to a smaller subset of desired observations before reading into R. This subsetting is most efficiently done using AWK, a unix utility and programming language for processing column formatted text data. This package acts as a front end for AWK, allowing users to filter eBird data before import into R.</p>
+<p><a href="http://www.ebird.org">eBird</a> is an online tool for recording bird observations. Since its inception, nearly 500 million sightings records have been collected, making it one of the largest citizen science projects in history and an extremely valuable resource for bird research and conservation. The full eBird database is packaged as a text file and available for download as the <a href="http://ebird.org/ebird/data/download">eBird Basic Dataset (EBD)</a>. Due to the large size of this dataset, it must be filtered to a smaller subset of desired observations before reading into R. This subsetting is most efficiently done using AWK, a unix utility and programming language for processing column formatted text data. This package acts as a front end for AWK, allowing users to filter eBird data before import into R.</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -69,6 +69,11 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("devtools")</span>
 devtools::<span class="kw">install_github</span>(<span class="st">"mstrimas/auk"</span>)</code></pre></div>
 <p><code>auk</code> requires the unix utility AWK and therefore currently only works on Linux and Mac OS X.</p>
+</div>
+<div id="vignette" class="section level2">
+<h2 class="hasAnchor">
+<a href="#vignette" class="anchor"></a>Vignette</h2>
+<p>Full details on using <code>auk</code> to produce both presence-only and presence-absence data are outlined in the vignette, which can be accessed with <code><a href="articles/auk.html">vignette("auk")</a></code>.</p>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
@@ -81,9 +86,9 @@ devtools::<span class="kw">install_github</span>(<span class="st">"mstrimas/auk"
 <span class="co"># sample data</span>
 f &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/ebd-sample_messy.txt"</span>, <span class="dt">package=</span><span class="st">"auk"</span>)
 tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>()
-<span class="co"># remove problem runs</span>
+<span class="co"># remove problem records</span>
 <span class="kw"><a href="reference/auk_clean.html">auk_clean</a></span>(f, tmp)
-<span class="co">#&gt; [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//Rtmp2Ex0GQ/filea5f529511c18"</span>
+<span class="co">#&gt; [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//Rtmpg8sB3C/filef3e43d380ba"</span>
 <span class="co"># number of lines in input</span>
 <span class="kw">length</span>(<span class="kw">readLines</span>(f))
 <span class="co">#&gt; [1] 101</span>
@@ -95,7 +100,7 @@ tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>()
 <div id="filtering" class="section level3">
 <h3 class="hasAnchor">
 <a href="#filtering" class="anchor"></a>Filtering</h3>
-<p><code>auk</code> uses a <a href="http://r4ds.had.co.nz/pipes.html">pipeline-based workflow</a> for defining filters, which can be compiled into an AWK script. Users should start by defining a reference to the EBD file with <code><a href="reference/auk_ebd.html">auk_ebd()</a></code>. Then the following filters can be applied:</p>
+<p><code>auk</code> uses a <a href="http://r4ds.had.co.nz/pipes.html">pipeline-based workflow</a> for defining filters, which can be compiled into an AWK script. Users should start by defining a reference to the EBD file with <code><a href="reference/auk_ebd.html">auk_ebd()</a></code>. Then any of the following filters can be applied:</p>
 <ul>
 <li>
 <code><a href="reference/auk_species.html">auk_species()</a></code>: filter by species using common or scientific names.</li>
@@ -104,7 +109,9 @@ tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>()
 <li>
 <code><a href="reference/auk_extent.html">auk_extent()</a></code>: filter by spatial extent, i.e. a range of latitudes and longitudes.</li>
 <li>
-<code><a href="reference/auk_date.html">auk_date()</a></code>: filter to checklists from a range of dates</li>
+<code><a href="reference/auk_date.html">auk_date()</a></code>: filter to checklists from a range of dates.</li>
+<li>
+<code><a href="reference/auk_last_edited.html">auk_last_edited()</a></code>: filter to checklists from a range of last edited dates, useful for extracting just new or recently edited data.</li>
 <li>
 <code><a href="reference/auk_time.html">auk_time()</a></code>: filter to checklists started during a range of times.</li>
 <li>
@@ -159,7 +166,7 @@ ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span clas
 <div id="reading" class="section level3">
 <h3 class="hasAnchor">
 <a href="#reading" class="anchor"></a>Reading</h3>
-<p>EBD files can be read with <code><a href="reference/read_ebd.html">read_ebd()</a></code>, a wrapper around <code>readr::read_delim()</code>, that uses <code>stringsAsFactors = FALSE</code>, <code>quote = ""</code>, sets column data types, and converts variable names to <code>snake_case</code>.</p>
+<p>EBD files can be read with <code><a href="reference/read_ebd.html">read_ebd()</a></code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.file</span>(<span class="st">"extdata/ebd-sample.txt"</span>, <span class="dt">package=</span><span class="st">"auk"</span>) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="reference/read_ebd.html">read_ebd</a></span>() %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">str</span>()
@@ -238,7 +245,7 @@ ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span clas
 <li>Matthew Strimas-Mackey <br><small class="roles"> Author, maintainer </small> </li>
 <li>Eliot Miller <br><small class="roles"> Author </small> </li>
 <li>Wesley Hochachka <br><small class="roles"> Author </small> </li>
-<li>Cornell Lab of Ornithology <br><small class="roles"> Copyright holder, funder </small> </li>
+<li><a href="authors.html">All authors...</a></li>
 </ul>
 <h2>Dev status</h2>
 <ul class="list-unstyled">
@@ -253,7 +260,7 @@ ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span clas
 
 
       <footer><div class="copyright">
-  <p>Developed by Matthew Strimas-Mackey, Eliot Miller, Wesley Hochachka, Cornell Lab of Ornithology.</p>
+  <p>Developed by Matthew Strimas-Mackey, Eliot Miller, Wesley Hochachka.</p>
 </div>
 
 <div class="pkgdown">

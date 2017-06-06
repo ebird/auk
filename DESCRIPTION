@@ -5,7 +5,7 @@ Authors@R: c(
   person("Matthew", "Strimas-Mackey", email = "mstrimas@gmail.com", role = c("aut", "cre")),
   person("Eliot", "Miller", role = "aut"),
   person("Wesley", "Hochachka", role = "aut"),
-  person("Cornell Lab of Ornithology", role = c("cph", "fnd"))
+  person("Cornell Lab of Ornithology", role = "cph")
   )
 Description: Process the eBird Basic Dataset (EBD) using AWK. This package is 
     used to filter the EBD by species, space, or time to produce a manageable 

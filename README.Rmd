@@ -17,13 +17,13 @@ knitr::opts_chunk$set(
 [![Travis-CI Build Status](https://img.shields.io/travis/mstrimas/auk/master.svg?label=Mac%20OSX%20%26%20Linux)](https://travis-ci.org/mstrimas/auk)
 [![AppVeyor Build Status](https://img.shields.io/appveyor/ci/mstrimas/auk/master.svg?label=Windows)](https://ci.appveyor.com/project/mstrimas/auk)
 [![Coverage Status](https://img.shields.io/codecov/c/github/mstrimas/auk/master.svg)](https://codecov.io/github/mstrimas/auk?branch=master)
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/auk)](https://cran.r-project.org/package=auk)]
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/auk)](https://cran.r-project.org/package=auk)
 
 **This package is the early stages of development and should be used with caution. If you encounter any bugs, please open an issue on GitHub**
 
 ## Overview
 
-[eBird](http://www.ebird.org) is an online tool for recording bird observations. Since its inception, nearly 500 million sightings records have been collected, making it among the largest citizen science projects in history and an extremely valuable resource for bird research and conservation. The full eBird database is packaged as a text file and available for download as the [eBird Basic Dataset (EBD)](http://ebird.org/ebird/data/download). Due to the large size of this dataset, it must be filtered to a smaller subset of desired observations before reading into R. This subsetting is most efficiently done using AWK, a unix utility and programming language for processing column formatted text data. This package acts as a front end for AWK, allowing users to filter eBird data before import into R.
+[eBird](http://www.ebird.org) is an online tool for recording bird observations. Since its inception, nearly 500 million sightings records have been collected, making it one of the largest citizen science projects in history and an extremely valuable resource for bird research and conservation. The full eBird database is packaged as a text file and available for download as the [eBird Basic Dataset (EBD)](http://ebird.org/ebird/data/download). Due to the large size of this dataset, it must be filtered to a smaller subset of desired observations before reading into R. This subsetting is most efficiently done using AWK, a unix utility and programming language for processing column formatted text data. This package acts as a front end for AWK, allowing users to filter eBird data before import into R.
 
 ## Installation
 
@@ -36,6 +36,10 @@ devtools::install_github("mstrimas/auk")
 
 `auk` requires the unix utility AWK and therefore currently only works on Linux and Mac OS X.
 
+## Vignette
+
+Full details on using `auk` to produce both presence-only and presence-absence data are outlined in the vignette, which can be accessed with `vignette("auk")`.
+
 ## Usage
 
 ### Cleaning
@@ -47,7 +51,7 @@ library(auk)
 # sample data
 f <- system.file("extdata/ebd-sample_messy.txt", package="auk")
 tmp <- tempfile()
-# remove problem runs
+# remove problem records
 auk_clean(f, tmp)
 # number of lines in input
 length(readLines(f))
@@ -58,12 +62,13 @@ unlink(tmp)
 
 ### Filtering
 
-`auk` uses a [pipeline-based workflow](http://r4ds.had.co.nz/pipes.html) for defining filters, which can be compiled into an AWK script. Users should start by defining a reference to the EBD file with `auk_ebd()`. Then the following filters can be applied:
+`auk` uses a [pipeline-based workflow](http://r4ds.had.co.nz/pipes.html) for defining filters, which can be compiled into an AWK script. Users should start by defining a reference to the EBD file with `auk_ebd()`. Then any of the following filters can be applied:
 
 - `auk_species()`: filter by species using common or scientific names.
 - `auk_country()`: filter by country using the standard Engligh name or [ISO 2-letter country codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
 - `auk_extent()`: filter by spatial extent, i.e. a range of latitudes and longitudes.
-- `auk_date()`: filter to checklists from a range of dates
+- `auk_date()`: filter to checklists from a range of dates.
+- `auk_last_edited()`: filter to checklists from a range of last edited dates, useful for extracting just new or recently edited data.
 - `auk_time()`: filter to checklists started during a range of times.
 - `auk_duration()`: filter to checklists that lasted a given length of time.
 - `auk_complete()`: only retain checklists in which the observer has specified that they recorded all species seen or heard. These records are the most useful for modelling because they provide both presence and absenced data.
@@ -106,7 +111,7 @@ unlink(tmp)
 
 ### Reading
 
-EBD files can be read with `read_ebd()`, a wrapper around `readr::read_delim()`, that uses `stringsAsFactors = FALSE`, `quote = ""`, sets column data types, and converts variable names to `snake_case`.
+EBD files can be read with `read_ebd()`:
 
 ```{r read}
 system.file("extdata/ebd-sample.txt", package="auk") %>% 

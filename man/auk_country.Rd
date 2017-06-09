@@ -10,9 +10,10 @@ auk_country(x, country, replace)
 \item{x}{\code{auk_ebd} object; reference to EBD file created by \code{\link[=auk_ebd]{auk_ebd()}}.}
 
 \item{country}{character; countries to filter by. Countries can either be
-expressed as English names or \href{https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2}{ISO 2-letter countrycodes}. English names are
-matched via regular expressions using \link[=countrycode]{countrycode}, so
-there is some flexibility in names.}
+expressed as English names or
+\href{https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2}{ISO 2-letter country codes}.
+English names are matched via regular expressions using
+\link[=countrycode]{countrycode}, so there is some flexibility in names.}
 
 \item{replace}{logical; multiple calls to \code{auk_country()} are additive,
 unless \code{replace = FALSE}, in which case the previous list of countries to

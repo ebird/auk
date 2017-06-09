@@ -10,7 +10,7 @@
 #'   eBird checklist. Any species not appearing in the EBD for a given checklist
 #'   is implicitly considered to have a count of 0. This file should be
 #'   downloaded at the same time as the EBD to ensure they are in sync.
-#' @param sep character; the input field seperator, the EBD is tab separated so
+#' @param sep character; the input field separator, the EBD is tab separated so
 #'   this should generally not be modified. Must only be a single character and
 #'   space delimited is not allowed since spaces appear in many of the fields.
 #'
@@ -23,14 +23,13 @@
 #'
 #' @details
 #' There are two potential pathways for preparing eBird data. Users wishing to
-#' produce presence only data, should download the [eBird Basic
-#' Dataset](http://ebird.org/ebird/data/download/) and reference this file when
-#' calling `auk_ebd()`. Users wishing to produce zero-filled, presence absence
-#' data should additionally download the sampling event data file associated
-#' with the EBD. This file contains only checklist information and can be used
-#' to infer absences. The sampling event data file should be provided to
-#' `auk_ebd()` via the `file_sampling` argument. For further details consult the
-#' vignettes.
+#' produce presence only data, should download the [eBird Basic Dataset](http://ebird.org/ebird/data/download/)
+#' and reference this file when calling `auk_ebd()`. Users wishing to produce
+#' zero-filled, presence absence data should additionally download the sampling
+#' event data file associated with the EBD. This file contains only checklist
+#' information and can be used to infer absences. The sampling event data file
+#' should be provided to `auk_ebd()` via the `file_sampling` argument. For
+#' further details consult the vignettes.
 #'
 #' @return An `auk_ebd` object storing the file reference and the desired
 #'   filters once created with other package functions.

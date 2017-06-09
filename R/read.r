@@ -5,7 +5,7 @@
 #' installed. `read_ebd()` reads the EBD itself, while read_sampling()` reads a
 #' sampling event data file.
 #'
-#' @param x filename or `auk_ebd` object with associtated output
+#' @param x filename or `auk_ebd` object with associated output
 #'   files as created by [auk_filter()].
 #' @param reader character; the function to use for reading the input file,
 #'   options are `"fread"`, `"readr"`, or `"base"`, for [data.table::fread()],

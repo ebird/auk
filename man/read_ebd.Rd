@@ -26,7 +26,7 @@ read_sampling(x, reader, sep, unique, setclass)
   setclass = c("tbl", "data.frame", "data.table"))
 }
 \arguments{
-\item{x}{filename or \code{auk_ebd} object with associtated output
+\item{x}{filename or \code{auk_ebd} object with associated output
 files as created by \code{\link[=auk_filter]{auk_filter()}}.}
 
 \item{reader}{character; the function to use for reading the input file,

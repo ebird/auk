@@ -16,7 +16,7 @@ eBird checklist. Any species not appearing in the EBD for a given checklist
 is implicitly considered to have a count of 0. This file should be
 downloaded at the same time as the EBD to ensure they are in sync.}
 
-\item{sep}{character; the input field seperator, the EBD is tab separated so
+\item{sep}{character; the input field separator, the EBD is tab separated so
 this should generally not be modified. Must only be a single character and
 space delimited is not allowed since spaces appear in many of the fields.}
 }
@@ -37,13 +37,13 @@ or a small region it is possible to submit a custom download request. This
 approach is suggested to speed up processing time.
 
 There are two potential pathways for preparing eBird data. Users wishing to
-produce presence only data, should download the \href{http://ebird.org/ebird/data/download/}{eBird BasicDataset} and reference this file when
-calling \code{auk_ebd()}. Users wishing to produce zero-filled, presence absence
-data should additionally download the sampling event data file associated
-with the EBD. This file contains only checklist information and can be used
-to infer absences. The sampling event data file should be provided to
-\code{auk_ebd()} via the \code{file_sampling} argument. For further details consult the
-vignettes.
+produce presence only data, should download the \href{http://ebird.org/ebird/data/download/}{eBird Basic Dataset}
+and reference this file when calling \code{auk_ebd()}. Users wishing to produce
+zero-filled, presence absence data should additionally download the sampling
+event data file associated with the EBD. This file contains only checklist
+information and can be used to infer absences. The sampling event data file
+should be provided to \code{auk_ebd()} via the \code{file_sampling} argument. For
+further details consult the vignettes.
 }
 \examples{
 # set up reference to sample EBD file

@@ -17,7 +17,7 @@ filters defined.}
 
 \item{awk_file}{character; output file to optionally save the awk script to.}
 
-\item{sep}{character; the input field seperator, the EBD is tab separated by
+\item{sep}{character; the input field separator, the EBD is tab separated by
 default. Must only be a single character and space delimited is not allowed
 since spaces appear in many of the fields.}
 
@@ -49,7 +49,7 @@ the same set of filters. This ensures that the files are in sync, i.e. that
 they contain data on the same set of checklists.
 
 The AWK script can be saved for future reference by providing an output
-filename to \code{awk_file}. The default behvaiour of this function is to generate
+filename to \code{awk_file}. The default behavior of this function is to generate
 and run the AWK script, however, by setting \code{execute = FALSE} the AWK script
 will be generated but not run. In this case, \code{file} is ignored and \code{awk_file}
 must be specified.

@@ -7,7 +7,7 @@
 \format{A data frame with six variables and 15,251 rows:
 \itemize{
 \item \code{category}: whether the entry is for a species or another
-field-identifiable taxon, wuch as \code{spuh}, \code{slash}, \code{hybrid}, etc.
+field-identifiable taxon, such as \code{spuh}, \code{slash}, \code{hybrid}, etc.
 \item \code{species_code}: a unique alphanumeric code identifying each species.
 \item \code{name_common}: the common name of the species as used in eBird.
 \item \code{name_scientific}: the scientific name of the species.

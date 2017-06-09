@@ -8,7 +8,7 @@
 #' @format A data frame with six variables and 15,251 rows:
 #'
 #' - `category`: whether the entry is for a species or another
-#' field-identifiable taxon, wuch as `spuh`, `slash`, `hybrid`, etc.
+#' field-identifiable taxon, such as `spuh`, `slash`, `hybrid`, etc.
 #' - `species_code`: a unique alphanumeric code identifying each species.
 #' - `name_common`: the common name of the species as used in eBird.
 #' - `name_scientific`: the scientific name of the species.

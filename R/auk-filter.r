@@ -14,7 +14,7 @@
 #' @param awk_file character; output file to optionally save the awk script to.
 #' @param filter_sampling logical; whether the EBD sampling event data should
 #'   also be filtered.
-#' @param sep character; the input field seperator, the EBD is tab separated by
+#' @param sep character; the input field separator, the EBD is tab separated by
 #'   default. Must only be a single character and space delimited is not allowed
 #'   since spaces appear in many of the fields.
 #' @param execute logical; whether to execute the awk script, or output it to a
@@ -29,7 +29,7 @@
 #' they contain data on the same set of checklists.
 #'
 #' The AWK script can be saved for future reference by providing an output
-#' filename to `awk_file`. The default behvaiour of this function is to generate
+#' filename to `awk_file`. The default behavior of this function is to generate
 #' and run the AWK script, however, by setting `execute = FALSE` the AWK script
 #' will be generated but not run. In this case, `file` is ignored and `awk_file`
 #' must be specified.

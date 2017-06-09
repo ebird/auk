@@ -7,7 +7,7 @@
 #'
 #' @param f_in character; input file.
 #' @param f_out character; output file.
-#' @param sep character; the input field seperator, the EBD is tab separated by
+#' @param sep character; the input field separator, the EBD is tab separated by
 #'   default. Must only be a single character and space delimited is not allowed
 #'   since spaces appear in many of the fields.
 #' @param remove_blank logical; whether the trailing blank should be removed

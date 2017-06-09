@@ -22,13 +22,13 @@ each group.}
 \item{species_id}{character; the name of the column identifying species
 uniquely. This is required to ensure that removing duplicates is done
 independently for each species. Note that this will not treat sub-species
-independently and, if that behaviour is desired, the user will have to
+independently and, if that behavior is desired, the user will have to
 generate a column uniquely identifying species and subspecies and pass that
 column's name to this argument.}
 
 \item{checklists_only}{logical; whether the dataset provided only contains
 checklist information as with the sampling event data file. If this
-argument is \code{TRUE}, then the \code{species_id} argument is igonored and removing
+argument is \code{TRUE}, then the \code{species_id} argument is ignored and removing
 of duplicated is done at the checklist level not the species level.}
 }
 \value{

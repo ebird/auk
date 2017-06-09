@@ -7,7 +7,7 @@
 #' checklist was had a count of zero.
 #'
 #' @param x filename, `data.frame` of EBD observations, or `auk_ebd` object with
-#'   associtated output files as created by [auk_filter()]. If a filename is
+#'   associated output files as created by [auk_filter()]. If a filename is
 #'   provided, it must point to the EBD and the `sampling_events` argument must
 #'   point to the sampling event data file. If a `data.frame` is provided it
 #'   should have been imported with [read_ebd()], to ensure the variables names

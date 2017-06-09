@@ -12,7 +12,7 @@ auk_clean(f_in, f_out, sep = "\\t", remove_blank = TRUE,
 
 \item{f_out}{character; output file.}
 
-\item{sep}{character; the input field seperator, the EBD is tab separated by
+\item{sep}{character; the input field separator, the EBD is tab separated by
 default. Must only be a single character and space delimited is not allowed
 since spaces appear in many of the fields.}
 

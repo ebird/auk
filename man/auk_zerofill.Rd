@@ -24,7 +24,7 @@ collapse_zerofill(x, setclass = c("tbl", "data.frame", "data.table"))
 }
 \arguments{
 \item{x}{filename, \code{data.frame} of EBD observations, or \code{auk_ebd} object with
-associtated output files as created by \code{\link[=auk_filter]{auk_filter()}}. If a filename is
+associated output files as created by \code{\link[=auk_filter]{auk_filter()}}. If a filename is
 provided, it must point to the EBD and the \code{sampling_events} argument must
 point to the sampling event data file. If a \code{data.frame} is provided it
 should have been imported with \code{\link[=read_ebd]{read_ebd()}}, to ensure the variables names

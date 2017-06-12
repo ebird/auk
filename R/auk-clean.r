@@ -47,7 +47,8 @@
 auk_clean <- function(f_in, f_out, sep = "\t",
                       remove_blank = TRUE, overwrite = FALSE) {
   # checks
-  if (!auk_installed()) {
+  awk_path <- auk_getpath()
+  if (is.na(awk_path)) {
     stop("auk_clean() requires a valid AWK install.")
   }
   assert_that(
@@ -87,7 +88,7 @@ auk_clean <- function(f_in, f_out, sep = "\t",
   }
   awk <- str_interp(awk_clean,
                     list(ncols = ncols, ws = ws, sep = sep))
-  awk <- paste0("awk '", awk, "' ")
+  awk <- paste0(awk_path, " '", awk, "' ")
   com <- paste0(awk, f_in, " > ", f_out)
 
   # run command

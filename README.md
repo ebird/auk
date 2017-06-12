@@ -10,7 +10,7 @@ auk: eBird Data Processing with AWK
 Overview
 --------
 
-[eBird](http://www.ebird.org) is an online tool for recording bird observations. Since its inception, nearly 500 million sightings records have been collected, making it one of the largest citizen science projects in history and an extremely valuable resource for bird research and conservation. The full eBird database is packaged as a text file and available for download as the [eBird Basic Dataset (EBD)](http://ebird.org/ebird/data/download). Due to the large size of this dataset, it must be filtered to a smaller subset of desired observations before reading into R. This subsetting is most efficiently done using AWK, a unix utility and programming language for processing column formatted text data. This package acts as a front end for AWK, allowing users to filter eBird data before import into R.
+[eBird](http://www.ebird.org) is an online tool for recording bird observations. Since its inception, nearly 500 million sightings records have been collected, making it one of the largest citizen science projects in history and an extremely valuable resource for bird research and conservation. The full eBird database is packaged as a text file and available for download as the [eBird Basic Dataset (EBD)](http://ebird.org/ebird/data/download). Due to the large size of this dataset, it must be filtered to a smaller subset of desired observations before reading into R. This filtering is most efficiently done using AWK, a Unix utility and programming language for processing column formatted text data. This package acts as a front end for AWK, allowing users to filter eBird data before import into R.
 
 Installation
 ------------
@@ -22,7 +22,7 @@ This package can be installed directly from GitHub with:
 devtools::install_github("mstrimas/auk")
 ```
 
-`auk` requires the unix utility AWK and therefore currently only works on Linux and Mac OS X.
+`auk` requires the Unix utility AWK, which is available on most Linux and Mac OS X machines. Windows users will first need to install [Cygwin](https://www.cygwin.com) before using this package.
 
 Vignette
 --------
@@ -43,7 +43,7 @@ f <- system.file("extdata/ebd-sample_messy.txt", package="auk")
 tmp <- tempfile()
 # remove problem records
 auk_clean(f, tmp)
-#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpRoFEsX/file11aec368c0d3f"
+#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpQ8iaTi/filee52241e343f0"
 # number of lines in input
 length(readLines(f))
 #> [1] 101
@@ -58,13 +58,13 @@ unlink(tmp)
 `auk` uses a [pipeline-based workflow](http://r4ds.had.co.nz/pipes.html) for defining filters, which can be compiled into an AWK script. Users should start by defining a reference to the EBD file with `auk_ebd()`. Then any of the following filters can be applied:
 
 -   `auk_species()`: filter by species using common or scientific names.
--   `auk_country()`: filter by country using the standard Engligh name or [ISO 2-letter country codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+-   `auk_country()`: filter by country using the standard English name or [ISO 2-letter country codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
 -   `auk_extent()`: filter by spatial extent, i.e. a range of latitudes and longitudes.
 -   `auk_date()`: filter to checklists from a range of dates.
 -   `auk_last_edited()`: filter to checklists from a range of last edited dates, useful for extracting just new or recently edited data.
 -   `auk_time()`: filter to checklists started during a range of times.
 -   `auk_duration()`: filter to checklists that lasted a given length of time.
--   `auk_complete()`: only retain checklists in which the observer has specified that they recorded all species seen or heard. These records are the most useful for modelling because they provide both presence and absenced data.
+-   `auk_complete()`: only retain checklists in which the observer has specified that they recorded all species seen or heard. These records are the most useful for modelling because they provide both presence and absence data.
 
 ``` r
 # sample data
@@ -87,7 +87,7 @@ ebd <- auk_ebd(f) %>%
   auk_complete()
 ebd
 #> Input 
-#>   EBD: /Library/Frameworks/R.framework/Versions/3.3/Resources/library/auk/extdata/ebd-sample.txt 
+#>   EBD: /Users/mes335/Library/R/3.4/library/auk/extdata/ebd-sample.txt 
 #> 
 #> Output 
 #>   Filters not executed
@@ -171,7 +171,7 @@ system.file("extdata/ebd-sample.txt", package="auk") %>%
 #>  $ approved                  : logi  TRUE TRUE TRUE TRUE TRUE TRUE ...
 #>  $ reviewed                  : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
 #>  $ reason                    : chr  NA NA NA NA ...
-#>  $ trip_comments             : chr  "RGV Bird Festival Trip, viewed from the US side of the river" "Placido Morales Hdz en  Santuario, Angel Albino Corzo, 1556 msnm." "With Glenn Crawford and 3 tourists. Glenn says that the frog calls that are heard nearly everywhere in Belize during the rainy "| __truncated__ "Muestreo realizado por Antonio, Ren� y Evaristo" ...
+#>  $ trip_comments             : chr  "RGV Bird Festival Trip, viewed from the US side of the river" "Placido Morales Hdz en  Santuario, Angel Albino Corzo, 1556 msnm." "With Glenn Crawford and 3 tourists. Glenn says that the frog calls that are heard nearly everywhere in Belize d"| __truncated__ "Muestreo realizado por Antonio, Ren� y Evaristo" ...
 #>  $ species_comments          : chr  NA NA NA NA ...
 ```
 

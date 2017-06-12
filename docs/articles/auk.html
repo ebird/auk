@@ -117,7 +117,7 @@ cleaned &lt;-<span class="st"> </span><span class="kw"><a href="../reference/auk
 <span class="st">  </span><span class="kw"><a href="../reference/auk_ebd.html">auk_ebd</a></span>()
 ebd
 <span class="co">#&gt; Input </span>
-<span class="co">#&gt;   EBD: /Library/Frameworks/R.framework/Versions/3.3/Resources/library/auk/extdata/ebd-sample_messy.txt </span>
+<span class="co">#&gt;   EBD: /Users/mes335/Library/R/3.4/library/auk/extdata/ebd-sample_messy.txt </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Output </span>
 <span class="co">#&gt;   Filters not executed</span>
@@ -172,7 +172,7 @@ ebd
 <span class="st">  </span><span class="kw"><a href="../reference/auk_complete.html">auk_complete</a></span>()
 ebd
 <span class="co">#&gt; Input </span>
-<span class="co">#&gt;   EBD: /Library/Frameworks/R.framework/Versions/3.3/Resources/library/auk/extdata/ebd-sample_messy.txt </span>
+<span class="co">#&gt;   EBD: /Users/mes335/Library/R/3.4/library/auk/extdata/ebd-sample_messy.txt </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Output </span>
 <span class="co">#&gt;   Filters not executed</span>
@@ -255,7 +255,7 @@ ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span clas
 <span class="co">#&gt;  $ approved                  : logi  TRUE TRUE TRUE TRUE TRUE TRUE ...</span>
 <span class="co">#&gt;  $ reviewed                  : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...</span>
 <span class="co">#&gt;  $ reason                    : chr  NA NA NA NA ...</span>
-<span class="co">#&gt;  $ trip_comments             : chr  "RGV Bird Festival Trip, viewed from the US side of the river" "Placido Morales Hdz en  Santuario, Angel Albino Corzo, 1556 msnm." "With Glenn Crawford and 3 tourists. Glenn says that the frog calls that are heard nearly everywhere in Belize during the rainy "| __truncated__ "Muestreo realizado por Antonio, Ren� y Evaristo" ...</span>
+<span class="co">#&gt;  $ trip_comments             : chr  "RGV Bird Festival Trip, viewed from the US side of the river" "Placido Morales Hdz en  Santuario, Angel Albino Corzo, 1556 msnm." "With Glenn Crawford and 3 tourists. Glenn says that the frog calls that are heard nearly everywhere in Belize d"| __truncated__ "Muestreo realizado por Antonio, Ren� y Evaristo" ...</span>
 <span class="co">#&gt;  $ species_comments          : chr  NA NA NA NA ...</span></code></pre></div>
 <p>By default, <code><a href="../reference/read_ebd.html">read_ebd()</a></code> returns a tibble for use with <a href="http://tidyverse.org">Tidyverse</a> packages. Tibbles will behave just like plain data frames in most instances, but users can choose to return a plain <code>data.frame</code> or <code>data.table</code> by using the <code>setclass</code> argument.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ebd_df &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/ebd-sample.txt"</span>, <span class="dt">package=</span><span class="st">"auk"</span>) %&gt;%<span class="st"> </span>
@@ -348,8 +348,8 @@ filters &lt;-<span class="st"> </span><span class="kw"><a href="../reference/auk
 <span class="st">  </span><span class="kw"><a href="../reference/auk_complete.html">auk_complete</a></span>()
 filters
 <span class="co">#&gt; Input </span>
-<span class="co">#&gt;   EBD: /Library/Frameworks/R.framework/Versions/3.3/Resources/library/auk/extdata/zerofill-ex_ebd.txt </span>
-<span class="co">#&gt;   Sampling events: /Library/Frameworks/R.framework/Versions/3.3/Resources/library/auk/extdata/zerofill-ex_sampling.txt </span>
+<span class="co">#&gt;   EBD: /Users/mes335/Library/R/3.4/library/auk/extdata/zerofill-ex_ebd.txt </span>
+<span class="co">#&gt;   Sampling events: /Users/mes335/Library/R/3.4/library/auk/extdata/zerofill-ex_sampling.txt </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Output </span>
 <span class="co">#&gt;   Filters not executed</span>
@@ -373,8 +373,8 @@ ebd_filtered$output_sampling &lt;-<span class="st"> "sampling-filtered.txt"</spa
 ##                            file_sampling = "sampling-filtered.txt")
 ebd_filtered
 <span class="co">#&gt; Input </span>
-<span class="co">#&gt;   EBD: /Library/Frameworks/R.framework/Versions/3.3/Resources/library/auk/extdata/zerofill-ex_ebd.txt </span>
-<span class="co">#&gt;   Sampling events: /Library/Frameworks/R.framework/Versions/3.3/Resources/library/auk/extdata/zerofill-ex_sampling.txt </span>
+<span class="co">#&gt;   EBD: /Users/mes335/Library/R/3.4/library/auk/extdata/zerofill-ex_ebd.txt </span>
+<span class="co">#&gt;   Sampling events: /Users/mes335/Library/R/3.4/library/auk/extdata/zerofill-ex_sampling.txt </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Output </span>
 <span class="co">#&gt;   EBD: ebd-filtered.txt </span>
@@ -489,7 +489,8 @@ ebd_zf_df &lt;-<span class="st"> </span><span class="kw"><a href="../reference/a
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
         <div id="tocnav">
-      <h2>Contents</h2>
+      <h2 class="hasAnchor">
+<a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#background">Background</a></li>
       <li><a href="#presence-data">Presence data</a></li>

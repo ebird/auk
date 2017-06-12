@@ -35,7 +35,7 @@ This package can be installed directly from GitHub with:
 devtools::install_github("mstrimas/auk")
 ```
 
-`auk` requires the Unix utility AWK and therefore currently only works on Linux and Mac OS X.
+`auk` requires the Unix utility AWK, which is available on most Linux and Mac OS X machines. Windows users will first need to install [Cygwin](https://www.cygwin.com) before using this package.
 
 ## Vignette
 

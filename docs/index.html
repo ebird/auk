@@ -60,7 +60,7 @@
 <div id="overview" class="section level2">
 <h2 class="hasAnchor">
 <a href="#overview" class="anchor"></a>Overview</h2>
-<p><a href="http://www.ebird.org">eBird</a> is an online tool for recording bird observations. Since its inception, nearly 500 million sightings records have been collected, making it one of the largest citizen science projects in history and an extremely valuable resource for bird research and conservation. The full eBird database is packaged as a text file and available for download as the <a href="http://ebird.org/ebird/data/download">eBird Basic Dataset (EBD)</a>. Due to the large size of this dataset, it must be filtered to a smaller subset of desired observations before reading into R. This subsetting is most efficiently done using AWK, a unix utility and programming language for processing column formatted text data. This package acts as a front end for AWK, allowing users to filter eBird data before import into R.</p>
+<p><a href="http://www.ebird.org">eBird</a> is an online tool for recording bird observations. Since its inception, nearly 500 million sightings records have been collected, making it one of the largest citizen science projects in history and an extremely valuable resource for bird research and conservation. The full eBird database is packaged as a text file and available for download as the <a href="http://ebird.org/ebird/data/download">eBird Basic Dataset (EBD)</a>. Due to the large size of this dataset, it must be filtered to a smaller subset of desired observations before reading into R. This filtering is most efficiently done using AWK, a Unix utility and programming language for processing column formatted text data. This package acts as a front end for AWK, allowing users to filter eBird data before import into R.</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -68,7 +68,7 @@
 <p>This package can be installed directly from GitHub with:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("devtools")</span>
 devtools::<span class="kw">install_github</span>(<span class="st">"mstrimas/auk"</span>)</code></pre></div>
-<p><code>auk</code> requires the unix utility AWK and therefore currently only works on Linux and Mac OS X.</p>
+<p><code>auk</code> requires the Unix utility AWK, which is available on most Linux and Mac OS X machines. Windows users will first need to install <a href="https://www.cygwin.com">Cygwin</a> before using this package.</p>
 </div>
 <div id="vignette" class="section level2">
 <h2 class="hasAnchor">
@@ -88,7 +88,7 @@ f &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class=
 tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>()
 <span class="co"># remove problem records</span>
 <span class="kw"><a href="reference/auk_clean.html">auk_clean</a></span>(f, tmp)
-<span class="co">#&gt; [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpDLLGPl/file11afc46d9364e"</span>
+<span class="co">#&gt; [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//Rtmpy58U1L/filee53373394505"</span>
 <span class="co"># number of lines in input</span>
 <span class="kw">length</span>(<span class="kw">readLines</span>(f))
 <span class="co">#&gt; [1] 101</span>
@@ -105,7 +105,7 @@ tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>()
 <li>
 <code><a href="reference/auk_species.html">auk_species()</a></code>: filter by species using common or scientific names.</li>
 <li>
-<code><a href="reference/auk_country.html">auk_country()</a></code>: filter by country using the standard Engligh name or <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 2-letter country codes</a>.</li>
+<code><a href="reference/auk_country.html">auk_country()</a></code>: filter by country using the standard English name or <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 2-letter country codes</a>.</li>
 <li>
 <code><a href="reference/auk_extent.html">auk_extent()</a></code>: filter by spatial extent, i.e. a range of latitudes and longitudes.</li>
 <li>
@@ -117,7 +117,7 @@ tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>()
 <li>
 <code><a href="reference/auk_duration.html">auk_duration()</a></code>: filter to checklists that lasted a given length of time.</li>
 <li>
-<code><a href="reference/auk_complete.html">auk_complete()</a></code>: only retain checklists in which the observer has specified that they recorded all species seen or heard. These records are the most useful for modelling because they provide both presence and absenced data.</li>
+<code><a href="reference/auk_complete.html">auk_complete()</a></code>: only retain checklists in which the observer has specified that they recorded all species seen or heard. These records are the most useful for modelling because they provide both presence and absence data.</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># sample data</span>
 f &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/ebd-sample.txt"</span>, <span class="dt">package=</span><span class="st">"auk"</span>)
@@ -139,7 +139,7 @@ ebd &lt;-<span class="st"> </span><span class="kw"><a href="reference/auk_ebd.ht
 <span class="st">  </span><span class="kw"><a href="reference/auk_complete.html">auk_complete</a></span>()
 ebd
 <span class="co">#&gt; Input </span>
-<span class="co">#&gt;   EBD: /Library/Frameworks/R.framework/Versions/3.3/Resources/library/auk/extdata/ebd-sample.txt </span>
+<span class="co">#&gt;   EBD: /Users/mes335/Library/R/3.4/library/auk/extdata/ebd-sample.txt </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Output </span>
 <span class="co">#&gt;   Filters not executed</span>
@@ -216,7 +216,7 @@ ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span clas
 <span class="co">#&gt;  $ approved                  : logi  TRUE TRUE TRUE TRUE TRUE TRUE ...</span>
 <span class="co">#&gt;  $ reviewed                  : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...</span>
 <span class="co">#&gt;  $ reason                    : chr  NA NA NA NA ...</span>
-<span class="co">#&gt;  $ trip_comments             : chr  "RGV Bird Festival Trip, viewed from the US side of the river" "Placido Morales Hdz en  Santuario, Angel Albino Corzo, 1556 msnm." "With Glenn Crawford and 3 tourists. Glenn says that the frog calls that are heard nearly everywhere in Belize during the rainy "| __truncated__ "Muestreo realizado por Antonio, Ren� y Evaristo" ...</span>
+<span class="co">#&gt;  $ trip_comments             : chr  "RGV Bird Festival Trip, viewed from the US side of the river" "Placido Morales Hdz en  Santuario, Angel Albino Corzo, 1556 msnm." "With Glenn Crawford and 3 tourists. Glenn says that the frog calls that are heard nearly everywhere in Belize d"| __truncated__ "Muestreo realizado por Antonio, Ren� y Evaristo" ...</span>
 <span class="co">#&gt;  $ species_comments          : chr  NA NA NA NA ...</span></code></pre></div>
 <p>By default, <code><a href="reference/read_ebd.html">read_ebd()</a></code> returns a tibble for use with <a href="http://tidyverse.org">Tidyverse</a> packages. Tibbles will behave just like plain data frames in most instances, but users can choose to return a plain <code>data.frame</code> or <code>data.table</code> by using the <code>setclass</code> argument.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ebd_df &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/ebd-sample.txt"</span>, <span class="dt">package=</span><span class="st">"auk"</span>) %&gt;%<span class="st"> </span>
@@ -238,7 +238,8 @@ ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span clas
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>License</h2>
+    <h2 class="hasAnchor">
+<a href="#sidebar" class="anchor"></a>License</h2>
 <p><a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE">LICENSE</a></p>
 <h2>Developers</h2>
 <ul class="list-unstyled">

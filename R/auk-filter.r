@@ -71,7 +71,8 @@ auk_filter.auk_ebd <- function(x, file, file_sampling, awk_file, sep = "\t",
                                filter_sampling = TRUE, execute = TRUE,
                                overwrite = FALSE) {
   # checks
-  if (execute && !auk_installed()) {
+  awk_path <- auk_getpath()
+  if (is.na(awk_path)) {
     stop("auk_filter() requires a valid AWK install, unless execute = FALSE.")
   }
   assert_that(
@@ -159,7 +160,7 @@ auk_filter.auk_ebd <- function(x, file, file_sampling, awk_file, sep = "\t",
 
   # ebd sampling
   if (filter_sampling) {
-    awk <- paste0("awk '", awk_script_sampling, "' ")
+    awk <- paste0(awk_path, " '", awk_script_sampling, "' ")
     com <- paste0(awk, x$file_sampling, " > ", file_sampling)
     exit_code <- system(com)
     if (exit_code != 0) {

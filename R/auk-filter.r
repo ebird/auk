@@ -121,7 +121,8 @@ auk_filter.auk_ebd <- function(x, file, file_sampling, awk_file, sep = "\t",
   if (filter_sampling && !x$filters$complete) {
     w <- paste("Sampling event data file provided, but filters have not been ",
                "set to only return complete checklists. Complete checklists ",
-               "are required for zero-filling. Try calling auk_complete().")
+               "are required for zero-filling. You may want to use ",
+               "auk_complete(), or manually filter out incomplete checklists.")
     warning(w)
   }
 

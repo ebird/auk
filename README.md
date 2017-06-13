@@ -43,7 +43,7 @@ f <- system.file("extdata/ebd-sample_messy.txt", package="auk")
 tmp <- tempfile()
 # remove problem records
 auk_clean(f, tmp)
-#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpQ8iaTi/filee52241e343f0"
+#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//Rtmpx44VxH/file1293a4945d70e"
 # number of lines in input
 length(readLines(f))
 #> [1] 101
@@ -87,7 +87,7 @@ ebd <- auk_ebd(f) %>%
   auk_complete()
 ebd
 #> Input 
-#>   EBD: /Users/mes335/Library/R/3.4/library/auk/extdata/ebd-sample.txt 
+#>   EBD: /Library/Frameworks/R.framework/Versions/3.4/Resources/library/auk/extdata/ebd-sample.txt 
 #> 
 #> Output 
 #>   Filters not executed

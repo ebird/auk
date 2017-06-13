@@ -86,13 +86,12 @@ auk_clean <- function(f_in, f_out, sep = "\t",
   } else {
     ws <- ""
   }
-  awk <- str_interp(awk_clean,
-                    list(ncols = ncols, ws = ws, sep = sep))
-  awk <- paste0(awk_path, " '", awk, "' ")
-  com <- paste0(awk, f_in, " > ", f_out)
+  awk <- str_interp(awk_clean, list(ncols = ncols, ws = ws, sep = sep))
 
   # run command
-  exit_code <- system(com)
+  exit_code <- system2(awk_path,
+                       args = paste0("'", awk, "' ", f_in),
+                       stdout = f_out)
   if (exit_code == 0) {
     f_out
   } else {

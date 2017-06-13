@@ -11,14 +11,14 @@ auk_getpath <- function() {
 
   # mac or linux
   if (sysname %in% c("darwin", "linux")) {
-    # set path
-    awk <- "awk"
     # test
     awk_test <- tryCatch(
       list(result = system("which awk", intern = TRUE, ignore.stderr = TRUE)),
       error = function(e) list(result = NULL),
       warning = function(e) list(result = NULL)
     )
+    # set path
+    awk <- awk_test$result
   } else if (sysname == "windows") {
     # cygwin or cygwin64?
     if (file.exists("C:/cygwin64/bin/gawk.exe")) {

@@ -50,7 +50,7 @@ Some rows in the eBird Basic Dataset (EBD) may have an incorrect number of colum
 ```{r auk-clean}
 library(auk)
 # sample data
-f <- system.file("extdata/ebd-sample_messy.txt", package="auk")
+f <- system.file("extdata/ebd-sample_messy.txt", package = "auk")
 tmp <- tempfile()
 # remove problem records
 auk_clean(f, tmp)
@@ -76,7 +76,7 @@ unlink(tmp)
 
 ```{r auk-filter}
 # sample data
-f <- system.file("extdata/ebd-sample.txt", package="auk")
+f <- system.file("extdata/ebd-sample.txt", package = "auk")
 # define an EBD reference and a set of filters
 ebd <- auk_ebd(f) %>% 
   # species: common and scientific names can be mixed
@@ -102,7 +102,7 @@ Each of these functions only defines the filter. `auk_filter()` should be used t
 
 ```{r auk-complete, eval = FALSE}
 tmp <- tempfile()
-ebd <- system.file("extdata/ebd-sample.txt", package="auk") %>% 
+ebd <- system.file("extdata/ebd-sample.txt", package = "auk") %>% 
   auk_ebd() %>% 
   auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>% 
   auk_country(country = "Canada") %>% 
@@ -115,7 +115,7 @@ unlink(tmp)
 EBD files can be read with `read_ebd()`:
 
 ```{r read}
-system.file("extdata/ebd-sample.txt", package="auk") %>% 
+system.file("extdata/ebd-sample.txt", package = "auk") %>% 
   read_ebd() %>% 
   str()
 ```
@@ -123,7 +123,7 @@ system.file("extdata/ebd-sample.txt", package="auk") %>%
 By default, `read_ebd()` returns a tibble for use with [Tidyverse](http://tidyverse.org) packages. Tibbles will behave just like plain data frames in most instances, but users can choose to return a plain `data.frame` or `data.table` by using the `setclass` argument.
 
 ```{r read-tbl}
-ebd_df <- system.file("extdata/ebd-sample.txt", package="auk") %>% 
+ebd_df <- system.file("extdata/ebd-sample.txt", package = "auk") %>% 
   read_ebd(setclass = "data.frame")
 ```
 

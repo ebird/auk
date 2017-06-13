@@ -7,6 +7,8 @@ Authors@R: c(
   person("Wesley", "Hochachka", role = "aut"),
   person("Cornell Lab of Ornithology", role = "cph")
   )
+URL: http://strimas.com/auk, https://github.com/mstrimas/auk
+BugReports: https://github.com/mstrimas/auk/issues
 Description: Process the eBird Basic Dataset (EBD) using AWK. This package is 
     used to filter the EBD by species, space, or time to produce a manageable 
     file size that can be imported into R.

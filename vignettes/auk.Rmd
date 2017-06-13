@@ -74,7 +74,7 @@ Some rows in the eBird Basic Dataset (EBD) may have an incorrect number of colum
 ```{r auk-clean, eval = FALSE}
 library(auk)
 # sample data, with intentially introduced errors
-f <- system.file("extdata/ebd-sample_messy.txt", package="auk")
+f <- system.file("extdata/ebd-sample_messy.txt", package = "auk")
 f_out <- "ebd_cleaned.txt"
 # remove problem records
 cleaned <- auk_clean(f, f_out = f_out)
@@ -87,7 +87,7 @@ unlink(f_out)
 This package uses an `auk_ebd` object to keep track of the input EBD file, any filters defined, and the output file after filtering has been executed. By keeping everything wrapped up in an object, the user can keep track of exactly what set of input data and filters produce given output data. To set up the initial `auk_ebd` object, use `auk_ebd()`:
 
 ```{r auk-ebd}
-ebd <- system.file("extdata/ebd-sample_messy.txt", package="auk") %>% 
+ebd <- system.file("extdata/ebd-sample_messy.txt", package = "auk") %>% 
   auk_ebd()
 ebd
 ```
@@ -134,7 +134,7 @@ Each of the above functions only defines a filter. Once all filters have been se
 
 ```{r auk-complete, eval = FALSE}
 output_file <- "ebd_filtered_blja-grja.txt"
-ebd <- system.file("extdata/ebd-sample.txt", package="auk") %>% 
+ebd <- system.file("extdata/ebd-sample.txt", package = "auk") %>% 
   auk_ebd() %>% 
   auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>% 
   auk_country(country = "Canada") %>% 
@@ -150,7 +150,7 @@ unlink(output_file)
 EBD files can be read with `read_ebd()`. This is a wrapper around `data.table::fread()`, `readr::read_delim()`, or `read.delim()`, depending on which packages are installed. `read_ebd()` uses `stringsAsFactors = FALSE`, `quote = ""`, sets column classes, and converts variable names to `snake_case`.
 
 ```{r read}
-system.file("extdata/ebd-sample.txt", package="auk") %>% 
+system.file("extdata/ebd-sample.txt", package = "auk") %>% 
   read_ebd() %>% 
   str()
 ```
@@ -158,7 +158,7 @@ system.file("extdata/ebd-sample.txt", package="auk") %>%
 By default, `read_ebd()` returns a tibble for use with [Tidyverse](http://tidyverse.org) packages. Tibbles will behave just like plain data frames in most instances, but users can choose to return a plain `data.frame` or `data.table` by using the `setclass` argument.
 
 ```{r read-tbl}
-ebd_df <- system.file("extdata/ebd-sample.txt", package="auk") %>% 
+ebd_df <- system.file("extdata/ebd-sample.txt", package = "auk") %>% 
   read_ebd(setclass = "data.frame")
 ```
 
@@ -166,7 +166,7 @@ An `auk_ebd` object can also be read directly after passing through `auk_filter(
 
 ```{r read-auk-ebd, eval = FALSE}
 output_file <- "ebd_filtered_blja-grja.txt"
-ebd <- system.file("extdata/ebd-sample.txt", package="auk") %>% 
+ebd <- system.file("extdata/ebd-sample.txt", package = "auk") %>% 
   auk_ebd() %>% 
   auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>% 
   auk_country(country = "Canada") %>% 
@@ -181,7 +181,7 @@ unlink(output_file)
 The AWK script can be saved for future reference by providing an output filename to `awk_file`. In addition, by setting `execute = FALSE` the AWK script will be generated but not run.
 
 ```{r awk-script}
-awk_script <- system.file("extdata/ebd-sample.txt", package="auk") %>% 
+awk_script <- system.file("extdata/ebd-sample.txt", package = "auk") %>% 
   auk_ebd() %>% 
   auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>% 
   auk_country(country = "Canada") %>% 

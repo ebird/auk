@@ -18,7 +18,7 @@ library(auk)
 ## ----auk-clean, eval = FALSE---------------------------------------------
 #  library(auk)
 #  # sample data, with intentially introduced errors
-#  f <- system.file("extdata/ebd-sample_messy.txt", package="auk")
+#  f <- system.file("extdata/ebd-sample_messy.txt", package = "auk")
 #  f_out <- "ebd_cleaned.txt"
 #  # remove problem records
 #  cleaned <- auk_clean(f, f_out = f_out)
@@ -26,7 +26,7 @@ library(auk)
 #  unlink(f_out)
 
 ## ----auk-ebd-------------------------------------------------------------
-ebd <- system.file("extdata/ebd-sample_messy.txt", package="auk") %>% 
+ebd <- system.file("extdata/ebd-sample_messy.txt", package = "auk") %>% 
   auk_ebd()
 ebd
 
@@ -50,7 +50,7 @@ ebd
 
 ## ----auk-complete, eval = FALSE------------------------------------------
 #  output_file <- "ebd_filtered_blja-grja.txt"
-#  ebd <- system.file("extdata/ebd-sample.txt", package="auk") %>%
+#  ebd <- system.file("extdata/ebd-sample.txt", package = "auk") %>%
 #    auk_ebd() %>%
 #    auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>%
 #    auk_country(country = "Canada") %>%
@@ -59,17 +59,17 @@ ebd
 #  unlink(output_file)
 
 ## ----read----------------------------------------------------------------
-system.file("extdata/ebd-sample.txt", package="auk") %>% 
+system.file("extdata/ebd-sample.txt", package = "auk") %>% 
   read_ebd() %>% 
   str()
 
 ## ----read-tbl------------------------------------------------------------
-ebd_df <- system.file("extdata/ebd-sample.txt", package="auk") %>% 
+ebd_df <- system.file("extdata/ebd-sample.txt", package = "auk") %>% 
   read_ebd(setclass = "data.frame")
 
 ## ----read-auk-ebd, eval = FALSE------------------------------------------
 #  output_file <- "ebd_filtered_blja-grja.txt"
-#  ebd <- system.file("extdata/ebd-sample.txt", package="auk") %>%
+#  ebd <- system.file("extdata/ebd-sample.txt", package = "auk") %>%
 #    auk_ebd() %>%
 #    auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>%
 #    auk_country(country = "Canada") %>%
@@ -79,7 +79,7 @@ ebd_df <- system.file("extdata/ebd-sample.txt", package="auk") %>%
 #  unlink(output_file)
 
 ## ----awk-script----------------------------------------------------------
-awk_script <- system.file("extdata/ebd-sample.txt", package="auk") %>% 
+awk_script <- system.file("extdata/ebd-sample.txt", package = "auk") %>% 
   auk_ebd() %>% 
   auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>% 
   auk_country(country = "Canada") %>% 

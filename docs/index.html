@@ -29,13 +29,20 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="reference/index.html">Reference</a>
+  <a href="articles/auk.html">Tutorial</a>
 </li>
 <li>
-  <a href="articles/index.html">Articles</a>
+  <a href="reference/index.html">Function Reference</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/mstrimas/auk">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -84,11 +91,11 @@ devtools::<span class="kw">install_github</span>(<span class="st">"mstrimas/auk"
 <p>Some rows in the eBird Basic Dataset (EBD) may have an incorrect number of columns and the dataset has an extra blank column at the end. The function <code><a href="reference/auk_clean.html">auk_clean()</a></code> drops these erroneous records and removes the blank column.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(auk)
 <span class="co"># sample data</span>
-f &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/ebd-sample_messy.txt"</span>, <span class="dt">package=</span><span class="st">"auk"</span>)
+f &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/ebd-sample_messy.txt"</span>, <span class="dt">package =</span> <span class="st">"auk"</span>)
 tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>()
 <span class="co"># remove problem records</span>
 <span class="kw"><a href="reference/auk_clean.html">auk_clean</a></span>(f, tmp)
-<span class="co">#&gt; [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpKYXsBi/file131a722f8f6ab"</span>
+<span class="co">#&gt; [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpwYM2H6/file185df67bd9816"</span>
 <span class="co"># number of lines in input</span>
 <span class="kw">length</span>(<span class="kw">readLines</span>(f))
 <span class="co">#&gt; [1] 101</span>
@@ -120,7 +127,7 @@ tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>()
 <code><a href="reference/auk_complete.html">auk_complete()</a></code>: only retain checklists in which the observer has specified that they recorded all species seen or heard. These records are the most useful for modelling because they provide both presence and absence data.</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># sample data</span>
-f &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/ebd-sample.txt"</span>, <span class="dt">package=</span><span class="st">"auk"</span>)
+f &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/ebd-sample.txt"</span>, <span class="dt">package =</span> <span class="st">"auk"</span>)
 <span class="co"># define an EBD reference and a set of filters</span>
 ebd &lt;-<span class="st"> </span><span class="kw"><a href="reference/auk_ebd.html">auk_ebd</a></span>(f) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="co"># species: common and scientific names can be mixed</span>
@@ -156,7 +163,7 @@ ebd
 <p>In all cases, checks are performed to ensure filters are valid. For example, species are checked against the official <a href="http://help.ebird.org/customer/portal/articles/1006825-the-ebird-taxonomy">eBird taxonomy</a> and countries are checked using the <a href="https://github.com/vincentarelbundock/countrycode"><code>countrycode</code></a> package.</p>
 <p>Each of these functions only defines the filter. <code><a href="reference/auk_filter.html">auk_filter()</a></code> should be used to compile all the filters into an AWK script and execute it to produce an output file. So, bringing all this together, one could, for example, extract all Gray Jay and Blue Jay records from Canada with:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>()
-ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/ebd-sample.txt"</span>, <span class="dt">package=</span><span class="st">"auk"</span>) %&gt;%<span class="st"> </span>
+ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/ebd-sample.txt"</span>, <span class="dt">package =</span> <span class="st">"auk"</span>) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="reference/auk_ebd.html">auk_ebd</a></span>() %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="reference/auk_species.html">auk_species</a></span>(<span class="dt">species =</span> <span class="kw">c</span>(<span class="st">"Gray Jay"</span>, <span class="st">"Cyanocitta cristata"</span>)) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="reference/auk_country.html">auk_country</a></span>(<span class="dt">country =</span> <span class="st">"Canada"</span>) %&gt;%<span class="st"> </span>
@@ -167,7 +174,7 @@ ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span clas
 <h3 class="hasAnchor">
 <a href="#reading" class="anchor"></a>Reading</h3>
 <p>EBD files can be read with <code><a href="reference/read_ebd.html">read_ebd()</a></code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.file</span>(<span class="st">"extdata/ebd-sample.txt"</span>, <span class="dt">package=</span><span class="st">"auk"</span>) %&gt;%<span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.file</span>(<span class="st">"extdata/ebd-sample.txt"</span>, <span class="dt">package =</span> <span class="st">"auk"</span>) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="reference/read_ebd.html">read_ebd</a></span>() %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">str</span>()
 <span class="co">#&gt; Classes 'tbl_df', 'tbl' and 'data.frame':    487 obs. of  47 variables:</span>
@@ -219,7 +226,7 @@ ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span clas
 <span class="co">#&gt;  $ trip_comments             : chr  "RGV Bird Festival Trip, viewed from the US side of the river" "Placido Morales Hdz en  Santuario, Angel Albino Corzo, 1556 msnm." "With Glenn Crawford and 3 tourists. Glenn says that the frog calls that are heard nearly everywhere in Belize d"| __truncated__ "Muestreo realizado por Antonio, Ren� y Evaristo" ...</span>
 <span class="co">#&gt;  $ species_comments          : chr  NA NA NA NA ...</span></code></pre></div>
 <p>By default, <code><a href="reference/read_ebd.html">read_ebd()</a></code> returns a tibble for use with <a href="http://tidyverse.org">Tidyverse</a> packages. Tibbles will behave just like plain data frames in most instances, but users can choose to return a plain <code>data.frame</code> or <code>data.table</code> by using the <code>setclass</code> argument.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ebd_df &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/ebd-sample.txt"</span>, <span class="dt">package=</span><span class="st">"auk"</span>) %&gt;%<span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ebd_df &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/ebd-sample.txt"</span>, <span class="dt">package =</span> <span class="st">"auk"</span>) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="reference/read_ebd.html">read_ebd</a></span>(<span class="dt">setclass =</span> <span class="st">"data.frame"</span>)</code></pre></div>
 </div>
 </div>
@@ -239,7 +246,14 @@ ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span clas
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2 class="hasAnchor">
-<a href="#sidebar" class="anchor"></a>License</h2>
+<a href="#sidebar" class="anchor"></a>Links</h2>
+<ul class="list-unstyled">
+<li>Browse source code at <br><a href="https://github.com/mstrimas/auk">https://​github.com/​mstrimas/​auk</a>
+</li>
+<li>Report a bug at <br><a href="https://github.com/mstrimas/auk/issues">https://​github.com/​mstrimas/​auk/​issues</a>
+</li>
+</ul>
+<h2>License</h2>
 <p><a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE.html">LICENSE</a></p>
 <h2>Developers</h2>
 <ul class="list-unstyled">

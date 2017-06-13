@@ -39,11 +39,11 @@ Some rows in the eBird Basic Dataset (EBD) may have an incorrect number of colum
 ``` r
 library(auk)
 # sample data
-f <- system.file("extdata/ebd-sample_messy.txt", package="auk")
+f <- system.file("extdata/ebd-sample_messy.txt", package = "auk")
 tmp <- tempfile()
 # remove problem records
 auk_clean(f, tmp)
-#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpV9hRvO/file131975e5ad99e"
+#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpQKox8z/file185cf5383359b"
 # number of lines in input
 length(readLines(f))
 #> [1] 101
@@ -68,7 +68,7 @@ unlink(tmp)
 
 ``` r
 # sample data
-f <- system.file("extdata/ebd-sample.txt", package="auk")
+f <- system.file("extdata/ebd-sample.txt", package = "auk")
 # define an EBD reference and a set of filters
 ebd <- auk_ebd(f) %>% 
   # species: common and scientific names can be mixed
@@ -109,7 +109,7 @@ Each of these functions only defines the filter. `auk_filter()` should be used t
 
 ``` r
 tmp <- tempfile()
-ebd <- system.file("extdata/ebd-sample.txt", package="auk") %>% 
+ebd <- system.file("extdata/ebd-sample.txt", package = "auk") %>% 
   auk_ebd() %>% 
   auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>% 
   auk_country(country = "Canada") %>% 
@@ -122,7 +122,7 @@ unlink(tmp)
 EBD files can be read with `read_ebd()`:
 
 ``` r
-system.file("extdata/ebd-sample.txt", package="auk") %>% 
+system.file("extdata/ebd-sample.txt", package = "auk") %>% 
   read_ebd() %>% 
   str()
 #> Classes 'tbl_df', 'tbl' and 'data.frame':    487 obs. of  47 variables:
@@ -178,7 +178,7 @@ system.file("extdata/ebd-sample.txt", package="auk") %>%
 By default, `read_ebd()` returns a tibble for use with [Tidyverse](http://tidyverse.org) packages. Tibbles will behave just like plain data frames in most instances, but users can choose to return a plain `data.frame` or `data.table` by using the `setclass` argument.
 
 ``` r
-ebd_df <- system.file("extdata/ebd-sample.txt", package="auk") %>% 
+ebd_df <- system.file("extdata/ebd-sample.txt", package = "auk") %>% 
   read_ebd(setclass = "data.frame")
 ```
 

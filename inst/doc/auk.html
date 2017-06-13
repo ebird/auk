@@ -111,7 +111,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Some rows in the eBird Basic Dataset (EBD) may have an incorrect number of columns, typically from problematic characters in the comments fields, and the dataset has an extra blank column at the end. The function <code>auk_clean()</code> drops these erroneous records and removes the blank column. This process should be run on both the EBD and sampling event data. It typically takes several hours for the full EBD, however, it only needs to be run once.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(auk)
 <span class="co"># sample data, with intentially introduced errors</span>
-f &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/ebd-sample_messy.txt&quot;</span>, <span class="dt">package=</span><span class="st">&quot;auk&quot;</span>)
+f &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/ebd-sample_messy.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;auk&quot;</span>)
 f_out &lt;-<span class="st"> &quot;ebd_cleaned.txt&quot;</span>
 <span class="co"># remove problem records</span>
 cleaned &lt;-<span class="st"> </span><span class="kw">auk_clean</span>(f, <span class="dt">f_out =</span> f_out)
@@ -121,7 +121,7 @@ cleaned &lt;-<span class="st"> </span><span class="kw">auk_clean</span>(f, <span
 <div id="the-auk_ebd-object" class="section level3">
 <h3>The <code>auk_ebd</code> object</h3>
 <p>This package uses an <code>auk_ebd</code> object to keep track of the input EBD file, any filters defined, and the output file after filtering has been executed. By keeping everything wrapped up in an object, the user can keep track of exactly what set of input data and filters produce given output data. To set up the initial <code>auk_ebd</code> object, use <code>auk_ebd()</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/ebd-sample_messy.txt&quot;</span>, <span class="dt">package=</span><span class="st">&quot;auk&quot;</span>) %&gt;%<span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/ebd-sample_messy.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;auk&quot;</span>) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">auk_ebd</span>()
 ebd
 <span class="co">#&gt; Input </span>
@@ -191,7 +191,7 @@ ebd
 <h3>Executing filters</h3>
 <p>Each of the above functions only defines a filter. Once all filters have been set, <code>auk_filter()</code> should be used to compile them into an AWK script and execute it to produce an output file. So, bringing all this together, one could, for example, extract all Gray Jay and Blue Jay records from Canada with:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">output_file &lt;-<span class="st"> &quot;ebd_filtered_blja-grja.txt&quot;</span>
-ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/ebd-sample.txt&quot;</span>, <span class="dt">package=</span><span class="st">&quot;auk&quot;</span>) %&gt;%<span class="st"> </span>
+ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/ebd-sample.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;auk&quot;</span>) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">auk_ebd</span>() %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">auk_species</span>(<span class="dt">species =</span> <span class="kw">c</span>(<span class="st">&quot;Gray Jay&quot;</span>, <span class="st">&quot;Cyanocitta cristata&quot;</span>)) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">auk_country</span>(<span class="dt">country =</span> <span class="st">&quot;Canada&quot;</span>) %&gt;%<span class="st"> </span>
@@ -203,7 +203,7 @@ ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span clas
 <div id="reading" class="section level3">
 <h3>Reading</h3>
 <p>EBD files can be read with <code>read_ebd()</code>. This is a wrapper around <code>data.table::fread()</code>, <code>readr::read_delim()</code>, or <code>read.delim()</code>, depending on which packages are installed. <code>read_ebd()</code> uses <code>stringsAsFactors = FALSE</code>, <code>quote = &quot;&quot;</code>, sets column classes, and converts variable names to <code>snake_case</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.file</span>(<span class="st">&quot;extdata/ebd-sample.txt&quot;</span>, <span class="dt">package=</span><span class="st">&quot;auk&quot;</span>) %&gt;%<span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.file</span>(<span class="st">&quot;extdata/ebd-sample.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;auk&quot;</span>) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">read_ebd</span>() %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">str</span>()
 <span class="co">#&gt; Classes 'tbl_df', 'tbl' and 'data.frame':    487 obs. of  47 variables:</span>
@@ -255,11 +255,11 @@ ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span clas
 <span class="co">#&gt;  $ trip_comments             : chr  &quot;RGV Bird Festival Trip, viewed from the US side of the river&quot; &quot;Placido Morales Hdz en  Santuario, Angel Albino Corzo, 1556 msnm.&quot; &quot;With Glenn Crawford and 3 tourists. Glenn says that the frog calls that are heard nearly everywhere in Belize d&quot;| __truncated__ &quot;Muestreo realizado por Antonio, Ren� y Evaristo&quot; ...</span>
 <span class="co">#&gt;  $ species_comments          : chr  NA NA NA NA ...</span></code></pre></div>
 <p>By default, <code>read_ebd()</code> returns a tibble for use with <a href="http://tidyverse.org">Tidyverse</a> packages. Tibbles will behave just like plain data frames in most instances, but users can choose to return a plain <code>data.frame</code> or <code>data.table</code> by using the <code>setclass</code> argument.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ebd_df &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/ebd-sample.txt&quot;</span>, <span class="dt">package=</span><span class="st">&quot;auk&quot;</span>) %&gt;%<span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ebd_df &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/ebd-sample.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;auk&quot;</span>) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">read_ebd</span>(<span class="dt">setclass =</span> <span class="st">&quot;data.frame&quot;</span>)</code></pre></div>
 <p>An <code>auk_ebd</code> object can also be read directly after passing through <code>auk_filter()</code>, allowing for a complete pipeline.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">output_file &lt;-<span class="st"> &quot;ebd_filtered_blja-grja.txt&quot;</span>
-ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/ebd-sample.txt&quot;</span>, <span class="dt">package=</span><span class="st">&quot;auk&quot;</span>) %&gt;%<span class="st"> </span>
+ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/ebd-sample.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;auk&quot;</span>) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">auk_ebd</span>() %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">auk_species</span>(<span class="dt">species =</span> <span class="kw">c</span>(<span class="st">&quot;Gray Jay&quot;</span>, <span class="st">&quot;Cyanocitta cristata&quot;</span>)) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">auk_country</span>(<span class="dt">country =</span> <span class="st">&quot;Canada&quot;</span>) %&gt;%<span class="st"> </span>
@@ -271,7 +271,7 @@ ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span clas
 <div id="saving-the-awk-command" class="section level3">
 <h3>Saving the AWK command</h3>
 <p>The AWK script can be saved for future reference by providing an output filename to <code>awk_file</code>. In addition, by setting <code>execute = FALSE</code> the AWK script will be generated but not run.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">awk_script &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/ebd-sample.txt&quot;</span>, <span class="dt">package=</span><span class="st">&quot;auk&quot;</span>) %&gt;%<span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">awk_script &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/ebd-sample.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;auk&quot;</span>) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">auk_ebd</span>() %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">auk_species</span>(<span class="dt">species =</span> <span class="kw">c</span>(<span class="st">&quot;Gray Jay&quot;</span>, <span class="st">&quot;Cyanocitta cristata&quot;</span>)) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">auk_country</span>(<span class="dt">country =</span> <span class="st">&quot;Canada&quot;</span>) %&gt;%<span class="st"> </span>

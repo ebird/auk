@@ -48,7 +48,7 @@ auk_unique <- function(x,
                        species_id = "scientific_name",
                        checklists_only = FALSE) {
   # checks
-  assert_that(
+  assertthat::assert_that(
     is.data.frame(x),
     assertthat::is.flag(checklists_only),
     assertthat::is.string(group_id),

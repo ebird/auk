@@ -51,7 +51,7 @@ auk_clean <- function(f_in, f_out, sep = "\t",
   if (is.na(awk_path)) {
     stop("auk_clean() requires a valid AWK install.")
   }
-  assert_that(
+  assertthat::assert_that(
     file.exists(f_in),
     assertthat::is.string(sep), nchar(sep) == 1, sep != " ",
     assertthat::is.flag(remove_blank),

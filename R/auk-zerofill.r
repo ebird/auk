@@ -78,7 +78,7 @@ auk_zerofill.data.frame <- function(x, sampling_events, species,
                                     setclass = c("tbl", "data.frame",
                                                  "data.table"), ...) {
   # checks
-  assert_that(
+  assertthat::assert_that(
     is.data.frame(sampling_events),
     missing(species) || is.character(species),
     assertthat::is.flag(unique))
@@ -190,7 +190,7 @@ auk_zerofill.character <- function(x, sampling_events, species, sep = "\t",
                                    setclass = c("tbl", "data.frame",
                                                 "data.table"), ...) {
   # checks
-  assert_that(
+  assertthat::assert_that(
     assertthat::is.string(x), file.exists(x),
     assertthat::is.string(sampling_events), file.exists(sampling_events),
     missing(species) || is.character(species),

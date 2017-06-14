@@ -109,7 +109,7 @@ set_class <- function(x, setclass = c("tbl", "data.frame", "data.table")) {
 }
 
 choose_reader <- function(x) {
-  assert_that(is.null(x) || x %in% c("fread", "readr", "base"))
+  assertthat::assert_that(is.null(x) || x %in% c("fread", "readr", "base"))
 
   if (is.null(x)) {
     if (requireNamespace("data.table", quietly = TRUE)) {

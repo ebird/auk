@@ -27,7 +27,7 @@ auk_species <- function(x, species, replace)  {
 #' @export
 auk_species.auk_ebd <- function(x, species, replace = FALSE) {
   # checks
-  assert_that(
+  assertthat::assert_that(
     is.character(species),
     assertthat::is.flag(replace)
   )

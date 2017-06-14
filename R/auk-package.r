@@ -4,6 +4,5 @@
 #'
 #' @name auk
 #' @docType package
-#' @importFrom assertthat assert_that
 #' @importFrom stringr str_interp
 NULL

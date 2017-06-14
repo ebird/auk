@@ -23,7 +23,7 @@ auk_time <- function(x, time)  {
 #' @export
 auk_time.auk_ebd <- function(x, time) {
   # checks
-  assert_that(
+  assertthat::assert_that(
     length(time) == 2,
     is.character(time)
   )
@@ -36,7 +36,7 @@ auk_time.auk_ebd <- function(x, time) {
   time <- paste0(ifelse(nchar(time) == 4, "0", ""), time)
 
   # check ordering of times makes sense
-  assert_that(time[1] <= time[2])
+  assertthat::assert_that(time[1] <= time[2])
 
   # define filter
   x$filters$time <- time

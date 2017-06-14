@@ -10,7 +10,7 @@ auk_ebd(file, file_sampling, sep = "\\t")
 \item{file}{character; input file.}
 
 \item{file_sampling}{character; optional input sampling event data file,
-required if you intend to zero-fill the data to produce a presence absence
+required if you intend to zero-fill the data to produce a presence-absence
 data set. The sampling file consists of just effort information for every
 eBird checklist. Any species not appearing in the EBD for a given checklist
 is implicitly considered to have a count of 0. This file should be

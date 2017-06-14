@@ -23,7 +23,7 @@ auk_duration <- function(x, duration)  {
 #' @export
 auk_duration.auk_ebd <- function(x, duration) {
   # checks
-  assert_that(
+  assertthat::assert_that(
     length(duration) == 2,
     is.numeric(duration),
     duration[1] <= duration[2],

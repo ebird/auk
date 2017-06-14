@@ -19,7 +19,7 @@
 #' # species not in the ebird taxonomy return NA
 #' ebird_species(species)
 ebird_species <- function(x, scientific = TRUE) {
-  assert_that(is.character(x))
+  assertthat::assert_that(is.character(x))
 
   # deal with case issues
   x <- tolower(trimws(x))

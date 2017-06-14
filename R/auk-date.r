@@ -22,7 +22,7 @@ auk_date <- function(x, date)  {
 #' @export
 auk_date.auk_ebd <- function(x, date) {
   # checks
-  assert_that(
+  assertthat::assert_that(
     length(date) == 2,
     is.character(date) || assertthat::is.date(date),
     date[1] <= date[2]
@@ -32,7 +32,7 @@ auk_date.auk_ebd <- function(x, date) {
   date <- as.Date(date) %>%
     format("%Y-%m-%d")
 
-  assert_that(
+  assertthat::assert_that(
     all(!is.na(date)),
     date[1] <= date[2],
     date[1] >= "1850-01-01",

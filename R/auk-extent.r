@@ -23,7 +23,7 @@ auk_extent <- function(x, extent)  {
 #' @export
 auk_extent.auk_ebd <- function(x, extent) {
   # checks
-  assert_that(
+  assertthat::assert_that(
     is.numeric(extent),
     length(extent) == 4,
     extent[1] < extent[3],

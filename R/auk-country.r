@@ -31,7 +31,7 @@ auk_country <- function(x, country, replace)  {
 #' @export
 auk_country.auk_ebd <- function(x, country, replace = FALSE) {
   # checks
-  assert_that(
+  assertthat::assert_that(
     is.character(country),
     assertthat::is.flag(replace)
   )

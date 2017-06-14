@@ -10,7 +10,7 @@ auk: eBird Data Processing with AWK
 Overview
 --------
 
-[eBird](http://www.ebird.org) is an online tool for recording bird observations. Since its inception, nearly 500 million sightings records have been collected, making it one of the largest citizen science projects in history and an extremely valuable resource for bird research and conservation. The full eBird database is packaged as a text file and available for download as the [eBird Basic Dataset (EBD)](http://ebird.org/ebird/data/download). Due to the large size of this dataset, it must be filtered to a smaller subset of desired observations before reading into R. This filtering is most efficiently done using AWK, a Unix utility and programming language for processing column formatted text data. This package acts as a front end for AWK, allowing users to filter eBird data before import into R.
+[eBird](http://www.ebird.org) is an online tool for recording bird observations. Since its inception, nearly 500 million records of bird sightings (i.e. combinations of location, date, time, and bird species) have been collected, making eBird one of the largest citizen science projects in history and an extremely valuable resource for bird research and conservation. The full eBird database is packaged as a text file and available for download as the [eBird Basic Dataset (EBD)](http://ebird.org/ebird/data/download). Due to the large size of this dataset, it must be filtered to a smaller subset of desired observations before reading into R. This filtering is most efficiently done using AWK, a Unix utility and programming language for processing column formatted text data. This package acts as a front end for AWK, allowing users to filter eBird data before import into R.
 
 Installation
 ------------
@@ -22,7 +22,7 @@ This package can be installed directly from GitHub with:
 devtools::install_github("mstrimas/auk")
 ```
 
-`auk` requires the Unix utility AWK, which is available on most Linux and Mac OS X machines. Windows users will first need to install [Cygwin](https://www.cygwin.com) before using this package.
+`auk` requires the Unix utility AWK, which is available on most Linux and Mac OS X machines. Windows users will first need to install [Cygwin](https://www.cygwin.com) before using this package. Note that **Cygwin must be installed in the default location** (`C:/cygwin/bin/gawk.exe` or `C:/cygwin64/bin/gawk.exe`) in order for `auk` to work.
 
 Vignette
 --------
@@ -34,7 +34,7 @@ Usage
 
 ### Cleaning
 
-Some rows in the eBird Basic Dataset (EBD) may have an incorrect number of columns and the dataset has an extra blank column at the end. The function `auk_clean()` drops these erroneous records and removes the blank column.
+Some rows in the eBird Basic Dataset (EBD) may have an incorrect number of columns, typically from problematic characters in the comments fields, and the dataset has an extra blank column at the end. The function `auk_clean()` drops these erroneous records and removes the blank column.
 
 ``` r
 library(auk)
@@ -43,7 +43,7 @@ f <- system.file("extdata/ebd-sample_messy.txt", package = "auk")
 tmp <- tempfile()
 # remove problem records
 auk_clean(f, tmp)
-#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpQKox8z/file185cf5383359b"
+#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpG4i3A0/file8a399b9693d"
 # number of lines in input
 length(readLines(f))
 #> [1] 101
@@ -55,16 +55,18 @@ unlink(tmp)
 
 ### Filtering
 
-`auk` uses a [pipeline-based workflow](http://r4ds.had.co.nz/pipes.html) for defining filters, which can be compiled into an AWK script. Users should start by defining a reference to the EBD file with `auk_ebd()`. Then any of the following filters can be applied:
+`auk` uses a [pipeline-based workflow](http://r4ds.had.co.nz/pipes.html) for defining filters, which can then be compiled into an AWK script. Users should start by defining a reference to the EBD file with `auk_ebd()`. Then any of the following filters can be applied:
 
 -   `auk_species()`: filter by species using common or scientific names.
--   `auk_country()`: filter by country using the standard English name or [ISO 2-letter country codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+-   `auk_country()`: filter by country using the standard English names or [ISO 2-letter country codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
 -   `auk_extent()`: filter by spatial extent, i.e. a range of latitudes and longitudes.
 -   `auk_date()`: filter to checklists from a range of dates.
 -   `auk_last_edited()`: filter to checklists from a range of last edited dates, useful for extracting just new or recently edited data.
--   `auk_time()`: filter to checklists started during a range of times.
--   `auk_duration()`: filter to checklists that lasted a given length of time.
--   `auk_complete()`: only retain checklists in which the observer has specified that they recorded all species seen or heard. These records are the most useful for modelling because they provide both presence and absence data.
+-   `auk_time()`: filter to checklists started during a range of times-of-day.
+-   `auk_duration()`: filter to checklists that are the result of observation periods that lasted a given range of durations.
+-   `auk_complete()`: only retain checklists in which the observer has specified that they recorded all species seen or heard. It is necessary to retain only complete records for the creation of presence-absence data, because the "absence"" information is inferred by the lack of reporting of a species on checklists.
+
+Note that all of the functions listed above only modify the `auk_ebd` object, in order to define the filters. Once the filters have been defined, the filtering is actually conducted using `auk_filter()`.
 
 ``` r
 # sample data
@@ -103,19 +105,22 @@ ebd
 #>   Complete checklists only: yes
 ```
 
-In all cases, checks are performed to ensure filters are valid. For example, species are checked against the official [eBird taxonomy](http://help.ebird.org/customer/portal/articles/1006825-the-ebird-taxonomy) and countries are checked using the [`countrycode`](https://github.com/vincentarelbundock/countrycode) package.
+In all cases, extensive checks are performed to ensure filters are valid. For example, species are checked against the official [eBird taxonomy](http://help.ebird.org/customer/portal/articles/1006825-the-ebird-taxonomy) and countries are checked using the [`countrycode`](https://github.com/vincentarelbundock/countrycode) package.
 
-Each of these functions only defines the filter. `auk_filter()` should be used to compile all the filters into an AWK script and execute it to produce an output file. So, bringing all this together, one could, for example, extract all Gray Jay and Blue Jay records from Canada with:
+Each of the functions described in the *Defining filters* section only defines a filter. Once all of the required filters have been set, `auk_filter()` should be used to compile them into an AWK script and execute it to produce an output file. So, as an example of bringing all of these steps together, the following commands will extract all Gray Jay and Blue Jay records from Canada and save the results to a tab-separated text file for subsequent use:
 
 ``` r
-tmp <- tempfile()
+output_file <- "ebd_filtered_blja-grja.txt"
 ebd <- system.file("extdata/ebd-sample.txt", package = "auk") %>% 
   auk_ebd() %>% 
   auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>% 
   auk_country(country = "Canada") %>% 
-  auk_filter(file = tmp)
-unlink(tmp)
+  auk_filter(file = output_file)
+# tidy up
+unlink(output_file)
 ```
+
+**Filtering the full EBD typically takes at least a couple hours**, so set it running then go grab lunch!
 
 ### Reading
 
@@ -175,12 +180,10 @@ system.file("extdata/ebd-sample.txt", package = "auk") %>%
 #>  $ species_comments          : chr  NA NA NA NA ...
 ```
 
-By default, `read_ebd()` returns a tibble for use with [Tidyverse](http://tidyverse.org) packages. Tibbles will behave just like plain data frames in most instances, but users can choose to return a plain `data.frame` or `data.table` by using the `setclass` argument.
+Presence-absence data
+---------------------
 
-``` r
-ebd_df <- system.file("extdata/ebd-sample.txt", package = "auk") %>% 
-  read_ebd(setclass = "data.frame")
-```
+For many applications, presence-only data are sufficient; however, for modeling and analysis, presence-absence data are required. `auk` includes functionality to produce presence-absence data from eBird checklists. For full details, consult the vignette: `vignette("auk")`.
 
 Acknowledgements
 ----------------

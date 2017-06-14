@@ -54,7 +54,7 @@ read_ebd.character <- function(x, reader, sep = "\t", unique = TRUE,
                                setclass = c("tbl", "data.frame",
                                             "data.table")) {
   # checks
-  assert_that(
+  assertthat::assert_that(
     assertthat::is.string(x),
     file.exists(x),
     missing(reader) || is.character(reader),

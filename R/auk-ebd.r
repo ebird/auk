@@ -5,7 +5,7 @@
 #'
 #' @param file character; input file.
 #' @param file_sampling character; optional input sampling event data file,
-#'   required if you intend to zero-fill the data to produce a presence absence
+#'   required if you intend to zero-fill the data to produce a presence-absence
 #'   data set. The sampling file consists of just effort information for every
 #'   eBird checklist. Any species not appearing in the EBD for a given checklist
 #'   is implicitly considered to have a count of 0. This file should be
@@ -44,7 +44,7 @@
 #' auk_ebd(f_ebd, file_sampling = f_smpl)
 auk_ebd <- function(file, file_sampling, sep = "\t") {
   # checks
-  assert_that(
+  assertthat::assert_that(
     file.exists(file),
     assertthat::is.string(sep), nchar(sep) == 1, sep != " "
   )
@@ -72,7 +72,7 @@ auk_ebd <- function(file, file_sampling, sep = "\t") {
 
   # process sampling data header
   if (!missing(file_sampling)) {
-    assert_that(
+    assertthat::assert_that(
       file.exists(file_sampling)
     )
     file_sampling <- normalizePath(file_sampling)

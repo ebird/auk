@@ -72,7 +72,7 @@ auk_filter.auk_ebd <- function(x, file, file_sampling, awk_file, sep = "\t",
                                overwrite = FALSE) {
   # checks
   awk_path <- auk_getpath()
-  if (is.na(awk_path)) {
+  if (execute && is.na(awk_path)) {
     stop("auk_filter() requires a valid AWK install, unless execute = FALSE.")
   }
   assertthat::assert_that(

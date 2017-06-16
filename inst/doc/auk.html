@@ -76,7 +76,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2>Background</h2>
 <div id="the-ebird-basic-dataset" class="section level3">
 <h3>The eBird Basic Dataset</h3>
-<p>The eBird database currently contains nearly 500 million bird observations, and this rate of increase is accelerating as new users join eBird. These data are an extremely valuable tool both for basic science and conservation; however, given the sheer amount of data, accessing eBird data poses a unique challenge. Currently, access to the complete set of eBird observations is provided via the eBird Basic Dataset (EBD). This is a tab-separated text file, released quarterly, containing all validated bird sighting in the eBird database at the time of release. Each row corresponds to the sighting of a single species within a checklist and, in addition to the species and number of individuals reported, information is provided at the checklist level (location, time, date, search effort, etc.).</p>
+<p>The eBird database currently contains nearly 500 million bird observations, and this rate of increase is accelerating as new users join eBird. These data are an extremely valuable tool both for basic science and conservation; however, given the sheer amount of data, accessing eBird data poses a unique challenge. Currently, access to the complete set of eBird observations is provided via the eBird Basic Dataset (EBD). This is a tab-separated text file, released quarterly, containing all validated bird sightings in the eBird database at the time of release. Each row corresponds to the sighting of a single species within a checklist and, in addition to the species and number of individuals reported, information is provided at the checklist level (location, time, date, search effort, etc.).</p>
 <p>In addition to the EBD, eBird provides a Sampling Event Data file that contains the checklist-level data for every valid checklist submitted to eBird, including checklists for which no species of birds were reported. In this file, each row corresponds to a checklist and only the checklist-level variables are included, not the associated bird data. While the EBD provides presence-only data, the EBD and Sampling Event Data can be combined to produce presence-absence data. This process is described below.</p>
 <p>For full metadata on the EBD and Sampling Event Data, consult the documentation provided when the <a href="http://ebird.org/ebird/data/download">files are downloaded</a>.</p>
 </div>
@@ -87,9 +87,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="example-data" class="section level3">
 <h3>Example data</h3>
-<p>This package comes with two example datasets. The first is suitable for practicing filtering the EBD and producing presence-only data. It’s a sample of 500 records from the EBD. It contains data from North and Central America from 2010-2012 on 4 jay species: Gray Jay, Blue Jay, Steller’s Jay, and Green Jay. It can be access with:</p>
+<p>This package comes with two example datasets. The first is suitable for practicing filtering the EBD and producing presence-only data. It’s a sample of 500 records from the EBD. It contains data from North and Central America from 2010-2012 on 4 jay species: Gray Jay, Blue Jay, Steller’s Jay, and Green Jay. It can be accessed with:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.file</span>(<span class="st">&quot;extdata/ebd-sample.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;auk&quot;</span>)</code></pre></div>
-<p>The second is suitable for producing zero-filled, presence-absence data. It contains every sighting from Singapore in 2012 of Collared Kingfisher, White-throated Kingfisher, and Blue-eared Kingfisher. In addition to these sightings data, the full Sampling Event Data file is included containing all checklists from Singapore in 2012. These files can be accessed with:</p>
+<p>The second is suitable for producing zero-filled, presence-absence data. It contains every sighting from Singapore in 2012 of Collared Kingfisher, White-throated Kingfisher, and Blue-eared Kingfisher. The full Sampling Event Data file is also included, and contains all checklists from Singapore in 2012. These files can be accessed with:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ebd</span>
 <span class="kw">system.file</span>(<span class="st">&quot;extdata/zerofill-ex_ebd.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;auk&quot;</span>)
 <span class="co"># sampling event data</span>
@@ -105,7 +105,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="presence-data" class="section level2">
 <h2>Presence data</h2>
-<p>The most common use of the EBD is to produce a set of bird sightings, i.e. where and when was a given species seen. For example, this type of data could be used to produce a map of sightings locations or determine if a given bird has been seen in an area of interest. For more analytic work, such as species distribution modeling, presence and absence data are likely preferred (see Guillera-Arroita et al. 2015). Producing presence-absence data will be covered in the next section.</p>
+<p>The most common use of the EBD is to produce a set of bird sightings, i.e. where and when was a given species seen. For example, this type of data could be used to produce a map of sighting locations, or to determine if a given bird has been seen in an area of interest. For more analytic work, such as species distribution modeling, presence and absence data are likely preferred (see Guillera-Arroita et al. 2015). Producing presence-absence data will be covered in the next section.</p>
 <div id="cleaning" class="section level3">
 <h3>Cleaning</h3>
 <p>Some rows in the eBird Basic Dataset (EBD) may have an incorrect number of columns, typically from problematic characters in the comments fields, and the dataset has an extra blank column at the end. The function <code>auk_clean()</code> drops these erroneous records and removes the blank column. This process should be run on both the EBD and sampling event data. It typically takes several hours for the full EBD; however, it only needs to be run once because the output from the process is saved out to a new tab-separated text file for subsequent and potentially repeated use.</p>
@@ -125,7 +125,7 @@ cleaned &lt;-<span class="st"> </span><span class="kw">auk_clean</span>(f, <span
 <span class="st">  </span><span class="kw">auk_ebd</span>()
 ebd
 <span class="co">#&gt; Input </span>
-<span class="co">#&gt;   EBD: /Users/mes335/projects/auk/inst/extdata/ebd-sample_messy.txt </span>
+<span class="co">#&gt;   EBD: /Library/Frameworks/R.framework/Versions/3.4/Resources/library/auk/extdata/ebd-sample_messy.txt </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Output </span>
 <span class="co">#&gt;   Filters not executed</span>
@@ -151,7 +151,7 @@ ebd
 <li><code>auk_last_edited()</code>: filter to checklists from a range of last edited dates, useful for extracting just new or recently edited data.</li>
 <li><code>auk_time()</code>: filter to checklists started during a range of times-of-day.</li>
 <li><code>auk_duration()</code>: filter to checklists that are the result of observation periods that lasted a given range of durations.</li>
-<li><code>auk_complete()</code>: only retain checklists in which the observer has specified that they recorded all species seen or heard. It is necessary to retain only complete records for the creation of presence-absence data, because the “absence”&quot; information is inferred by the lack of reporting of a species on checklists.</li>
+<li><code>auk_complete()</code>: only retain checklists in which the observer has specified that they recorded all species seen or heard. It is necessary to retain only complete records for the creation of presence-absence data, because the “absence” information is inferred by the lack of reporting of a species on checklists.</li>
 </ul>
 <p>Note that all of the functions listed above only modify the <code>auk_ebd</code> object, in order to define the filters. Once the filters have been defined, the filtering is actually conducted using <code>auk_filter()</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ebd &lt;-<span class="st"> </span>ebd %&gt;%<span class="st"> </span>
@@ -171,7 +171,7 @@ ebd
 <span class="st">  </span><span class="kw">auk_complete</span>()
 ebd
 <span class="co">#&gt; Input </span>
-<span class="co">#&gt;   EBD: /Users/mes335/projects/auk/inst/extdata/ebd-sample_messy.txt </span>
+<span class="co">#&gt;   EBD: /Library/Frameworks/R.framework/Versions/3.4/Resources/library/auk/extdata/ebd-sample_messy.txt </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Output </span>
 <span class="co">#&gt;   Filters not executed</span>
@@ -257,7 +257,7 @@ ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span clas
 <p>By default, <code>read_ebd()</code> returns a tibble for use with <a href="http://tidyverse.org">Tidyverse</a> packages. Tibbles will behave just like plain data frames in most instances, but users can choose to return a plain <code>data.frame</code> or <code>data.table</code> by using the <code>setclass</code> argument.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ebd_df &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/ebd-sample.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;auk&quot;</span>) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">read_ebd</span>(<span class="dt">setclass =</span> <span class="st">&quot;data.frame&quot;</span>)</code></pre></div>
-<p>An <code>auk_ebd</code> object can also be read directly after passing through <code>auk_filter()</code>, allowing for a complete pipeline.</p>
+<p><code>auk_filter()</code> returns an <code>auk_ebd</code> object with the output file paths stored in it. This <code>auk_ebd</code> object can then be passed directly to <code>auk_read()</code>, allowing for a complete pipeline. For example, we can create an <code>auk_ebd</code> object, define filters, filter with AWK, and read in the results all at once.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">output_file &lt;-<span class="st"> &quot;ebd_filtered_blja-grja.txt&quot;</span>
 ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/ebd-sample.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;auk&quot;</span>) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">auk_ebd</span>() %&gt;%<span class="st"> </span>
@@ -276,7 +276,7 @@ ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span clas
 <span class="st">  </span><span class="kw">auk_species</span>(<span class="dt">species =</span> <span class="kw">c</span>(<span class="st">&quot;Gray Jay&quot;</span>, <span class="st">&quot;Cyanocitta cristata&quot;</span>)) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">auk_country</span>(<span class="dt">country =</span> <span class="st">&quot;Canada&quot;</span>) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">auk_filter</span>(<span class="dt">awk_file =</span> <span class="st">&quot;awk-script.txt&quot;</span>, <span class="dt">execute =</span> <span class="ot">FALSE</span>)
-<span class="co"># read back in a prepare for printing</span>
+<span class="co"># read back in and prepare for printing</span>
 awk_file &lt;-<span class="st"> </span><span class="kw">readLines</span>(awk_script)
 awk_file[!<span class="kw">grepl</span>(<span class="st">&quot;^[[:space:]]*$&quot;</span>, awk_file)] %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">paste0</span>(<span class="dt">collapse =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>) %&gt;%<span class="st"> </span>
@@ -330,7 +330,7 @@ ebd_unique &lt;-<span class="st"> </span><span class="kw">auk_unique</span>(ebd)
 <p>For many applications, presence-only data are sufficient; however, for modeling and analysis, presence-absence data are required. eBird observers only explicitly collect presence data, but they have the option of flagging their checklist as “complete” meaning that they are reporting all the species they saw or heard, and identified. Therefore, given a list of positive sightings (the EBD) and a list of all checklists (the sampling event data) it is possible to infer absences by filling zeros for all species not explicitly reported. This section of the vignette describes functions for producing zero-filled, presence-absence data.</p>
 <div id="filtering" class="section level3">
 <h3>Filtering</h3>
-<p>When preparing to create zero-filled data, the EBD and sampling event data must be filtered to the same set of checklists to ensure consistency. To ensure these two datasets are synced, provide <em>both</em> the EBD and sampling event data files to <code>auk_ebd</code>, then filter as described in the previous section. This will ensure that all the filters applied to the ebd (except species) will be applied to the sampling event data so that we’ll be working with the same set of checklists. It is critical that, at least, <code>auk_compete()</code> is a called to only include complete checklists, since these are a requirement for zero-filling.</p>
+<p>When preparing to create zero-filled data, the EBD and sampling event data must be filtered to the same set of checklists to ensure consistency. To ensure these two datasets are synced, provide <em>both</em> the EBD and sampling event data files to <code>auk_ebd</code>, then filter as described in the previous section. This will ensure that all the filters applied to the ebd (except species) will be applied to the sampling event data so that we’ll be working with the same set of checklists. It is critical that <code>auk_compete()</code> is called, since complete checklists are a requirement for zero-filling.</p>
 <p>For example, the following filters to only include sightings of Collared Kingfisher between 6 and 10am:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># to produce zero-filled data, provide an EBD and sampling event data file</span>
 f_ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/zerofill-ex_ebd.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;auk&quot;</span>)
@@ -341,8 +341,8 @@ filters &lt;-<span class="st"> </span><span class="kw">auk_ebd</span>(f_ebd, <sp
 <span class="st">  </span><span class="kw">auk_complete</span>()
 filters
 <span class="co">#&gt; Input </span>
-<span class="co">#&gt;   EBD: /Users/mes335/projects/auk/inst/extdata/zerofill-ex_ebd.txt </span>
-<span class="co">#&gt;   Sampling events: /Users/mes335/projects/auk/inst/extdata/zerofill-ex_sampling.txt </span>
+<span class="co">#&gt;   EBD: /Library/Frameworks/R.framework/Versions/3.4/Resources/library/auk/extdata/zerofill-ex_ebd.txt </span>
+<span class="co">#&gt;   Sampling events: /Library/Frameworks/R.framework/Versions/3.4/Resources/library/auk/extdata/zerofill-ex_sampling.txt </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Output </span>
 <span class="co">#&gt;   Filters not executed</span>
@@ -366,8 +366,8 @@ ebd_filtered$output_sampling &lt;-<span class="st"> &quot;sampling-filtered.txt&
 ##                            file_sampling = &quot;sampling-filtered.txt&quot;)
 ebd_filtered
 <span class="co">#&gt; Input </span>
-<span class="co">#&gt;   EBD: /Users/mes335/projects/auk/inst/extdata/zerofill-ex_ebd.txt </span>
-<span class="co">#&gt;   Sampling events: /Users/mes335/projects/auk/inst/extdata/zerofill-ex_sampling.txt </span>
+<span class="co">#&gt;   EBD: /Library/Frameworks/R.framework/Versions/3.4/Resources/library/auk/extdata/zerofill-ex_ebd.txt </span>
+<span class="co">#&gt;   Sampling events: /Library/Frameworks/R.framework/Versions/3.4/Resources/library/auk/extdata/zerofill-ex_sampling.txt </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Output </span>
 <span class="co">#&gt;   EBD: ebd-filtered.txt </span>

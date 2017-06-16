@@ -84,7 +84,7 @@ awk_script <- system.file("extdata/ebd-sample.txt", package = "auk") %>%
   auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>% 
   auk_country(country = "Canada") %>% 
   auk_filter(awk_file = "awk-script.txt", execute = FALSE)
-# read back in a prepare for printing
+# read back in and prepare for printing
 awk_file <- readLines(awk_script)
 awk_file[!grepl("^[[:space:]]*$", awk_file)] %>% 
   paste0(collapse = "\n") %>% 

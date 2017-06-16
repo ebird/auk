@@ -24,7 +24,7 @@ This vignette is divided into three sections. The first section provides backgro
 
 ### The eBird Basic Dataset
 
-The eBird database currently contains nearly 500 million bird observations, and this rate of increase is accelerating as new users join eBird. These data are an extremely valuable tool both for basic science and conservation; however, given the sheer amount of data, accessing eBird data poses a unique challenge. Currently, access to the complete set of eBird observations is provided via the eBird Basic Dataset (EBD). This is a tab-separated text file, released quarterly, containing all validated bird sighting in the eBird database at the time of release. Each row corresponds to the sighting of a single species within a checklist and, in addition to the species and number of individuals reported, information is provided at the checklist level (location, time, date, search effort, etc.).
+The eBird database currently contains nearly 500 million bird observations, and this rate of increase is accelerating as new users join eBird. These data are an extremely valuable tool both for basic science and conservation; however, given the sheer amount of data, accessing eBird data poses a unique challenge. Currently, access to the complete set of eBird observations is provided via the eBird Basic Dataset (EBD). This is a tab-separated text file, released quarterly, containing all validated bird sightings in the eBird database at the time of release. Each row corresponds to the sighting of a single species within a checklist and, in addition to the species and number of individuals reported, information is provided at the checklist level (location, time, date, search effort, etc.).
 
 In addition to the EBD, eBird provides a Sampling Event Data file that contains the checklist-level data for every valid checklist submitted to eBird, including checklists for which no species of birds were reported. In this file, each row corresponds to a checklist and only the checklist-level variables are included, not the associated bird data. While the EBD provides presence-only data, the EBD and Sampling Event Data can be combined to produce presence-absence data. This process is described below.
 
@@ -38,13 +38,13 @@ Once you have access to the data, proceed to the [download page](http://ebird.or
 
 ### Example data
 
-This package comes with two example datasets. The first is suitable for practicing filtering the EBD and producing presence-only data. It's a sample of 500 records from the EBD. It contains data from North and Central America from 2010-2012 on 4 jay species: Gray Jay, Blue Jay, Steller's Jay, and Green Jay. It can be access with:
+This package comes with two example datasets. The first is suitable for practicing filtering the EBD and producing presence-only data. It's a sample of 500 records from the EBD. It contains data from North and Central America from 2010-2012 on 4 jay species: Gray Jay, Blue Jay, Steller's Jay, and Green Jay. It can be accessed with:
 
 ```{r example-data-1, eval = FALSE}
 system.file("extdata/ebd-sample.txt", package = "auk")
 ```
 
-The second is suitable for producing zero-filled, presence-absence data. It contains every sighting from Singapore in 2012 of Collared Kingfisher, White-throated Kingfisher, and Blue-eared Kingfisher. In addition to these sightings data, the full Sampling Event Data file is included containing all checklists from Singapore in 2012. These files can be accessed with:
+The second is suitable for producing zero-filled, presence-absence data. It contains every sighting from Singapore in 2012 of Collared Kingfisher, White-throated Kingfisher, and Blue-eared Kingfisher. The full Sampling Event Data file is also included, and contains all checklists from Singapore in 2012. These files can be accessed with:
 
 ```{r example-data-2, eval = FALSE}
 # ebd
@@ -65,7 +65,7 @@ Linux and Mac users should already have AWK installed on their machines, however
 
 ## Presence data
 
-The most common use of the EBD is to produce a set of bird sightings, i.e. where and when was a given species seen. For example, this type of data could be used to produce a map of sightings locations or determine if a given bird has been seen in an area of interest. For more analytic work, such as species distribution modeling, presence and absence data are likely preferred (see Guillera-Arroita et al. 2015). Producing presence-absence data will be covered in the next section.
+The most common use of the EBD is to produce a set of bird sightings, i.e. where and when was a given species seen. For example, this type of data could be used to produce a map of sighting locations, or to determine if a given bird has been seen in an area of interest. For more analytic work, such as species distribution modeling, presence and absence data are likely preferred (see Guillera-Arroita et al. 2015). Producing presence-absence data will be covered in the next section.
 
 ### Cleaning
 
@@ -103,7 +103,7 @@ ebd
 - `auk_last_edited()`: filter to checklists from a range of last edited dates, useful for extracting just new or recently edited data.
 - `auk_time()`: filter to checklists started during a range of times-of-day.
 - `auk_duration()`: filter to checklists that are the result of observation periods that lasted a given range of durations.
-- `auk_complete()`: only retain checklists in which the observer has specified that they recorded all species seen or heard. It is necessary to retain only complete records for the creation of presence-absence data, because the "absence"" information is inferred by the lack of reporting of a species on checklists. 
+- `auk_complete()`: only retain checklists in which the observer has specified that they recorded all species seen or heard. It is necessary to retain only complete records for the creation of presence-absence data, because the "absence" information is inferred by the lack of reporting of a species on checklists. 
 
 Note that all of the functions listed above only modify the `auk_ebd` object, in order to define the filters. Once the filters have been defined, the filtering is actually conducted using `auk_filter()`.
 
@@ -162,7 +162,7 @@ ebd_df <- system.file("extdata/ebd-sample.txt", package = "auk") %>%
   read_ebd(setclass = "data.frame")
 ```
 
-An `auk_ebd` object can also be read directly after passing through `auk_filter()`, allowing for a complete pipeline.
+`auk_filter()` returns an `auk_ebd` object with the output file paths stored in it. This `auk_ebd` object can then be passed directly to `auk_read()`, allowing for a complete pipeline. For example, we can create an `auk_ebd` object, define filters, filter with AWK, and read in the results all at once.
 
 ```{r read-auk-ebd, eval = FALSE}
 output_file <- "ebd_filtered_blja-grja.txt"
@@ -186,7 +186,7 @@ awk_script <- system.file("extdata/ebd-sample.txt", package = "auk") %>%
   auk_species(species = c("Gray Jay", "Cyanocitta cristata")) %>% 
   auk_country(country = "Canada") %>% 
   auk_filter(awk_file = "awk-script.txt", execute = FALSE)
-# read back in a prepare for printing
+# read back in and prepare for printing
 awk_file <- readLines(awk_script)
 awk_file[!grepl("^[[:space:]]*$", awk_file)] %>% 
   paste0(collapse = "\n") %>% 
@@ -218,7 +218,7 @@ For many applications, presence-only data are sufficient; however, for modeling 
 
 ### Filtering
 
-When preparing to create zero-filled data, the EBD and sampling event data must be filtered to the same set of checklists to ensure consistency. To ensure these two datasets are synced, provide *both* the EBD and sampling event data files to `auk_ebd`, then filter as described in the previous section. This will ensure that all the filters applied to the ebd (except species) will be applied to the sampling event data so that we'll be working with the same set of checklists. It is critical that, at least, `auk_compete()` is a called to only include complete checklists, since these are a requirement for zero-filling.
+When preparing to create zero-filled data, the EBD and sampling event data must be filtered to the same set of checklists to ensure consistency. To ensure these two datasets are synced, provide *both* the EBD and sampling event data files to `auk_ebd`, then filter as described in the previous section. This will ensure that all the filters applied to the ebd (except species) will be applied to the sampling event data so that we'll be working with the same set of checklists. It is critical that `auk_compete()` is called, since complete checklists are a requirement for zero-filling.
 
 For example, the following filters to only include sightings of Collared Kingfisher between 6 and 10am:
 

@@ -162,7 +162,7 @@ ebd_df <- system.file("extdata/ebd-sample.txt", package = "auk") %>%
   read_ebd(setclass = "data.frame")
 ```
 
-An `auk_ebd` object can also be read directly after passing through `auk_filter()`, allowing for a complete pipeline.
+`auk_filter()` returns an `auk_ebd` object with the output file paths stored in it. This `auk_ebd` object can then be passed directly to `auk_read()`, allowing for a complete pipeline. For example, we can create an `auk_ebd` object, define filters, filter with AWK, and read in the results all at once.
 
 ```{r read-auk-ebd, eval = FALSE}
 output_file <- "ebd_filtered_blja-grja.txt"

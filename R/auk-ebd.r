@@ -183,7 +183,7 @@ print.auk_ebd <- function(x, ...) {
   }
   cat("\n")
   # last edited date filter
-  cat("  Laste edited date: ")
+  cat("  Last edited date: ")
   if (length(x$filters$last_edited) == 0) {
     cat("all")
   } else {

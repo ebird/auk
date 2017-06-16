@@ -3,7 +3,7 @@
 auk: eBird Data Processing with AWK
 ===================================
 
-[![Licence](https://img.shields.io/github/license/mashape/apistatus.svg)](http://choosealicense.com/licenses/mit/) [![Travis-CI Build Status](https://img.shields.io/travis/mstrimas/auk/master.svg?label=Mac%20OSX%20%26%20Linux)](https://travis-ci.org/mstrimas/auk) [![AppVeyor Build Status](https://img.shields.io/appveyor/ci/mstrimas/auk/master.svg?label=Windows)](https://ci.appveyor.com/project/mstrimas/auk) [![Coverage Status](https://img.shields.io/codecov/c/github/mstrimas/auk/master.svg)](https://codecov.io/github/mstrimas/auk?branch=master) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/auk)](https://cran.r-project.org/package=auk)
+[![Licence](https://img.shields.io/github/license/mashape/apistatus.svg)](http://choosealicense.com/licenses/mit/) [![Travis-CI Build Status](https://img.shields.io/travis/ebird/auk/master.svg?label=Mac%20OSX%20%26%20Linux)](https://travis-ci.org/ebird/auk) [![AppVeyor Build Status](https://img.shields.io/appveyor/ci/ebird/auk/master.svg?label=Windows)](https://ci.appveyor.com/project/ebird/auk) [![Coverage Status](https://img.shields.io/codecov/c/github/ebird/auk/master.svg)](https://codecov.io/github/ebird/auk?branch=master) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/auk)](https://cran.r-project.org/package=auk)
 
 **This package is the early stages of development and should be used with caution. If you encounter any bugs, please open an issue on GitHub**
 
@@ -19,7 +19,7 @@ This package can be installed directly from GitHub with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("mstrimas/auk")
+devtools::install_github("ebird/auk")
 ```
 
 `auk` requires the Unix utility AWK, which is available on most Linux and Mac OS X machines. Windows users will first need to install [Cygwin](https://www.cygwin.com) before using this package. Note that **Cygwin must be installed in the default location** (`C:/cygwin/bin/gawk.exe` or `C:/cygwin64/bin/gawk.exe`) in order for `auk` to work.
@@ -43,7 +43,7 @@ f <- system.file("extdata/ebd-sample_messy.txt", package = "auk")
 tmp <- tempfile()
 # remove problem records
 auk_clean(f, tmp)
-#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpwK9JOn/filee71a4c92a394"
+#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//Rtmp1gF5Cn/fileedc47ba0ee04"
 # number of lines in input
 length(readLines(f))
 #> [1] 101

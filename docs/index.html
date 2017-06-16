@@ -74,7 +74,7 @@
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>This package can be installed directly from GitHub with:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("devtools")</span>
-devtools::<span class="kw">install_github</span>(<span class="st">"mstrimas/auk"</span>)</code></pre></div>
+devtools::<span class="kw">install_github</span>(<span class="st">"ebird/auk"</span>)</code></pre></div>
 <p><code>auk</code> requires the Unix utility AWK, which is available on most Linux and Mac OS X machines. Windows users will first need to install <a href="https://www.cygwin.com">Cygwin</a> before using this package. Note that <strong>Cygwin must be installed in the default location</strong> (<code>C:/cygwin/bin/gawk.exe</code> or <code>C:/cygwin64/bin/gawk.exe</code>) in order for <code>auk</code> to work.</p>
 </div>
 <div id="vignette" class="section level2">
@@ -95,7 +95,7 @@ f &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class=
 tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>()
 <span class="co"># remove problem records</span>
 <span class="kw"><a href="reference/auk_clean.html">auk_clean</a></span>(f, tmp)
-<span class="co">#&gt; [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//Rtmp7hoMou/filee72a46f8e8be"</span>
+<span class="co">#&gt; [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpaoB3wB/fileedd49aaa0bd"</span>
 <span class="co"># number of lines in input</span>
 <span class="kw">length</span>(<span class="kw">readLines</span>(f))
 <span class="co">#&gt; [1] 101</span>
@@ -253,9 +253,9 @@ ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span clas
     <h2 class="hasAnchor">
 <a href="#sidebar" class="anchor"></a>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/mstrimas/auk">https://​github.com/​mstrimas/​auk</a>
+<li>Browse source code at <br><a href="http://ebird.github.io/auk/">http://​ebird.github.io/​auk/​</a>
 </li>
-<li>Report a bug at <br><a href="https://github.com/mstrimas/auk/issues">https://​github.com/​mstrimas/​auk/​issues</a>
+<li>Report a bug at <br><a href="https://github.com/ebird/auk/issues">https://​github.com/​ebird/​auk/​issues</a>
 </li>
 </ul>
 <h2>License</h2>
@@ -270,9 +270,9 @@ ebd &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span clas
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="http://choosealicense.com/licenses/mit/"><img src="https://img.shields.io/github/license/mashape/apistatus.svg" alt="Licence"></a></li>
-<li><a href="https://travis-ci.org/mstrimas/auk"><img src="https://img.shields.io/travis/mstrimas/auk/master.svg?label=Mac%20OSX%20%26%20Linux" alt="Travis-CI Build Status"></a></li>
-<li><a href="https://ci.appveyor.com/project/mstrimas/auk"><img src="https://img.shields.io/appveyor/ci/mstrimas/auk/master.svg?label=Windows" alt="AppVeyor Build Status"></a></li>
-<li><a href="https://codecov.io/github/mstrimas/auk?branch=master"><img src="https://img.shields.io/codecov/c/github/mstrimas/auk/master.svg" alt="Coverage Status"></a></li>
+<li><a href="https://travis-ci.org/ebird/auk"><img src="https://img.shields.io/travis/ebird/auk/master.svg?label=Mac%20OSX%20%26%20Linux" alt="Travis-CI Build Status"></a></li>
+<li><a href="https://ci.appveyor.com/project/ebird/auk"><img src="https://img.shields.io/appveyor/ci/ebird/auk/master.svg?label=Windows" alt="AppVeyor Build Status"></a></li>
+<li><a href="https://codecov.io/github/ebird/auk?branch=master"><img src="https://img.shields.io/codecov/c/github/ebird/auk/master.svg" alt="Coverage Status"></a></li>
 <li><a href="https://cran.r-project.org/package=auk"><img src="http://www.r-pkg.org/badges/version/auk" alt="CRAN_Status_Badge"></a></li>
 </ul>
 </div>

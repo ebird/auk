@@ -4,7 +4,6 @@
 ^README\.Rmd$
 ^README\.md$
 ^README-.*\.png$
-messing-around.r
 ^\.travis\.yml$
 ^codecov\.yml$
 ^appveyor\.yml$

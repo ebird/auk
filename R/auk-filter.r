@@ -97,6 +97,7 @@ auk_filter.auk_ebd <- function(x, file, file_sampling, awk_file, sep = "\t",
     if (!overwrite && file.exists(file)) {
       stop("Output file already exists, use overwrite = TRUE.")
     }
+    file <- path.expand(file)
   }
   # check output awk file
   if (!missing(awk_file) && !dir.exists(dirname(awk_file))) {
@@ -116,6 +117,7 @@ auk_filter.auk_ebd <- function(x, file, file_sampling, awk_file, sep = "\t",
     if (!overwrite && file.exists(file_sampling)) {
       stop("Output sampling file already exists, use overwrite = TRUE.")
     }
+    file_sampling <- path.expand(file_sampling)
   }
   # zero-filling requires complete checklists
   if (filter_sampling && !x$filters$complete) {

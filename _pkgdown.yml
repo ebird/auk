@@ -2,7 +2,7 @@ navbar:
   title: ~
   type: default
   left:
-  - text: Tutorial
+  - text: Vignette
     href: articles/auk.html
   - text: Function Reference
     href: reference/index.html

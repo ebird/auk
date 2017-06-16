@@ -3,7 +3,7 @@
 auk: eBird Data Processing with AWK
 ===================================
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0) [![Travis-CI Build Status](https://img.shields.io/travis/ebird/auk/master.svg?label=Mac%20OSX%20%26%20Linux)](https://travis-ci.org/ebird/auk) [![AppVeyor Build Status](https://img.shields.io/appveyor/ci/ebird/auk/master.svg?label=Windows)](https://ci.appveyor.com/project/ebird/auk) [![Coverage Status](https://img.shields.io/codecov/c/github/ebird/auk/master.svg)](https://codecov.io/github/ebird/auk?branch=master) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/auk)](https://cran.r-project.org/package=auk)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0) [![Travis-CI Build Status](https://img.shields.io/travis/ebird/auk/master.svg?label=Mac%20OSX%20%26%20Linux)](https://travis-ci.org/ebird/auk) [![AppVeyor Build Status](https://img.shields.io/appveyor/ci/mstrimas/auk/master.svg?label=Windows)](https://ci.appveyor.com/project/mstrimas/auk) [![Coverage Status](https://img.shields.io/codecov/c/github/ebird/auk/master.svg)](https://codecov.io/github/ebird/auk?branch=master) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/auk)](https://cran.r-project.org/package=auk)
 
 **This package is the early stages of development and should be used with caution. If you encounter any bugs, please open an issue on GitHub**
 
@@ -43,7 +43,7 @@ f <- system.file("extdata/ebd-sample_messy.txt", package = "auk")
 tmp <- tempfile()
 # remove problem records
 auk_clean(f, tmp)
-#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpyO1TWT/filef09d19393eeb"
+#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmprW8ajn/filef1f836d516f4"
 # number of lines in input
 length(readLines(f))
 #> [1] 101

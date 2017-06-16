@@ -13,7 +13,7 @@ Description: Process the eBird Basic Dataset (EBD) using AWK. This package is
     used to filter the EBD by species, space, or time to produce a manageable 
     file size that can be imported into R.
 Depends: R (>= 3.3.3)
-License: MIT + file LICENSE
+License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:

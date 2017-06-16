@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 
 # auk: eBird Data Processing with AWK
 
-[![Licence](https://img.shields.io/github/license/mashape/apistatus.svg)](http://choosealicense.com/licenses/mit/)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 [![Travis-CI Build Status](https://img.shields.io/travis/ebird/auk/master.svg?label=Mac%20OSX%20%26%20Linux)](https://travis-ci.org/ebird/auk)
 [![AppVeyor Build Status](https://img.shields.io/appveyor/ci/ebird/auk/master.svg?label=Windows)](https://ci.appveyor.com/project/ebird/auk)
 [![Coverage Status](https://img.shields.io/codecov/c/github/ebird/auk/master.svg)](https://codecov.io/github/ebird/auk?branch=master)

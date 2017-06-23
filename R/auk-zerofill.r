@@ -167,7 +167,7 @@ auk_zerofill.data.frame <- function(x, sampling_events, species,
     x,
     cols = list(checklist_id = ~ sampling_events$checklist_id,
                 "scientific_name"),
-    fill = list(observation_count = "0", species_observed = 0)
+    fill = list(observation_count = "0", species_observed = FALSE)
   )
 
   out <- structure(

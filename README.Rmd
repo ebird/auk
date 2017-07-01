@@ -41,6 +41,10 @@ devtools::install_github("ebird/auk")
 
 Full details on using `auk` to produce both presence-only and presence-absence data are outlined in the vignette, which can be accessed with `vignette("auk")`.
 
+## A note on versions
+
+This package contains a current (as of the time of package release) version of the [bird taxonomy used by eBird](http://help.ebird.org/customer/portal/articles/1006825-the-ebird-taxonomy). This taxonomy determines the species that can be reported in eBird and therefore the species that users of `auk` can extract from the EBD. eBird releases an updated taxonomy once a year, typically in August, at which time `auk` will be updated to include the current taxonomy. When using `auk`, users should be careful to ensure that the version they're using is in sync with the EBD file they're working with. This is most easily accomplished by always using the must recent version of `auk` and the most recent release of the EBD.
+
 ## Usage
 
 ### Cleaning

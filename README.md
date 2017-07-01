@@ -29,6 +29,11 @@ Vignette
 
 Full details on using `auk` to produce both presence-only and presence-absence data are outlined in the vignette, which can be accessed with `vignette("auk")`.
 
+A note on versions
+------------------
+
+This package contains a current (as of the time of package release) version of the [bird taxonomy used by eBird](http://help.ebird.org/customer/portal/articles/1006825-the-ebird-taxonomy). This taxonomy determines the species that can be reported in eBird and therefore the species that users of `auk` can extract from the EBD. eBird releases an updated taxonomy once a year, typically in August, at which time `auk` will be updated to include the current taxonomy. When using `auk`, users should be careful to ensure that the version they're using is in sync with the EBD file they're working with. This is most easily accomplished by always using the must recent version of `auk` and the most recent release of the EBD.
+
 Usage
 -----
 
@@ -38,12 +43,15 @@ Some rows in the eBird Basic Dataset (EBD) may have an incorrect number of colum
 
 ``` r
 library(auk)
+#> This version of auk uses the Aug 2016 eBird taxonomy
+#> Working with an EBD file downloaded after Aug 2017 may yield unexpected results
+#> To  get a current taxonomy, update auk with install.packages('auk')
 # sample data
 f <- system.file("extdata/ebd-sample_messy.txt", package = "auk")
 tmp <- tempfile()
 # remove problem records
 auk_clean(f, tmp)
-#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpLxpNG8/filefdd326440b12"
+#> [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpjXbK1j/file6ee7f253d8b"
 # number of lines in input
 length(readLines(f))
 #> [1] 101
@@ -100,7 +108,7 @@ ebd
 #>   Spatial extent: Lat -100 - -80; Lon 37 - 52
 #>   Date: 2012-01-01 - 2012-12-31
 #>   Time: 06:00-09:00
-#>   Laste edited date: all
+#>   Last edited date: all
 #>   Duration: 0-60 minutes
 #>   Complete checklists only: yes
 ```

@@ -82,6 +82,11 @@ devtools::<span class="kw">install_github</span>(<span class="st">"ebird/auk"</s
 <a href="#vignette" class="anchor"></a>Vignette</h2>
 <p>Full details on using <code>auk</code> to produce both presence-only and presence-absence data are outlined in the vignette, which can be accessed with <code><a href="articles/auk.html">vignette("auk")</a></code>.</p>
 </div>
+<div id="a-note-on-versions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#a-note-on-versions" class="anchor"></a>A note on versions</h2>
+<p>This package contains a current (as of the time of package release) version of the <a href="http://help.ebird.org/customer/portal/articles/1006825-the-ebird-taxonomy">bird taxonomy used by eBird</a>. This taxonomy determines the species that can be reported in eBird and therefore the species that users of <code>auk</code> can extract from the EBD. eBird releases an updated taxonomy once a year, typically in August, at which time <code>auk</code> will be updated to include the current taxonomy. When using <code>auk</code>, users should be careful to ensure that the version they’re using is in sync with the EBD file they’re working with. This is most easily accomplished by always using the must recent version of <code>auk</code> and the most recent release of the EBD.</p>
+</div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
@@ -90,12 +95,15 @@ devtools::<span class="kw">install_github</span>(<span class="st">"ebird/auk"</s
 <a href="#cleaning" class="anchor"></a>Cleaning</h3>
 <p>Some rows in the eBird Basic Dataset (EBD) may have an incorrect number of columns, typically from problematic characters in the comments fields, and the dataset has an extra blank column at the end. The function <code><a href="reference/auk_clean.html">auk_clean()</a></code> drops these erroneous records and removes the blank column.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(auk)
+<span class="co">#&gt; This version of auk uses the Aug 2016 eBird taxonomy</span>
+<span class="co">#&gt; Working with an EBD file downloaded after Aug 2017 may yield unexpected results</span>
+<span class="co">#&gt; To  get a current taxonomy, update auk with install.packages('auk')</span>
 <span class="co"># sample data</span>
 f &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/ebd-sample_messy.txt"</span>, <span class="dt">package =</span> <span class="st">"auk"</span>)
 tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>()
 <span class="co"># remove problem records</span>
 <span class="kw"><a href="reference/auk_clean.html">auk_clean</a></span>(f, tmp)
-<span class="co">#&gt; [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmptnMLds/filefde3a9a5619"</span>
+<span class="co">#&gt; [1] "/var/folders/mg/qh40qmqd7376xn8qxd6hm5lwjyy0h2/T//RtmpSRzsI1/file6fe7b44f31c"</span>
 <span class="co"># number of lines in input</span>
 <span class="kw">length</span>(<span class="kw">readLines</span>(f))
 <span class="co">#&gt; [1] 101</span>
@@ -158,7 +166,7 @@ ebd
 <span class="co">#&gt;   Spatial extent: Lat -100 - -80; Lon 37 - 52</span>
 <span class="co">#&gt;   Date: 2012-01-01 - 2012-12-31</span>
 <span class="co">#&gt;   Time: 06:00-09:00</span>
-<span class="co">#&gt;   Laste edited date: all</span>
+<span class="co">#&gt;   Last edited date: all</span>
 <span class="co">#&gt;   Duration: 0-60 minutes</span>
 <span class="co">#&gt;   Complete checklists only: yes</span></code></pre></div>
 <p>In all cases, extensive checks are performed to ensure filters are valid. For example, species are checked against the official <a href="http://help.ebird.org/customer/portal/articles/1006825-the-ebird-taxonomy">eBird taxonomy</a> and countries are checked using the <a href="https://github.com/vincentarelbundock/countrycode"><code>countrycode</code></a> package.</p>
